@@ -20,34 +20,34 @@ class AuthController extends Controller
 
     /////////////////////////////////////////Register
 
-    public function register(Request $request)
-    {
+    // public function register(Request $request)
+    // {
 
 
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', (new Password)->length(10)->requireNumeric()],
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-            // 'full_name'=>['required', 'string', 'max:255', 'unique:users'],
+    //     $validator = Validator::make($request->all(), [
+    //         'name' => ['required', 'string', 'max:255', 'unique:users'],
+    //         'password' => ['required', 'string', (new Password)->length(10)->requireNumeric()],
+    //         'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+    //         // 'full_name'=>['required', 'string', 'max:255', 'unique:users'],
 
-        ]);
+    //     ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 400);
+    //     }
 
 
-        $user = User::create([
-            'name' => $request->name,
-            'role' =>'user',
-            'password' => Hash::make($request->password),
-        ]);
+    //     $user = User::create([
+    //         'name' => $request->name,
+    //         'role' =>'user',
+    //         'password' => Hash::make($request->password),
+    //     ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+    //     $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()
-            ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
-    }
+    //     return response()
+    //         ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
+    // }
 
 
     /////////////////////////////////////////login

@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string("motherLastName");
             $table->date("birthday");
             $table->bigInteger("phone");
-            $table->json("location");
+            $table->string("location");
             $table->integer("siblingNo");
-            $table->text("helthInfo");
+            $table->text("healthInfo");
             $table->timestamps();
         });
     }

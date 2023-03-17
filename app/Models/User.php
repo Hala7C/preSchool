@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
 
 class User extends Authenticatable
 {
@@ -27,6 +29,9 @@ class User extends Authenticatable
         'name',
         'role',
         'password',
+        'status',
+        'ownerable_id',
+        'ownerable_type'
     ];
 
     /**
@@ -58,4 +63,11 @@ class User extends Authenticatable
     // protected $appends = [
     //     'profile_photo_url',
     // ];
+
+
+    public function ownerable(): MorphTo
+    {
+        // return $this->morphTo();
+        return $this->morphTo();
+    }
 }
