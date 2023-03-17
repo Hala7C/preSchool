@@ -32,7 +32,7 @@ class User extends Authenticatable
         'status',
         'ownerable_id',
         'ownerable_type'
-    ];
+        ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -60,9 +60,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    // protected $appends = [
-    //     'profile_photo_url',
-    // ];
+    protected $appends = [
+        'profile_photo_url',
+    ];
 
 
     public function ownerable(): MorphTo

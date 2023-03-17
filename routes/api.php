@@ -31,6 +31,9 @@ Route::middleware([
     'auth:sanctum'
 ])->group(function () {
 
+    Route::get('/profile', [App\Http\Controllers\API\AuthController::class, 'profile']);
+    Route::post('/profile/updatepassword', [App\Http\Controllers\API\AuthController::class, 'updatepassword']);
+    Route::post('/profile/update', [App\Http\Controllers\API\AuthController::class, 'updateProfile']);
     Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
 
 

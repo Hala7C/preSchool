@@ -67,10 +67,10 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // return response()
-            // ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer', 'user' => $user], 200);
-            return response()
+        // ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer', 'user' => $user], 200);
+        return response()
             ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
-        }
+    }
 
 
 
@@ -90,7 +90,6 @@ class AuthController extends Controller
 
     /////////////////////////////////////////updateProfile
 
-
     public function updateProfile(Request $request)
     {
 
@@ -98,13 +97,18 @@ class AuthController extends Controller
         $user = auth()->user();
 
         $validator = Validator::make($request->all(), [
+
             'name'  => ['required', 'string', 'max:255'],
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
+        if (isset($request->photo)) {
+            $user->updateProfilePhoto($request->photo);
+        }
 
         $user->forceFill([
             'name' =>  $request->name,
@@ -113,7 +117,6 @@ class AuthController extends Controller
         return response()
             ->json(['message' => 'You have successfully update '], 200);
     }
-
     /////////////////////////////////////////updatepassword
 
 

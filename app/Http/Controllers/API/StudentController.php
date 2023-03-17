@@ -5,9 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+
+use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Database\Events\TransactionBeginning;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -16,52 +20,30 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::all();
-        // $data = collect();
-        // foreach($students as $s){
-        //     $data->push([
-        //         'id'=>$s->id,
-        //         'fullName'=>$s->fullName,
-        //         'gender'=>$s->gender,
-        //         'age'=>$s->age,
-        //         'motherName'=>$s->motherName,
-        //         'motherLastName'=>$s->motherLastName,
-        //         'birthday'=>$s->birthday,
-        //         'phone'=>$s->phone,
-        //         'location'=>$s->location,
-        //         'siblingNo'=>$s->siblingNo,
-        //         'healthInfo'=>$s->healthInfo,
-        //         'sequenceNo'=>$s->sequenceNo
-        //     ]);
-        // }
         return ['data' => $students, 'status' => '210'];
     }
 
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            'fullName' => ['required', 'string'],
-            'gender' => ['required', 'string'],
-            'age' => ['required', 'string'],
-            'motherName' => ['required', 'string'],
-            'motherLastName' => ['required', 'string'],
-            'birthday' => ['required', 'string'],
-            'phone' => ['required', 'string'],
+            'fullName' => ['required', 'alpha', 'max:255'],
+            'gender' => ['required','in:male,female'],
+            'motherName' => ['required', 'alpha', 'max:255'],
+            'motherLastName' => ['required','alpha', 'max:255'],
+            'birthday' => ['required',  'date_format:m/d/Y'],
+            'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
-            'siblingNo' => ['required', 'string'],
-            'healthInfo' => ['string'],
-            'sequenceNo' => ['required', 'string']
+            'siblingNo' => ['required','numeric|min:0'],
+            'healthInfo' => ['string','alpha', 'max:255'],
+            'sequenceNo' => ['required', 'numeric']
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
-
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
-            'age' => $request->age,
             'motherName' => $request->motherName,
             'motherLastName' => $request->motherLastName,
             'birthday' => $request->birthday,
@@ -71,15 +53,24 @@ class StudentController extends Controller
             'healthInfo' => $request->healthInfo,
             'sequenceNo' => $request->sequenceNo
         ];
-        $std = Student::create($input);
-        $pass = Str::random(7);
-        $account = User::create([
-            'name' => Str::random(5),
-            'role' => 'user',
-            'password' => Hash::make($pass),
-            'status' => 'active',
-            'ownerable_id' => $std->id,
-        ]);
+        DB::beginTransaction();
+        try {
+            $std = Student::create($input);
+            $pass = Str::random(7);
+            $account =$std->owner()->create([
+                'name' => Str::random(5),
+                'role' => 'user',
+                'password' => Hash::make($pass),
+                'status' => 'active'
+            ]);
+            DB::commit();
+        } catch (\Exception $exp) {
+            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
+            $data = ['message' => $exp->getMessage(), 'status' => 'failed'];
+            $status = 400;
+            return ['data' => $data, 'status' => $status];
+        }
+
         $data = collect();
         $data->push([
             'student info' => $std,
@@ -93,21 +84,6 @@ class StudentController extends Controller
     public function show($id)
     {
         $student = Student::findOrFail($id);
-        // $data = collect();
-        // $data->push([
-        //     'id'=>$student->id,
-        //     'fullName'=>$student->fullName,
-        //     'gender'=>$student->gender,
-        //     'age'=>$student->age,
-        //     'motherName'=>$student->motherName,
-        //     'motherLastName'=>$student->motherLastName,
-        //     'birthday'=>$student->birthday,
-        //     'phone'=>$student->phone,
-        //     'location'=>$student->location,
-        //     'siblingNo'=>$student->siblingNo,
-        //     'healthInfo'=>$student->healthInfo,
-        //     'sequenceNo'=>$student->sequenceNo
-        // ]);
         return ['data' => $student, 'status' => '210'];
     }
 
@@ -115,9 +91,26 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $student = Student::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'fullName' => ['required', 'alpha', 'max:255'],
+            'gender' => ['required','in:male,female'],
+            'motherName' => ['required', 'alpha', 'max:255'],
+            'motherLastName' => ['required','alpha', 'max:255'],
+            'birthday' => ['required',  'date_format:m/d/Y'],
+            'phone' => ['required', 'digits:10'],
+            'location' => ['required', 'string'],
+            'siblingNo' => ['required','numeric|min:0'],
+            'healthInfo' => ['string','alpha', 'max:255'],
+            'sequenceNo' => ['required', 'numeric']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
         $student->fullName = $request->fullName;
         $student->gender = $request->gender;
-        $student->age = $request->age;
         $student->motherName = $request->motherName;
         $student->motherLastName = $request->motherLastName;
         $student->birthday = $request->birthday;
@@ -137,7 +130,34 @@ class StudentController extends Controller
         /*
         panding account status [use event|listener]
          */
+        // return ['data' => $account, 'status' => 210];
         $account->status='suspended';
         $account->save();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+      // $data = collect();
+        // $data->push([
+        //     'id'=>$student->id,
+        //     'fullName'=>$student->fullName,
+        //     'gender'=>$student->gender,
+        //     'age'=>$student->age,
+        //     'motherName'=>$student->motherName,
+        //     'motherLastName'=>$student->motherLastName,
+        //     'birthday'=>$student->birthday,
+        //     'phone'=>$student->phone,
+        //     'location'=>$student->location,
+        //     'siblingNo'=>$student->siblingNo,
+        //     'healthInfo'=>$student->healthInfo,
+        //     'sequenceNo'=>$student->sequenceNo
+        // ]);
