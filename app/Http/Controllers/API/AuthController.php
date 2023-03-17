@@ -28,7 +28,7 @@ class AuthController extends Controller
     //         'name' => ['required', 'string', 'max:255', 'unique:users'],
     //         'password' => ['required', 'string', (new Password)->length(10)->requireNumeric()],
     //         'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-    //         // 'full_name'=>['required', 'string', 'max:255', 'unique:users'],
+    //         'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
 
     //     ]);
 
@@ -41,7 +41,11 @@ class AuthController extends Controller
     //         'name' => $request->name,
     //         'role' =>'user',
     //         'password' => Hash::make($request->password),
+
     //     ]);
+    //     if (isset($request->photo)) {
+    //         $user->updateProfilePhoto($request->photo);
+    //     }
 
     //     $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -121,37 +125,28 @@ class AuthController extends Controller
 
 
 
-    public function updatepassword(Request $request)
+    public function updatepassword(Request $request,$id)
     {
-
-        $user = auth()->user();
-
+          $user = User::findOrFail($id);
         $validator = Validator::make($request->all(), [
-
             'current_password' => ['required', 'string'],
             'password' => ['required', 'string', (new Password)->length(10)->requireNumeric(), 'confirmed'],
-
         ])->after(function ($validator) use ($user, $request) {
-
             if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
                 $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
             }
         });
-
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
         $user->forceFill([
             'password' => Hash::make($request->password),
         ])->save();
-
         if (request()->hasSession()) {
             request()->session()->put([
                 'password_hash_' . Auth::getDefaultDriver() => Auth::user()->getAuthPassword(),
             ]);
         }
-
         return response()
             ->json(['message' => 'password successfully update '], 200);
     }

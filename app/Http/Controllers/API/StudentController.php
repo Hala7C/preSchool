@@ -30,10 +30,10 @@ class StudentController extends Controller
             'gender' => ['required','in:male,female'],
             'motherName' => ['required', 'alpha', 'max:255'],
             'motherLastName' => ['required','alpha', 'max:255'],
-            'birthday' => ['required',  'date_format:m/d/Y'],
+            'birthday' => ['required'],
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
-            'siblingNo' => ['required','numeric|min:0'],
+            'siblingNo' => ['required','numeric'],
             'healthInfo' => ['string','alpha', 'max:255'],
             'sequenceNo' => ['required', 'numeric']
         ]);
