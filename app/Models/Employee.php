@@ -12,7 +12,14 @@ class Employee extends Model
     public $table = "employee";
 
     protected $fillable = [
-        'fullName', 'gender',    'age',    'birthday',    'phone', 'location',    'helthInfo', 'degree',    'specialization'
+        'fullName',
+        'gender',
+        'birthday',
+        'phone',
+        'location',
+        'healthInfo',
+        'degree',
+        'specialization'
     ];
     public function owner(): MorphOne
     {

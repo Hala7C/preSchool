@@ -94,11 +94,11 @@ class AuthController extends Controller
 
     /////////////////////////////////////////updateProfile
 
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request,$id)
     {
 
 
-        $user = auth()->user();
+        $user = User::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
 

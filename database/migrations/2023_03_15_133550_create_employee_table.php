@@ -17,11 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string("fullName");
             $table->enum("gender", ["female", "male"]);
-            $table->integer("age");
             $table->date("birthday");
             $table->bigInteger("phone");
             $table->json("location");
-            $table->text("helthInfo");
+            $table->text("healthInfo");
             $table->enum("degree", ["bachalor", "bachalors", "master"]);
             $table->string("specialization");
             $table->timestamps();

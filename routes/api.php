@@ -28,8 +28,8 @@ Route::middleware([
 ])->group(function () {
     Route::get('/profile', [App\Http\Controllers\API\AuthController::class, 'profile']);
     Route::post('/profile/{id}/updatepassword', [App\Http\Controllers\API\AuthController::class, 'updatepassword']);
-    Route::post('/profile/update', [App\Http\Controllers\API\AuthController::class, 'updateProfile']);
-    Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
+    Route::post('/profile/{id}/update', [App\Http\Controllers\API\AuthController::class, 'updateProfile']);
+  //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
 });
 
@@ -43,4 +43,12 @@ Route::middleware([
     Route::get('/users/{id}', [App\Http\Controllers\API\StudentController::class, 'show']);
     Route::put('/users/{id}', [App\Http\Controllers\API\StudentController::class, 'update']);
     Route::delete('/users/{id}', [App\Http\Controllers\API\StudentController::class, 'destroy']);
+
+
+
+    Route::post('/employee/store', [App\Http\Controllers\API\EmployeeController::class, 'store']);
+    Route::get('/employee', [App\Http\Controllers\API\EmployeeController::class, 'index']);
+    Route::get('/employee/{id}', [App\Http\Controllers\API\EmployeeController::class, 'show']);
+    Route::put('/employee/{id}', [App\Http\Controllers\API\EmployeeController::class, 'update']);
+    Route::delete('/employee/{id}', [App\Http\Controllers\API\EmployeeController::class, 'destroy']);
 });
