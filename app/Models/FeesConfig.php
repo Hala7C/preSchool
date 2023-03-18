@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class FeesConfig extends Model
 {
     use HasFactory;
+    public $table = "fees_config";
+    protected $fillable = [
+        'date', 'amount'
+    ];
 }

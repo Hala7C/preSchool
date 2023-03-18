@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
+    public $table = "subject";
+    protected $fillable = [
+        'name'
+    ];
 }

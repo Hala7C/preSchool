@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Level;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class LevelController extends Controller
+class SubjectController extends Controller
 {
+
     public function index()
     {
         //
-        $levels = Level::all();
-        return ['data' => $levels, 'status' => '210'];
+        $subjects = Subject::all();
+        return ['data' => $subjects, 'status' => '210'];
     }
-
 
     public function store(Request $request)
     {
         //
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'alpha', 'max:255'],
-            'age' => ['required', 'integer', 'between:4,6']
+            'name' => 'required|alpha|max:255',
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -31,37 +31,36 @@ class LevelController extends Controller
                 'name' => $request->name,
                 'age' => $request->age,
             ];
-            $level = Level::create($input);
-            return ['data' => $level, 'status' => '210'];
+            $subject = Subject::create($input);
+            return ['data' => $subject, 'status' => '210'];
         }
     }
 
 
     public function show($id)
     {
-        $level = Level::findOrFail($id);
-        return ['data' => $level, 'status' => '210'];
+        $subject = Subject::findOrFail($id);
+        return ['data' => $subject, 'status' => '210'];
     }
+
 
     public function update(Request $request, $id)
     {
-        $level = Level::findOrFail($id);
+        $subject = Subject::findOrFail($id);
         $request->validate([
 
             'name' => 'sometimes|required|alpha|max:255',
-            'age' => 'sometimes|required|integer|between:4,6'
 
         ]);
 
-        $level->update($request->all());
-        return ['data' => $level, 'status' => '210'];
+        $subject->update($request->all());
+        return ['data' => $subject, 'status' => '210'];
     }
-
 
     public function destroy($id)
     {
         //
-        Level::destroy($id);
-        return ['message' => 'Level deleted successfly'];
+        Subject::destroy($id);
+        return ['message' => 'subject deleted successfly'];
     }
 }

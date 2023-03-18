@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\ClassController;
+use App\Http\Controllers\API\FeesStudentController;
+use App\Http\Controllers\API\LevelController;
+use App\Http\Controllers\API\SubjectController as APISubjectController;
+use App\Http\Controllers\SubjectController;
+use App\Models\FeesConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,26 +35,12 @@ Route::middleware([
     Route::get('/profile', [App\Http\Controllers\API\AuthController::class, 'profile']);
     Route::post('/profile/{id}/updatepassword', [App\Http\Controllers\API\AuthController::class, 'updatepassword']);
     Route::post('/profile/{id}/update', [App\Http\Controllers\API\AuthController::class, 'updateProfile']);
-  //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
+    //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
 });
-
-
-Route::middleware([
-    'auth:sanctum',
-    'isAdmin',
-])->group(function () {
-    Route::post('/users/store', [App\Http\Controllers\API\StudentController::class, 'store']);
-    Route::get('/users', [App\Http\Controllers\API\StudentController::class, 'index']);
-    Route::get('/users/{id}', [App\Http\Controllers\API\StudentController::class, 'show']);
-    Route::put('/users/{id}', [App\Http\Controllers\API\StudentController::class, 'update']);
-    Route::delete('/users/{id}', [App\Http\Controllers\API\StudentController::class, 'destroy']);
-
-
-
-    Route::post('/employee/store', [App\Http\Controllers\API\EmployeeController::class, 'store']);
-    Route::get('/employee', [App\Http\Controllers\API\EmployeeController::class, 'index']);
-    Route::get('/employee/{id}', [App\Http\Controllers\API\EmployeeController::class, 'show']);
-    Route::put('/employee/{id}', [App\Http\Controllers\API\EmployeeController::class, 'update']);
-    Route::delete('/employee/{id}', [App\Http\Controllers\API\EmployeeController::class, 'destroy']);
+Route::middleware(['isManager'])->group(function () {
+    Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
+    Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
+    Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
+    Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 });
