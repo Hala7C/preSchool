@@ -94,7 +94,7 @@ class AuthController extends Controller
 
     /////////////////////////////////////////updateProfile
 
-    public function updateProfile(Request $request,$id)
+    public function updateProfile(Request $request, $id)
     {
 
 
@@ -125,9 +125,9 @@ class AuthController extends Controller
 
 
 
-    public function updatepassword(Request $request,$id)
+    public function updatepassword(Request $request, $id)
     {
-          $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
         $validator = Validator::make($request->all(), [
             'current_password' => ['required', 'string'],
             'password' => ['required', 'string', (new Password)->length(10)->requireNumeric(), 'confirmed'],

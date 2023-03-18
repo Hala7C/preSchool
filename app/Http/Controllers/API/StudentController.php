@@ -20,6 +20,9 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::all();
+        if ($students->isEmpty()) {
+            return ['data' => 'there is no student', 'status' => '210'];
+        }
         return ['data' => $students, 'status' => '210'];
     }
 
@@ -27,14 +30,14 @@ class StudentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'fullName' => ['required', 'alpha', 'max:255'],
-            'gender' => ['required','in:male,female'],
+            'gender' => ['required', 'in:male,female'],
             'motherName' => ['required', 'alpha', 'max:255'],
-            'motherLastName' => ['required','alpha', 'max:255'],
+            'motherLastName' => ['required', 'alpha', 'max:255'],
             'birthday' => ['required'],
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
-            'siblingNo' => ['required','numeric'],
-            'healthInfo' => ['string','alpha', 'max:255'],
+            'siblingNo' => ['required', 'numeric'],
+            'healthInfo' => ['string', 'alpha', 'max:255'],
             'sequenceNo' => ['required', 'numeric']
         ]);
 
@@ -57,7 +60,7 @@ class StudentController extends Controller
         try {
             $std = Student::create($input);
             $pass = Str::random(7);
-            $account =$std->owner()->create([
+            $account = $std->owner()->create([
                 'name' => Str::random(5),
                 'role' => 'user',
                 'password' => Hash::make($pass),
@@ -75,9 +78,14 @@ class StudentController extends Controller
         $data->push([
             'student info' => $std,
             'account info' => $account,
-            'pass' =>$pass
+            'pass' => $pass
         ]);
-        return ['data' => $data, 'status' => 210];
+        $res = collect();
+        $res->push([
+            'message' => 'added successfully',
+            'data' => $data
+        ]);
+        return ['data' => $res, 'status' => 210];
     }
 
 
@@ -94,14 +102,14 @@ class StudentController extends Controller
 
         $validator = Validator::make($request->all(), [
             'fullName' => ['required', 'alpha', 'max:255'],
-            'gender' => ['required','in:male,female'],
+            'gender' => ['required', 'in:male,female'],
             'motherName' => ['required', 'alpha', 'max:255'],
-            'motherLastName' => ['required','alpha', 'max:255'],
+            'motherLastName' => ['required', 'alpha', 'max:255'],
             'birthday' => ['required'],
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
-            'siblingNo' => ['required','numeric'],
-            'healthInfo' => ['string','alpha', 'max:255'],
+            'siblingNo' => ['required', 'numeric'],
+            'healthInfo' => ['string', 'alpha', 'max:255'],
             'sequenceNo' => ['required', 'numeric']
         ]);
 
@@ -120,18 +128,19 @@ class StudentController extends Controller
         $student->healthInfo = $request->healthInfo;
         $student->sequenceNo = $request->sequenceNo;
         $student->save();
-        return ['data' => $student, 'status' => 210];
+        $res = collect();
+        $res->push([
+            'message' => 'updated successfully',
+            'data' => $student
+        ]);
+        return ['data' => $res, 'status' => 210];
     }
 
     public function destroy($id)
     {
         $student = Student::findOrFail($id);
         $account = $student->owner;
-        /*
-        panding account status [use event|listener]
-         */
-        // return ['data' => $account, 'status' => 210];
-        $account->status='suspended';
+        $account->status = 'suspended';
         $account->save();
     }
 }
