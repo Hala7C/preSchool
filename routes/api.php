@@ -75,3 +75,37 @@ Route::middleware([
     Route::post('/user/{id}',   [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
 });
+/**
+ *
+ *                    **********Class Route **********
+ *
+ *   GET|HEAD  http://127.0.0.1:8000/api/classes           ==> classes.index
+ *   POST      http://127.0.0.1:8000/api/classes           ==> classes.store
+ *   GET|HEAD  http://127.0.0.1:8000/api/classes/{class}   ==> classes.show
+ *   PUT|PATCH http://127.0.0.1:8000/api/classes/{class}   ==> classes.update
+ *   DELETE    http://127.0.0.1:8000/api/classes/{class}   ==> classes.destroy
+ *
+ *                    **********Config Route **********
+ *
+ *   GET|HEAD  http://127.0.0.1:8000/api/config            ==> config.index
+ *   POST      http://127.0.0.1:8000/api/config            ==> config.store
+ *   GET|HEAD  http://127.0.0.1:8000/api/config/{config}   ==> config.show
+ *   PUT|PATCH http://127.0.0.1:8000/api/config/{config}   ==> config.update
+ *   DELETE    http://127.0.0.1:8000/api/config/{config}   ==> config.destroy
+ *
+ *                    **********Levels Route **********
+ *
+ *   GET|HEAD  http://127.0.0.1:8000/api/levels            ==> levels.index
+ *   POST      http://127.0.0.1:8000/api/levels            ==> levels.store
+ *   GET|HEAD  http://127.0.0.1:8000/api/levels/{level}    ==> levels.show
+ *   PUT|PATCH http://127.0.0.1:8000/api/levels/{level}    ==> levels.update
+ *   DELETE    http://127.0.0.1:8000/api/levels/{level}    ==> levels.destroy
+ *
+ *                    **********Subject Route **********
+ *
+ *   GET|HEAD  http://127.0.0.1:8000/api/subject           ==> subject.index
+ *   POST      http://127.0.0.1:8000/api/subject           ==> subject.store
+ *   GET|HEAD  http://127.0.0.1:8000/api/subject/{subject} ==> subject.show
+ *   PUT|PATCH http://127.0.0.1:8000/api/subject/{subject} ==> subject.update
+ *   DELETE    http://127.0.0.1:8000/api/subject/{subject} ==> subject.destroy
+ */
