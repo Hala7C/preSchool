@@ -54,24 +54,24 @@ Route::middleware([
     'isAdmin',
 ])->group(function () {
     //registry
-    Route::post('/student/store', [StudentController::class, 'store']);
-    Route::get('/students', [StudentController::class, 'index']);
-    Route::get('/student/{id}', [StudentController::class, 'show']);
-    Route::post('/student/{id}', [StudentController::class, 'update']);
+    Route::post('/student/store' , [StudentController::class, 'store']);
+    Route::get('/students',        [StudentController::class, 'index']);
+    Route::get('/student/{id}',    [StudentController::class, 'show']);
+    Route::post('/student/{id}',   [StudentController::class, 'update']);
     Route::delete('/student/{id}', [StudentController::class, 'destroy']);
 
 
     //recruit
-    Route::post('/employee/store', [EmployeeController::class, 'store']);
-    Route::get('/employees', [EmployeeController::class, 'index']);
-    Route::get('/employee/{id}', [EmployeeController::class, 'show']);
-    Route::post('/employee/{id}', [EmployeeController::class, 'update']);
+    Route::post('/employee/store',  [EmployeeController::class, 'store']);
+    Route::get('/employees',        [EmployeeController::class, 'index']);
+    Route::get('/employee/{id}',    [EmployeeController::class, 'show']);
+    Route::post('/employee/{id}',   [EmployeeController::class, 'update']);
     Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
 
 
     //user management
     // Route::post('/user/store', [App\Http\Controllers\API\UserController::class, 'store']);
-    Route::get('/users', [UserController::class, 'index']);
-    Route::post('/user/{id}', [UserController::class, 'update']);
+    Route::get('/users',        [UserController::class, 'index']);
+    Route::post('/user/{id}',   [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
 });
