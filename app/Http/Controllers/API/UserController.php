@@ -18,34 +18,34 @@ class UserController extends Controller
         return ['data' => $users, 'status' => '210'];
     }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
 
-            'name' => ['required', 'alpha', 'max:255'],
-            'password' => ['required', 'string', (new Password)->length(10)->requireNumeric(), 'confirmed'],
-            'role' => ['required', 'in:teacher,manager,employee,bus_supervisor,admin'],
-            'status' => ['required', 'in:active,suspended'],
-            'ownerable_id'=>['required'],
-            'ownerable_type'=>['required','in:employee,student']
-        ]);
+    //         'name' => ['required', 'alpha', 'max:255'],
+    //         'password' => ['required', 'string', (new Password)->length(10)->requireNumeric(), 'confirmed'],
+    //         'role' => ['required', 'in:teacher,manager,employee,bus_supervisor,admin'],
+    //         'status' => ['required', 'in:active,suspended'],
+    //         'ownerable_id'=>['required'],
+    //         'ownerable_type'=>['required','in:employee,student']
+    //     ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $input = [
-            'name' => $request->name,
-            'password' => $request->password,
-            'role' => $request->role,
-            'status' => $request->status,
-            'ownerable_id' => $request->ownerable_id,
-            'ownerable_type' => $request->ownerable_type,
-        ];
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 400);
+    //     }
+    //     $input = [
+    //         'name' => $request->name,
+    //         'password' => $request->password,
+    //         'role' => $request->role,
+    //         'status' => $request->status,
+    //         'ownerable_id' => $request->ownerable_id,
+    //         'ownerable_type' => $request->ownerable_type,
+    //     ];
 
-            $user = User::create($input);
+    //         $user = User::create($input);
 
-        return ['data' => $user, 'status' => 210];
-    }
+    //     return ['data' => $user, 'status' => 210];
+    // }
 
     public function update(Request $request, $id)
     {

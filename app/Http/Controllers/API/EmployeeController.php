@@ -15,6 +15,9 @@ class EmployeeController extends Controller
     public function index()
     {
         $Employees = Employee::all();
+        if ($Employees->isEmpty()) {
+            return ['data' => 'there is no student', 'status' => '210'];
+        }
         return ['data' => $Employees, 'status' => '210'];
     }
 
@@ -27,9 +30,9 @@ class EmployeeController extends Controller
             'birthday' => ['required'],
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
-            'healthInfo' => ['string','alpha', 'max:255'],
+            'healthInfo' => ['sometimes','string','alpha', 'max:255'],
             'degree' => ['required','in:bachalor,bachalors,master'],
-            'specialization'=>['required'],
+            'specialization'=>['sometimes'],
             'role'=>['required','in:teacher,manager,employee,bus_supervisor']
         ]);
 
@@ -70,7 +73,12 @@ class EmployeeController extends Controller
             'account info' => $account,
             'pass' =>$pass
         ]);
-        return ['data' => $data, 'status' => 210];
+        $res = collect();
+        $res->push([
+            'message' => 'added successfully',
+            'data' => $data
+        ]);
+        return ['data' => $res, 'status' => 210];
     }
 
 
@@ -110,7 +118,12 @@ class EmployeeController extends Controller
         $Employee->degree = $request->degree;
         $Employee->specialization=$request->specialization;
         $Employee->save();
-        return ['data' => $Employee, 'status' => 210];
+        $res = collect();
+        $res->push([
+            'message' => 'added successfully',
+            'data' => $Employee
+        ]);
+        return ['data' => $res, 'status' => 210];
     }
 
     public function destroy($id)
