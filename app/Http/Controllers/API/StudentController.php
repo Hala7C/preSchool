@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 
@@ -43,12 +44,14 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
             'motherName' => $request->motherName,
             'motherLastName' => $request->motherLastName,
-            'birthday' => $request->birthday,
+            'birthday' =>$date,
             'phone' => $request->phone,
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
@@ -33,16 +33,18 @@ class EmployeeController extends Controller
             'healthInfo' => ['sometimes','string','alpha', 'max:255'],
             'degree' => ['required','in:bachalor,bachalors,master'],
             'specialization'=>['sometimes'],
-            'role'=>['required','in:teacher,manager,employee,bus_supervisor']
+            'role'=>['required','in:teacher,manager,employee,bus_supervisor,admin']
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
-            'birthday' => $request->birthday,
+            'birthday' =>$date,
             'phone' => $request->phone,
             'location' => $request->location,
             'healthInfo' => $request->healthInfo,
