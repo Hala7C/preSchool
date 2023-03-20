@@ -37,8 +37,7 @@ class StudentController extends Controller
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
-            'healthInfo' => ['string', 'alpha', 'max:255'],
-            'sequenceNo' => ['required', 'numeric']
+            'healthInfo' => ['string', 'alpha', 'max:255']
         ]);
 
         if ($validator->fails()) {
@@ -53,9 +52,8 @@ class StudentController extends Controller
             'phone' => $request->phone,
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,
-            'healthInfo' => $request->healthInfo,
-            'sequenceNo' => $request->sequenceNo
-        ];
+            'healthInfo' => $request->healthInfo
+                ];
         DB::beginTransaction();
         try {
             $std = Student::create($input);
@@ -110,7 +108,6 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'sequenceNo' => ['required', 'numeric']
         ]);
 
         if ($validator->fails()) {
@@ -126,7 +123,6 @@ class StudentController extends Controller
         $student->location = $request->location;
         $student->siblingNo = $request->siblingNo;
         $student->healthInfo = $request->healthInfo;
-        $student->sequenceNo = $request->sequenceNo;
         $student->save();
         $res = collect();
         $res->push([

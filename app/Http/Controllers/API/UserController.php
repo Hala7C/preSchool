@@ -51,9 +51,9 @@ class UserController extends Controller
     {
         $user=User::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'name' => ['sometimes','required', 'alpha', 'max:255'],
-            'role' => ['sometimes','required', 'in:teacher,manager,employee,bus_supervisor,admin'],
-            'status' => ['sometimes','required', 'in:active,suspended']
+            'name' => ['required', 'alpha', 'max:255'],
+            'role' => ['required', 'in:teacher,manager,employee,bus_supervisor,admin'],
+            'status' => ['required', 'in:active,suspended']
         ]);
 
         if ($validator->fails()) {
