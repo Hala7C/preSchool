@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\{
     AuthController,
     EmployeeController,
-    StudentController
+    StudentController,
+    BusController
 };
+use App\Models\Bus;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -48,6 +51,14 @@ Route::middleware(['isManager'])->group(function () {
     Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
     Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 });
+
+Route::middleware(['isEmployee'])->group(function () {
+    Route::post('/buses/store' , [BusController::class, 'store']);
+    Route::get('/buses',         [BusController::class, 'index']);
+    Route::post('/buses/{id}',   [BusController::class, 'update']);
+    Route::delete('/buses/{id}', [BusController::class, 'destroy']);
+});
+
 
 Route::middleware([
     'auth:sanctum',
