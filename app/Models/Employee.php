@@ -25,4 +25,8 @@ class Employee extends Model
     {
         return $this->morphOne(User::class, 'ownerable');
     }
+
+    public function bus(){
+        return $this->hasOne(Bus::class,'bus_supervisor_id','id');
+    }
 }

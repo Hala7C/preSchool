@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bus', function (Blueprint $table) {
+        Schema::create('student_fees', function (Blueprint $table) {
             $table->id();
-            $table->integer('capacity');
-            $table->bigInteger('number');
-            $table->foreignId('bus_supervisor_id')->constrained("employee")->cascadeOnDelete();
+            $table->decimal('amount');
+            $table->decimal('remaind');
+            $table->foreignId('student_id')->constrained('student');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bus');
+        Schema::dropIfExists('student_fees');
     }
 };

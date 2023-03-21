@@ -37,6 +37,7 @@ class StudentController extends Controller
                 'location' => $std->location,
                 'siblingNo' => $std->siblingNo,
                 'healthInfo' => $std->healthInfo,
+                'bus_id'=>$std->bus_id,
                 'account_info'=>$account
             ]);
 
@@ -55,7 +56,8 @@ class StudentController extends Controller
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
-            'healthInfo' => ['string', 'alpha', 'max:255']
+            'healthInfo' => ['string', 'alpha', 'max:255'],
+            'bus_id'=>['required']
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +74,8 @@ class StudentController extends Controller
             'phone' => $request->phone,
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,
-            'healthInfo' => $request->healthInfo
+            'healthInfo' => $request->healthInfo,
+            'bus_id'=>$request->bus_id
                 ];
         DB::beginTransaction();
         try {
@@ -122,6 +125,7 @@ class StudentController extends Controller
             'location' => $std->location,
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
+            'bus_id'=>$std->bus_id,
             'account_info'=>$account
         ]);
         return ['data' => $data, 'status' => '210'];
@@ -142,6 +146,8 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
+            'bus_id'=>['required']
+
         ]);
 
         if ($validator->fails()) {
@@ -157,6 +163,7 @@ class StudentController extends Controller
         $student->location = $request->location;
         $student->siblingNo = $request->siblingNo;
         $student->healthInfo = $request->healthInfo;
+        $student->bus_id=$request->bus_id;
         $student->save();
         $res = collect();
         $res->push([

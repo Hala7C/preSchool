@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\Employee;
+use App\Models\Employee;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;

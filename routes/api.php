@@ -120,3 +120,8 @@ Route::middleware([
  *   PUT|PATCH http://127.0.0.1:8000/api/subject/{subject} ==> subject.update
  *   DELETE    http://127.0.0.1:8000/api/subject/{subject} ==> subject.destroy
  */
+
+
+
+
+ Route::get('/supervisors',        [BusController::class, 'allBusSupervisor']);
