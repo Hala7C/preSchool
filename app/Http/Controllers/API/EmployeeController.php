@@ -18,7 +18,22 @@ class EmployeeController extends Controller
         if ($Employees->isEmpty()) {
             return ['data' => 'there is no student', 'status' => '210'];
         }
-        return ['data' => $Employees, 'status' => '210'];
+        $data=collect();
+        foreach($Employees as $emp){
+            $account=$emp->owner;
+            $data->push([
+                'fullName' => $emp->fullName,
+                'gender' => $emp->gender,
+                'birthday' =>$emp->birthday,
+                'phone' => $emp->phone,
+                'location' => $emp->location,
+                'healthInfo' => $emp->healthInfo,
+                'degree' => $emp->degree,
+                'account_info'=>$account
+            ]);
+        }
+
+        return ['data' => $data, 'status' => '210'];
     }
 
     public function store(Request $request)
@@ -86,8 +101,20 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-        $Employee = Employee::findOrFail($id);
-        return ['data' => $Employee, 'status' => '210'];
+        $emp = Employee::findOrFail($id);
+        $account=$emp->owner;
+        $data=collect();
+        $data->push([
+            'fullName' => $emp->fullName,
+            'gender' => $emp->gender,
+            'birthday' =>$emp->birthday,
+            'phone' => $emp->phone,
+            'location' => $emp->location,
+            'healthInfo' => $emp->healthInfo,
+            'degree' => $emp->degree,
+            'account_info'=>$account
+        ]);
+        return ['data' => $data, 'status' => '210'];
     }
 
 

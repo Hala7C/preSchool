@@ -24,7 +24,24 @@ class StudentController extends Controller
         if ($students->isEmpty()) {
             return ['data' => 'there is no student', 'status' => '210'];
         }
-        return ['data' => $students, 'status' => '210'];
+        $data=collect();
+        foreach($students as $std){
+            $account=$std->owner;
+            $data->push([
+                'fullName' => $std->fullName,
+                'gender' => $std->gender,
+                'motherName' => $std->motherName,
+                'motherLastName' =>$std->motherLastName,
+                'birthday' => $std->birthday,
+                'phone' =>$std->phone,
+                'location' => $std->location,
+                'siblingNo' => $std->siblingNo,
+                'healthInfo' => $std->healthInfo,
+                'account_info'=>$account
+            ]);
+
+        }
+        return ['data' => $data, 'status' => '210'];
     }
 
     public function store(Request $request)
@@ -92,8 +109,22 @@ class StudentController extends Controller
 
     public function show($id)
     {
-        $student = Student::findOrFail($id);
-        return ['data' => $student, 'status' => '210'];
+        $std = Student::findOrFail($id);
+        $data=collect();
+        $account=$std->owner;
+        $data->push([
+            'fullName' => $std->fullName,
+            'gender' => $std->gender,
+            'motherName' => $std->motherName,
+            'motherLastName' =>$std->motherLastName,
+            'birthday' => $std->birthday,
+            'phone' =>$std->phone,
+            'location' => $std->location,
+            'siblingNo' => $std->siblingNo,
+            'healthInfo' => $std->healthInfo,
+            'account_info'=>$account
+        ]);
+        return ['data' => $data, 'status' => '210'];
     }
 
 
