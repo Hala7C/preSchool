@@ -153,12 +153,13 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $student->fullName = $request->fullName;
         $student->gender = $request->gender;
         $student->motherName = $request->motherName;
         $student->motherLastName = $request->motherLastName;
-        $student->birthday = $request->birthday;
+        $student->birthday = $date;
         $student->phone = $request->phone;
         $student->location = $request->location;
         $student->siblingNo = $request->siblingNo;

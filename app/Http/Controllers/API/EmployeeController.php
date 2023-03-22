@@ -137,10 +137,11 @@ class EmployeeController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $Employee->fullName = $request->fullName;
         $Employee->gender = $request->gender;
-        $Employee->birthday = $request->birthday;
+        $Employee->birthday = $date;
         $Employee->phone = $request->phone;
         $Employee->location = $request->location;
         $Employee->healthInfo = $request->healthInfo;

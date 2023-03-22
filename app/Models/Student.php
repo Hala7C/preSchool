@@ -28,4 +28,8 @@ class Student extends Model
     public function fees(){
         return $this->hasMany(StudentFees::class,'student_id','id');
     }
+
+    public function currentPayment(){
+        return $this->hasMany(StudentFees::class,'student_id','id')->latest('created_at')->first();
+    }
 }
