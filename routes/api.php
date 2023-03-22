@@ -45,14 +45,15 @@ Route::middleware([
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-Route::middleware(['isManager'])->group(function () {
+Route::middleware(['auth:sanctum','isManager'])->group(function () {
     Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
     Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
     Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
     Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 });
 
-Route::middleware(['isEmployee'])->group(function () {
+Route::middleware([  'auth:sanctum',
+'isEmployee',])->group(function () {
     Route::post('/buses/store' , [BusController::class, 'store']);
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);

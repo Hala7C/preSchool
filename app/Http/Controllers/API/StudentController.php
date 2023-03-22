@@ -24,15 +24,19 @@ class StudentController extends Controller
         if ($students->isEmpty()) {
             return ['data' => 'there is no student', 'status' => '210'];
         }
+        $cuurentYear=Carbon::now()->year;
         $data=collect();
         foreach($students as $std){
             $account=$std->owner;
+            $date=explode('-',$std->birthday);
+            $age=$cuurentYear-$date[0];
             $data->push([
                 'fullName' => $std->fullName,
                 'gender' => $std->gender,
                 'motherName' => $std->motherName,
                 'motherLastName' =>$std->motherLastName,
                 'birthday' => $std->birthday,
+                'age'=>$age,
                 'phone' =>$std->phone,
                 'location' => $std->location,
                 'siblingNo' => $std->siblingNo,
@@ -113,6 +117,9 @@ class StudentController extends Controller
     public function show($id)
     {
         $std = Student::findOrFail($id);
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$std->birthday);
+        $age=$cuurentYear-$date[0];
         $data=collect();
         $account=$std->owner;
         $data->push([
@@ -121,6 +128,7 @@ class StudentController extends Controller
             'motherName' => $std->motherName,
             'motherLastName' =>$std->motherLastName,
             'birthday' => $std->birthday,
+            'age' =>$age,
             'phone' =>$std->phone,
             'location' => $std->location,
             'siblingNo' => $std->siblingNo,

@@ -19,16 +19,23 @@ class EmployeeController extends Controller
             return ['data' => 'there is no student', 'status' => '210'];
         }
         $data=collect();
+
+        $cuurentYear=Carbon::now()->year;
+
         foreach($Employees as $emp){
             $account=$emp->owner;
+            $date=explode('-',$emp->birthday);
+            $age=$cuurentYear-$date[0];
             $data->push([
                 'fullName' => $emp->fullName,
                 'gender' => $emp->gender,
                 'birthday' =>$emp->birthday,
+                'age'=>$age,
                 'phone' => $emp->phone,
                 'location' => $emp->location,
                 'healthInfo' => $emp->healthInfo,
                 'degree' => $emp->degree,
+                'specialization'=>$emp->specialization,
                 'account_info'=>$account
             ]);
         }
@@ -103,15 +110,20 @@ class EmployeeController extends Controller
     {
         $emp = Employee::findOrFail($id);
         $account=$emp->owner;
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$emp->birthday);
+        $age=$cuurentYear-$date[0];
         $data=collect();
         $data->push([
             'fullName' => $emp->fullName,
             'gender' => $emp->gender,
             'birthday' =>$emp->birthday,
+            'age'=>$age,
             'phone' => $emp->phone,
             'location' => $emp->location,
             'healthInfo' => $emp->healthInfo,
             'degree' => $emp->degree,
+            'specialization'=>$emp->specialization,
             'account_info'=>$account
         ]);
         return ['data' => $data, 'status' => '210'];
