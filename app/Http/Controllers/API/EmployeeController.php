@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
@@ -18,7 +18,29 @@ class EmployeeController extends Controller
         if ($Employees->isEmpty()) {
             return ['data' => 'there is no student', 'status' => '210'];
         }
-        return ['data' => $Employees, 'status' => '210'];
+        $data=collect();
+
+        $cuurentYear=Carbon::now()->year;
+
+        foreach($Employees as $emp){
+            $account=$emp->owner;
+            $date=explode('-',$emp->birthday);
+            $age=$cuurentYear-$date[0];
+            $data->push([
+                'fullName' => $emp->fullName,
+                'gender' => $emp->gender,
+                'birthday' =>$emp->birthday,
+                'age'=>$age,
+                'phone' => $emp->phone,
+                'location' => $emp->location,
+                'healthInfo' => $emp->healthInfo,
+                'degree' => $emp->degree,
+                'specialization'=>$emp->specialization,
+                'account_info'=>$account
+            ]);
+        }
+
+        return ['data' => $data, 'status' => '210'];
     }
 
     public function store(Request $request)
@@ -33,16 +55,18 @@ class EmployeeController extends Controller
             'healthInfo' => ['sometimes','string','alpha', 'max:255'],
             'degree' => ['required','in:bachalor,bachalors,master'],
             'specialization'=>['sometimes'],
-            'role'=>['required','in:teacher,manager,employee,bus_supervisor']
+            'role'=>['required','in:teacher,manager,employee,bus_supervisor,admin']
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
-            'birthday' => $request->birthday,
+            'birthday' =>$date,
             'phone' => $request->phone,
             'location' => $request->location,
             'healthInfo' => $request->healthInfo,
@@ -84,8 +108,25 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-        $Employee = Employee::findOrFail($id);
-        return ['data' => $Employee, 'status' => '210'];
+        $emp = Employee::findOrFail($id);
+        $account=$emp->owner;
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$emp->birthday);
+        $age=$cuurentYear-$date[0];
+        $data=collect();
+        $data->push([
+            'fullName' => $emp->fullName,
+            'gender' => $emp->gender,
+            'birthday' =>$emp->birthday,
+            'age'=>$age,
+            'phone' => $emp->phone,
+            'location' => $emp->location,
+            'healthInfo' => $emp->healthInfo,
+            'degree' => $emp->degree,
+            'specialization'=>$emp->specialization,
+            'account_info'=>$account
+        ]);
+        return ['data' => $data, 'status' => '210'];
     }
 
 
@@ -108,10 +149,11 @@ class EmployeeController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $Employee->fullName = $request->fullName;
         $Employee->gender = $request->gender;
-        $Employee->birthday = $request->birthday;
+        $Employee->birthday = $date;
         $Employee->phone = $request->phone;
         $Employee->location = $request->location;
         $Employee->healthInfo = $request->healthInfo;

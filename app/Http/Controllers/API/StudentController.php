@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,29 @@ class StudentController extends Controller
         if ($students->isEmpty()) {
             return ['data' => 'there is no student', 'status' => '210'];
         }
-        return ['data' => $students, 'status' => '210'];
+        $cuurentYear=Carbon::now()->year;
+        $data=collect();
+        foreach($students as $std){
+            $account=$std->owner;
+            $date=explode('-',$std->birthday);
+            $age=$cuurentYear-$date[0];
+            $data->push([
+                'fullName' => $std->fullName,
+                'gender' => $std->gender,
+                'motherName' => $std->motherName,
+                'motherLastName' =>$std->motherLastName,
+                'birthday' => $std->birthday,
+                'age'=>$age,
+                'phone' =>$std->phone,
+                'location' => $std->location,
+                'siblingNo' => $std->siblingNo,
+                'healthInfo' => $std->healthInfo,
+                'bus_id'=>$std->bus_id,
+                'account_info'=>$account
+            ]);
+
+        }
+        return ['data' => $data, 'status' => '210'];
     }
 
     public function store(Request $request)
@@ -38,24 +61,26 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'sequenceNo' => ['required', 'numeric']
+            'bus_id'=>['required']
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
             'motherName' => $request->motherName,
             'motherLastName' => $request->motherLastName,
-            'birthday' => $request->birthday,
+            'birthday' =>$date,
             'phone' => $request->phone,
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,
             'healthInfo' => $request->healthInfo,
-            'sequenceNo' => $request->sequenceNo
-        ];
+            'bus_id'=>$request->bus_id
+                ];
         DB::beginTransaction();
         try {
             $std = Student::create($input);
@@ -91,8 +116,27 @@ class StudentController extends Controller
 
     public function show($id)
     {
-        $student = Student::findOrFail($id);
-        return ['data' => $student, 'status' => '210'];
+        $std = Student::findOrFail($id);
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$std->birthday);
+        $age=$cuurentYear-$date[0];
+        $data=collect();
+        $account=$std->owner;
+        $data->push([
+            'fullName' => $std->fullName,
+            'gender' => $std->gender,
+            'motherName' => $std->motherName,
+            'motherLastName' =>$std->motherLastName,
+            'birthday' => $std->birthday,
+            'age' =>$age,
+            'phone' =>$std->phone,
+            'location' => $std->location,
+            'siblingNo' => $std->siblingNo,
+            'healthInfo' => $std->healthInfo,
+            'bus_id'=>$std->bus_id,
+            'account_info'=>$account
+        ]);
+        return ['data' => $data, 'status' => '210'];
     }
 
 
@@ -110,23 +154,25 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'sequenceNo' => ['required', 'numeric']
+            'bus_id'=>['required']
+
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+        $myDate =  $request->birthday;
+        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
         $student->fullName = $request->fullName;
         $student->gender = $request->gender;
         $student->motherName = $request->motherName;
         $student->motherLastName = $request->motherLastName;
-        $student->birthday = $request->birthday;
+        $student->birthday = $date;
         $student->phone = $request->phone;
         $student->location = $request->location;
         $student->siblingNo = $request->siblingNo;
         $student->healthInfo = $request->healthInfo;
-        $student->sequenceNo = $request->sequenceNo;
+        $student->bus_id=$request->bus_id;
         $student->save();
         $res = collect();
         $res->push([

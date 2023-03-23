@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\{
     AuthController,
     EmployeeController,
-    StudentController
+    StudentController,
+    BusController
 };
+use App\Models\Bus;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -42,10 +45,7 @@ Route::middleware([
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-Route::middleware([
-    'auth:sanctum',
-    'isManager'
-])->group(function () {
+Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
     Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
     Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
     Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
@@ -54,28 +54,39 @@ Route::middleware([
 
 Route::middleware([
     'auth:sanctum',
+    'isEmployee',
+])->group(function () {
+    Route::post('/buses/store', [BusController::class, 'store']);
+    Route::get('/buses',         [BusController::class, 'index']);
+    Route::post('/buses/{id}',   [BusController::class, 'update']);
+    Route::delete('/buses/{id}', [BusController::class, 'destroy']);
+});
+
+
+Route::middleware([
+    'auth:sanctum',
     'isAdmin',
 ])->group(function () {
     //registry
     Route::post('/student/store', [StudentController::class, 'store']);
-    Route::get('/students', [StudentController::class, 'index']);
-    Route::get('/student/{id}', [StudentController::class, 'show']);
-    Route::post('/student/{id}', [StudentController::class, 'update']);
+    Route::get('/students',        [StudentController::class, 'index']);
+    Route::get('/student/{id}',    [StudentController::class, 'show']);
+    Route::post('/student/{id}',   [StudentController::class, 'update']);
     Route::delete('/student/{id}', [StudentController::class, 'destroy']);
 
 
     //recruit
-    Route::post('/employee/store', [EmployeeController::class, 'store']);
-    Route::get('/employees', [EmployeeController::class, 'index']);
-    Route::get('/employee/{id}', [EmployeeController::class, 'show']);
-    Route::post('/employee/{id}', [EmployeeController::class, 'update']);
+    Route::post('/employee/store',  [EmployeeController::class, 'store']);
+    Route::get('/employees',        [EmployeeController::class, 'index']);
+    Route::get('/employee/{id}',    [EmployeeController::class, 'show']);
+    Route::post('/employee/{id}',   [EmployeeController::class, 'update']);
     Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
 
 
     //user management
     // Route::post('/user/store', [App\Http\Controllers\API\UserController::class, 'store']);
-    Route::get('/users', [UserController::class, 'index']);
-    Route::post('/user/{id}', [UserController::class, 'update']);
+    Route::get('/users',        [UserController::class, 'index']);
+    Route::post('/user/{id}',   [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
 });
 /**
@@ -112,3 +123,8 @@ Route::middleware([
  *   PUT|PATCH http://127.0.0.1:8000/api/subject/{subject} ==> subject.update
  *   DELETE    http://127.0.0.1:8000/api/subject/{subject} ==> subject.destroy
  */
+
+
+
+
+Route::get('/supervisors',        [BusController::class, 'allBusSupervisor']);
