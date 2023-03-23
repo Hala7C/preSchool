@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fees_config', function (Blueprint $table) {
+        Schema::create('year_config', function (Blueprint $table) {
             $table->id();
-            $table->date("date");
-            $table->bigInteger("amount");
-            $table->unique(['date', 'amount']);
+            $table->year('year');
+            $table->bigInteger("study_fees");
+            $table->bigInteger("bus_fees");
+            $table->decimal("discount_bus");
+            $table->decimal("discount_without_bus");
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fees_config');
+        Schema::dropIfExists('year_config');
     }
 };

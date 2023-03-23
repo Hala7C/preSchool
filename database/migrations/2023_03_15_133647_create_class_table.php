@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("name");
             $table->integer("capacity");
             $table->foreignId("level_id")->constrained("level")->cascadeOnDelete();
+            $table->unique(['name', 'level_id']);
             $table->timestamps();
         });
     }

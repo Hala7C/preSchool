@@ -22,9 +22,9 @@ class ClassController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|alpha|max:255',
+            'name'     => 'required|alpha|max:255|unique',
             'capacity' => 'required|integer',
-            'level_id' => 'required|exists:level,id'
+            'level_id' => 'required|exists:level,id',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -52,7 +52,7 @@ class ClassController extends Controller
         $class = Classe::findOrFail($id);
         $validator = Validator::make($request->all(), [
             [
-                'name'     => 'sometimes|required|alpha',
+                'name'     => 'sometimes|required|alpha|unique',
                 'capacity' => 'sometimes|required|numeric',
                 'level_id' => 'sometimes|exists:level,id'
             ]

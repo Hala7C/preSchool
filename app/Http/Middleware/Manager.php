@@ -17,15 +17,11 @@ class Manager
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::user()->role === 'manager')
-        {
+        if (Auth::user()->role === 'manager') {
             return $next($request);
-        }
-        else
-        {
+        } else {
 
-         return redirect()->route('logout1');
-
+            return redirect()->route('logout1');
         }
     }
 }

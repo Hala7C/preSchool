@@ -21,7 +21,7 @@ class LevelController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'alpha', 'max:255'],
+            'name' => ['required', 'alpha', 'max:255', 'unique'],
             'age' => ['required', 'integer', 'between:4,6']
         ]);
         if ($validator->fails()) {
