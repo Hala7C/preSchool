@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('student_fees', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount');
-            $table->decimal('remaind');
+            $table->bigInteger('amount');
+            $table->bigInteger('remaind');
             $table->foreignId('student_id')->constrained('student');
             $table->timestamps();
         });

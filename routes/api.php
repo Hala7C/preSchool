@@ -12,9 +12,11 @@ use App\Http\Controllers\API\{
     AuthController,
     EmployeeController,
     StudentController,
-    BusController
+    BusController,
+    StudentFeesController
 };
 use App\Models\Bus;
+use App\Models\StudentFees;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,3 +130,8 @@ Route::middleware([
 
 
 Route::get('/supervisors',        [BusController::class, 'allBusSupervisor']);
+Route::post('/studentFees/store', [StudentFeesController::class, 'store']);
+Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
+
+Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
+Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
