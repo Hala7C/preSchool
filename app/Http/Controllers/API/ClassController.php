@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ClassController extends Controller
 {
@@ -21,10 +22,17 @@ class ClassController extends Controller
     public function store(Request $request)
     {
         //
+
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|alpha|max:255|unique',
-            'capacity' => 'required|integer',
-            'level_id' => 'required|exists:level,id',
+            'name' => ['required', 'alpha', 'max:255', Rule::unique('class')->where(function ($query) use ($request) {
+                return $query->where('name', $request->name)
+                    ->where('level_id', $request->level_id);
+            })],
+            'capacity' => ['required', 'integer'],
+            'level_id' => ['required', 'exists:level,id'],
+        ], [
+            'name.unique' => 'This name of class is already exists in this level :(',
+            'required' => 'The field (:attribute) is required ',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -50,12 +58,17 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         $class = Classe::findOrFail($id);
+
         $validator = Validator::make($request->all(), [
-            [
-                'name'     => 'sometimes|required|alpha|unique',
-                'capacity' => 'sometimes|required|numeric',
-                'level_id' => 'sometimes|exists:level,id'
-            ]
+            'name' => ['sometimes', 'required', 'alpha', 'max:255', Rule::unique('class')->where(function ($query) use ($request) {
+                return $query->where('name', $request->name)
+                    ->where('level_id', $request->level_id);
+            })],
+            'capacity' => ['sometimes', 'required', 'integer'],
+            'level_id' => ['sometimes', 'required', 'exists:level,id'],
+        ], [
+            'name.unique' => 'This name of class is already exists in this level :(',
+            'required' => 'The field (:attribute) is required ',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);

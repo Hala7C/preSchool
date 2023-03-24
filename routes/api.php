@@ -45,12 +45,12 @@ Route::middleware([
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
-    Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
-    Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
-    Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
-    Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
-});
+//Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
+Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
+Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
+Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
+Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
+//});
 
 Route::middleware([
     'auth:sanctum',
