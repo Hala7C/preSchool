@@ -21,8 +21,12 @@ class LevelController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'alpha', 'max:255', 'unique'],
+            'name' => ['required', 'unique:level,name', 'alpha', 'max:255',],
             'age' => ['required', 'integer', 'between:4,6']
+        ], [
+            'name.unique' => 'This Level is Already Exists',
+            'required' => 'The field (:attribute) is required ',
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -46,14 +50,18 @@ class LevelController extends Controller
     public function update(Request $request, $id)
     {
         $level = Level::findOrFail($id);
-        $request->validate([
-
-            'name' => 'sometimes|required|alpha|max:255',
-            'age' => 'sometimes|required|integer|between:4,6'
+        $validator = Validator::make($request->all(), [
+            'name' => ['sometimes', 'required', 'unique:level,name', 'alpha', 'max:255',],
+            'age' => ['sometimes', 'required', 'integer', 'between:4,6']
+        ], [
+            'name.unique' => 'This Level is Already Exists',
+            'required' => 'The field (:attribute) is required ',
 
         ]);
-
-        $level->update($request->all());
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        } else
+            $level->update($request->all());
         return ['data' => $level, 'status' => '210'];
     }
 

@@ -12,6 +12,10 @@ class Level extends Model
     protected $fillable = [
         'name', 'age'
     ];
+    protected $casts = [
+        'age' => 'int',
+
+    ];
     public function classes()
     {
         return $this->hasMany(Classe::class, 'level_id', 'id');

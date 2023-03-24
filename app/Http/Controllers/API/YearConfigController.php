@@ -26,7 +26,7 @@ class YearConfigController extends Controller
             'bus_fees' => 'required|integer',
             'discount_bus' => 'required',
             'discount_without_bus' => 'required',
-        ]);
+        ], ['required' => 'The field (:attribute) is required ',]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         } else {
@@ -61,7 +61,7 @@ class YearConfigController extends Controller
             'discount_bus' => 'sometimes|required',
             'discount_without_bus' => 'sometimes|required',
 
-        ]);
+        ], ['required' => 'The field (:attribute) is required ',]);
 
         $config->update($request->all());
         return ['data' => $config, 'status' => '210'];

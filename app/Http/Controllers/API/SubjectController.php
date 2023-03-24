@@ -20,16 +20,23 @@ class SubjectController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|alpha|max:255',
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|alpha|max:255|unique:subject,name',
 
-        ]);
+            ],
+            [
+                'name.unique' => 'This subject is already exists :(',
+                'required' => 'The field (:attribute) is required ',
+            ]
+        );
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         } else {
             $input = [
                 'name' => $request->name,
-                'age' => $request->age,
+
             ];
             $subject = Subject::create($input);
             return ['data' => $subject, 'status' => '210'];
@@ -49,8 +56,11 @@ class SubjectController extends Controller
         $subject = Subject::findOrFail($id);
         $request->validate([
 
-            'name' => 'sometimes|required|alpha|max:255',
+            'name' => 'sometimes|required|alpha|max:255|unique:subject,name',
 
+        ], [
+            'name.unique' => 'This name of class is already exists in this level :(',
+            'required' => 'The field (:attribute) is required ',
         ]);
 
         $subject->update($request->all());
