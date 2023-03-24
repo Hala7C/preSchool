@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('year_config', function (Blueprint $table) {
             $table->id();
-            $table->year('year');
+            $table->year('year')->unique();
             $table->bigInteger("study_fees");
             $table->bigInteger("bus_fees");
             $table->decimal("discount_bus");
