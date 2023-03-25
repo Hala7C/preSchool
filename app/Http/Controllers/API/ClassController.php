@@ -63,7 +63,7 @@ class ClassController extends Controller
             'name' => ['sometimes', 'required', 'alpha', 'max:255', Rule::unique('class')->where(function ($query) use ($request) {
                 return $query->where('name', $request->name)
                     ->where('level_id', $request->level_id);
-            })],
+            })->ignore($class->id)],
             'capacity' => ['sometimes', 'required', 'integer'],
             'level_id' => ['sometimes', 'required', 'exists:level,id'],
         ], [

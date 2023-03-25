@@ -58,7 +58,7 @@ class FeesStudentController extends Controller
             'date' => ['sometimes', 'required', 'date', Rule::unique('fees_config')->where(function ($query) use ($request) {
                 return $query->where('date', $request->date)
                     ->where('amount', $request->amount);
-            })],
+            }),],
             'amount' => ['sometimes', 'required', 'integer'],
         ], [
             'date.unique' => ' On this date, there is a specific amount that must be paid. Select another time and amount :(',
