@@ -31,6 +31,7 @@ class StudentController extends Controller
             $date=explode('-',$std->birthday);
             $age=$cuurentYear-$date[0];
             $data->push([
+                'id'=>$std->id,
                 'fullName' => $std->fullName,
                 'gender' => $std->gender,
                 'motherName' => $std->motherName,
@@ -123,6 +124,7 @@ class StudentController extends Controller
         $data=collect();
         $account=$std->owner;
         $data->push([
+            'id'=>$std->id,
             'fullName' => $std->fullName,
             'gender' => $std->gender,
             'motherName' => $std->motherName,

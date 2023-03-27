@@ -53,14 +53,14 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'alpha', 'max:255'],
             'role' => ['required', 'in:teacher,manager,employee,bus_supervisor,admin'],
-            'status' => ['required', 'in:active,suspended']
+            'status' => ['required', 'in:active,suspended'],
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ]);
-
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        if (isset($request->password)) {
-            $result = (new AuthController)->updatepassword($request, $id);
+        if (isset($request->photo)) {
+            $user->updateProfilePhoto($request->photo);
         }
         $user->update($request->all());
         // $user->name=$request->name;

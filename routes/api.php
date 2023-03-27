@@ -13,6 +13,7 @@ use App\Http\Controllers\API\{
     EmployeeController,
     StudentController,
     BusController,
+    UserController,
     StudentFeesController
 };
 use App\Models\Bus;
