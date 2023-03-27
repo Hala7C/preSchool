@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
@@ -54,15 +55,21 @@ class SubjectController extends Controller
     public function update(Request $request, $id)
     {
         $subject = Subject::findOrFail($id);
-        $request->validate([
+        $validator = Validator::make(
+            $request->all(),
+            [
 
-            'name' => 'sometimes|required|alpha|max:255|unique:subject,name',
+                'name' => ['sometimes', 'required', 'alpha', 'max:255', Rule::unique('subject', 'name')->ignore($subject->id),]
 
-        ], [
-            'name.unique' => 'This name of class is already exists in this level :(',
-            'required' => 'The field (:attribute) is required ',
-        ]);
-
+            ],
+            [
+                'name.unique' => 'This subject already exists  :(',
+                'required' => 'The field (:attribute) is required ',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         $subject->update($request->all());
         return ['data' => $subject, 'status' => '210'];
     }

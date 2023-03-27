@@ -54,19 +54,26 @@ class FeesStudentController extends Controller
     public function update(Request $request, $id)
     {
         $config = FeesConfig::findOrFail($id);
-        $request->validate([
-            'date' => ['sometimes', 'required', 'date', Rule::unique('fees_config')->where(function ($query) use ($request) {
-                return $query->where('date', $request->date)
-                    ->where('amount', $request->amount);
-            })],
-            'amount' => ['sometimes', 'required', 'integer'],
-        ], [
-            'date.unique' => ' On this date, there is a specific amount that must be paid. Select another time and amount :(',
-            'required' => 'The field (:attribute) is required ',
-        ]);
-
-        $config->update($request->all());
-        return ['data' => $config, 'status' => '210'];
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'date' => ['sometimes', 'required', 'date', Rule::unique('fees_config')->where(function ($query) use ($request) {
+                    return $query->where('date', $request->date)
+                        ->where('amount', $request->amount);
+                })->ignore($config->id),],
+                'amount' => ['sometimes', 'required', 'integer', Rule::unique('fees_config', 'amount')->ignore($config->id)],
+            ],
+            [
+                'date.unique' => ' On this date, there is a specific amount that must be paid. Select another time and amount :(',
+                'required' => 'The field (:attribute) is required ',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        } else {
+            $config->update($request->all());
+            return ['data' => $config, 'status' => '210'];
+        }
     }
 
 

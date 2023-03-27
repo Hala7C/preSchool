@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class LevelController extends Controller
 {
@@ -51,7 +52,7 @@ class LevelController extends Controller
     {
         $level = Level::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'name' => ['sometimes', 'required', 'unique:level,name', 'alpha', 'max:255',],
+            'name' => ['sometimes', 'required', 'alpha', 'max:255', Rule::unique('level', 'name')->ignore($level->id),],
             'age' => ['sometimes', 'required', 'integer', 'between:4,6']
         ], [
             'name.unique' => 'This Level is Already Exists',
@@ -60,8 +61,8 @@ class LevelController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
-        } else
-            $level->update($request->all());
+        }
+        $level->update($request->all());
         return ['data' => $level, 'status' => '210'];
     }
 
