@@ -27,6 +27,7 @@ class EmployeeController extends Controller
             $date=explode('-',$emp->birthday);
             $age=$cuurentYear-$date[0];
             $data->push([
+                'id'=>$emp->id,
                 'fullName' => $emp->fullName,
                 'gender' => $emp->gender,
                 'birthday' =>$emp->birthday,
@@ -115,6 +116,7 @@ class EmployeeController extends Controller
         $age=$cuurentYear-$date[0];
         $data=collect();
         $data->push([
+            'id'=>$emp->id,
             'fullName' => $emp->fullName,
             'gender' => $emp->gender,
             'birthday' =>$emp->birthday,
