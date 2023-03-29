@@ -59,10 +59,12 @@ Route::middleware([
     'auth:sanctum',
     'isEmployee',
 ])->group(function () {
+    Route::get('/supervisors',  [BusController::class, 'allBusSupervisor']);
     Route::post('/buses/store', [BusController::class, 'store']);
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
+
 });
 
 
@@ -130,9 +132,10 @@ Route::middleware([
 
 
 
-Route::get('/supervisors',        [BusController::class, 'allBusSupervisor']);
 Route::post('/studentFees/store', [StudentFeesController::class, 'store']);
 Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
 
 Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
+
+

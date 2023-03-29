@@ -16,7 +16,7 @@ class BusController extends Controller
     {
         $buses = Bus::all();
         if ($buses->isEmpty()) {
-            return ['data' => 'there is no student', 'status' => '210'];
+            return ['data' => 'there is no bus', 'status' => '210'];
         }
         return ['data' => $buses, 'status' => '210'];
     }
@@ -29,9 +29,14 @@ class BusController extends Controller
             'number' => 'required|integer',
             'bus_supervisor_id'=>'required'
         ]);
+        $emp=Employee::findOrFail($request->bus_supervisor_id);
+        $bus=Bus::findOrFail(1);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
+        }elseif($emp->bus!=null){
+            return response()->json('the supervisor is already assignmented to another bus', 400);
         } else {
+
             $input = [
                 'capacity' => $request->capacity,
                 'number'   => $request->number,
@@ -49,7 +54,7 @@ class BusController extends Controller
             [
                 'number'     => 'required|numeric',
                 'capacity' => 'required|numeric',
-                'bus_supervisor_id'=>'required'
+                'bus_supervisor_id'=>'somtimes|required'
             ]
         ]);
         if ($validator->fails()) {
@@ -71,12 +76,14 @@ class BusController extends Controller
         $supervisors_account=User::where('role','=','bus_supervisor')->get();
         $data=collect();
         foreach($supervisors_account as $supervisor){
+            $emp=$supervisor->ownerable;
+            if($emp->bus==null){
                 $data->push([
                     'id'=>$supervisor->id,
-                    'name'=>Employee::select('name')->where('id',$supervisor->id)->get()
+                    'name'=>$emp->fullName
                 ]);
         }
-
+    }
         return ['data' => $data, 'status' => '210'];
 
     }
@@ -86,4 +93,6 @@ class BusController extends Controller
         return ['data' => $students, 'status' => '210'];
 
     }
+
+
 }
