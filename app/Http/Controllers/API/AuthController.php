@@ -72,8 +72,15 @@ class AuthController extends Controller
 
         // return response()
         // ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer', 'user' => $user], 200);
-        return response()
-            ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
+        $data=collect();
+        $data->push([
+            'user'=>$user,
+            'access_token'=>$token,
+            'token_type'=>'Bearer'
+        ]);
+        return ['data'=>$data,'status'=>201];
+        // return response()
+        //     ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
     }
 
 
@@ -87,8 +94,9 @@ class AuthController extends Controller
     {
         $user->tokens()->delete();
 
-        return response()
-            ->json(['message' => 'You have successfully logged out and the token was successfully deleted'], 200);
+        // return response()
+        //     ->json(['message' => 'You have successfully logged out and the token was successfully deleted'], 200);
+            return ['data'=>'You have successfully logged out and the token was successfully deleted','status'=>200];
     }
 
 
@@ -133,8 +141,10 @@ class AuthController extends Controller
             'name' =>  $request->name,
         ])->save();
 
-        return response()
-            ->json(['message' => 'You have successfully update '], 200);
+        // return response()
+        //     ->json(['message' => 'You have successfully update '], 200);
+
+            return['data'=>'You have successfully update','status'=>200];
     }
     /////////////////////////////////////////updatepassword
 
