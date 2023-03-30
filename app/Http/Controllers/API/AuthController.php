@@ -104,8 +104,14 @@ class AuthController extends Controller
 
             'name'  => ['required', 'string', 'max:255'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-        ]);
-
+            'current_password' => ['sometimes','required', 'string'],
+            'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric(), 'confirmed'],
+        ])->after(function ($validator) use ($user, $request) {
+            if(isset($request->password)){
+            if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
+                $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
+            }}
+        });
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
@@ -113,7 +119,16 @@ class AuthController extends Controller
         if (isset($request->photo)) {
             $user->updateProfilePhoto($request->photo);
         }
-
+        if (isset($request->password)) {
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+            ])->save();
+            if (request()->hasSession()) {
+                request()->session()->put([
+                    'password_hash_' . Auth::getDefaultDriver() => Auth::user()->getAuthPassword(),
+                ]);
+            }
+        }
         $user->forceFill([
             'name' =>  $request->name,
         ])->save();
