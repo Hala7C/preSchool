@@ -182,6 +182,9 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return  auth()->user();
+        // return  auth()->user();
+
+        $user=User::findOrFail(Auth::user()->id);
+        return ['data'=>$user,'status'=>200];
     }
 }
