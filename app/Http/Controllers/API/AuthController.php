@@ -113,7 +113,7 @@ class AuthController extends Controller
             'name'  => ['required', 'string', 'max:255'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'current_password' => ['sometimes','required', 'string'],
-            'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric(), 'confirmed'],
+            'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
         ])->after(function ($validator) use ($user, $request) {
             if(isset($request->password)){
             if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
