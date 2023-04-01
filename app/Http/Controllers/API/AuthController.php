@@ -115,7 +115,7 @@ class AuthController extends Controller
             'current_password' => ['sometimes','required', 'string'],
             'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
         ])->after(function ($validator) use ($user, $request) {
-            if(isset($request->password)){
+            if($request->password!=null){
             if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
                 $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
             }}
