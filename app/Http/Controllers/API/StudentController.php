@@ -69,7 +69,7 @@ class StudentController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
+        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
@@ -102,16 +102,13 @@ class StudentController extends Controller
 
         $data = collect();
         $data->push([
+            'message' => 'added successfully',
             'student info' => $std,
             'account info' => $account,
             'pass' => $pass
         ]);
-        $res = collect();
-        $res->push([
-            'message' => 'added successfully',
-            'data' => $data
-        ]);
-        return ['data' => $res, 'status' => 210];
+
+        return ['data' => $data, 'status' => 210];
     }
 
 
@@ -164,7 +161,7 @@ class StudentController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
+        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $student->fullName = $request->fullName;
         $student->gender = $request->gender;
         $student->motherName = $request->motherName;
@@ -179,7 +176,7 @@ class StudentController extends Controller
         $res = collect();
         $res->push([
             'message' => 'updated successfully',
-            'data' => $student
+            'student_info' => $student
         ]);
         return ['data' => $res, 'status' => 210];
     }
