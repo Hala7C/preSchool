@@ -91,12 +91,23 @@ class EmployeeController extends Controller
             $status = 400;
             return ['data' => $data, 'status' => $status];
         }
-
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$emp->birthday);
+        $age=$cuurentYear-$date[0];
         $data = collect();
         $data->push([
             'message' => 'added successfully',
-            'Employee info' => $emp,
-            'account info' => $account,
+            'id'=>$emp->id,
+            'fullName' => $emp->fullName,
+            'gender' => $emp->gender,
+            'birthday' =>$emp->birthday,
+            'age'=>$age,
+            'phone' => $emp->phone,
+            'location' => $emp->location,
+            'healthInfo' => $emp->healthInfo,
+            'degree' => $emp->degree,
+            'specialization'=>$emp->specialization,
+            'account_info'=>$account,
             'pass' =>$pass
         ]);
 
@@ -160,9 +171,23 @@ class EmployeeController extends Controller
         $Employee->specialization=$request->specialization;
         $Employee->save();
         $res = collect();
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$Employee->birthday);
+        $age=$cuurentYear-$date[0];
+        $account=$Employee->owner;
         $res->push([
             'message' => 'updated successfully',
-            'employee_info' => $Employee
+            'id'=>$Employee->id,
+            'fullName' => $Employee->fullName,
+            'gender' =>$Employee->gender,
+            'birthday' =>$Employee->birthday,
+            'age'=>$age,
+            'phone' =>$Employee->phone,
+            'location' => $Employee->location,
+            'healthInfo' =>$Employee->healthInfo,
+            'degree' => $Employee->degree,
+            'specialization'=>$Employee->specialization,
+            'account_info'=>$account
         ]);
         return ['data' => $res, 'status' => 210];
     }

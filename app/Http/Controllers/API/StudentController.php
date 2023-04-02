@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -99,12 +97,25 @@ class StudentController extends Controller
             $status = 400;
             return ['data' => $data, 'status' => $status];
         }
-
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$std->birthday);
+        $age=$cuurentYear-$date[0];
         $data = collect();
         $data->push([
             'message' => 'added successfully',
-            'student info' => $std,
-            'account info' => $account,
+            'id'=>$std->id,
+            'fullName' => $std->fullName,
+            'gender' => $std->gender,
+            'motherName' => $std->motherName,
+            'motherLastName' =>$std->motherLastName,
+            'birthday' => $std->birthday,
+            'age' =>$age,
+            'phone' =>$std->phone,
+            'location' => $std->location,
+            'siblingNo' => $std->siblingNo,
+            'healthInfo' => $std->healthInfo,
+            'bus_id'=>$std->bus_id,
+            'account_info'=>$account,
             'pass' => $pass
         ]);
 
@@ -174,9 +185,26 @@ class StudentController extends Controller
         $student->bus_id=$request->bus_id;
         $student->save();
         $res = collect();
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$student->birthday);
+        $age=$cuurentYear-$date[0];
+        $data=collect();
+        $account=$student->owner;
         $res->push([
             'message' => 'updated successfully',
-            'student_info' => $student
+            'id'=>$student->id,
+            'fullName' => $student->fullName,
+            'gender' => $student->gender,
+            'motherName' => $student->motherName,
+            'motherLastName' =>$student->motherLastName,
+            'birthday' => $student->birthday,
+            'age' =>$age,
+            'phone' =>$student->phone,
+            'location' => $student->location,
+            'siblingNo' => $student->siblingNo,
+            'healthInfo' => $student->healthInfo,
+            'bus_id'=>$student->bus_id,
+            'account_info'=>$account
         ]);
         return ['data' => $res, 'status' => 210];
     }
