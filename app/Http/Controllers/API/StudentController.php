@@ -101,7 +101,7 @@ class StudentController extends Controller
         $date=explode('-',$std->birthday);
         $age=$cuurentYear-$date[0];
         $data = collect();
-        $data->push([
+        $data=([
             'message' => 'added successfully',
             'id'=>$std->id,
             'fullName' => $std->fullName,
@@ -131,7 +131,7 @@ class StudentController extends Controller
         $age=$cuurentYear-$date[0];
         $data=collect();
         $account=$std->owner;
-        $data->push([
+        $data=([
             'id'=>$std->id,
             'fullName' => $std->fullName,
             'gender' => $std->gender,
@@ -190,7 +190,7 @@ class StudentController extends Controller
         $age=$cuurentYear-$date[0];
         $data=collect();
         $account=$student->owner;
-        $res->push([
+        $res=([
             'message' => 'updated successfully',
             'id'=>$student->id,
             'fullName' => $student->fullName,
