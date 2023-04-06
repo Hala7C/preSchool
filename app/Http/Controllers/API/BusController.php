@@ -8,6 +8,7 @@ use App\Models\Bus;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class BusController extends Controller
 {
@@ -27,7 +28,7 @@ class BusController extends Controller
         $validator = Validator::make($request->all(), [
             'capacity' => 'required|integer',
             'number' => 'required|integer',
-            'bus_supervisor_id'=>'required'
+            'bus_supervisor_id' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -35,7 +36,7 @@ class BusController extends Controller
             $input = [
                 'capacity' => $request->capacity,
                 'number'   => $request->number,
-                'bus_supervisor_id'=>$request->bus_supervisor_id
+                'bus_supervisor_id' => $request->bus_supervisor_id
             ];
             $class = Bus::create($input);
             return ['data' => $class, 'status' => '210'];
@@ -49,7 +50,7 @@ class BusController extends Controller
             [
                 'number'     => 'required|numeric',
                 'capacity' => 'required|numeric',
-                'bus_supervisor_id'=>'required'
+                'bus_supervisor_id' => 'required'
             ]
         ]);
         if ($validator->fails()) {
@@ -67,23 +68,35 @@ class BusController extends Controller
         return ['message' => 'class deleted successfly'];
     }
 
-    public function allBusSupervisor(){
-        $supervisors_account=User::where('role','=','bus_supervisor')->get();
-        $data=collect();
-        foreach($supervisors_account as $supervisor){
-                $data->push([
-                    'id'=>$supervisor->id,
-                    'name'=>Employee::select('name')->where('id',$supervisor->id)->get()
-                ]);
+    public function allBusSupervisor()
+    {
+        $supervisors_account = User::where('role', '=', 'bus_supervisor')->get();
+        $data = collect();
+        foreach ($supervisors_account as $supervisor) {
+            $data->push([
+                'id' => $supervisor->id,
+                'name' => Employee::select('name')->where('id', $supervisor->id)->get()
+            ]);
         }
 
         return ['data' => $data, 'status' => '210'];
-
     }
-    public function allStudent($id){
-        $bus=Bus::find($id);
-        $students=$bus->students()->get();
+    public function allStudent($id)
+    {
+        $bus = Bus::find($id);
+        $students = $bus->students()->get();
         return ['data' => $students, 'status' => '210'];
-
     }
+    // public function showTrack(Bus $bus)
+    // {
+    //     $busTrack = $bus->busTrack()->select([
+    //         'id',
+    //         'order_id',
+    //         'status',
+    //         DB::raw("ST_Y(current_location) AS lat"),
+    //         DB::raw("ST_X(current_location) AS lng"),
+    //     ])->first();
+
+    //     return $busTrack;
+    // }
 }

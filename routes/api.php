@@ -16,6 +16,7 @@ use App\Http\Controllers\API\{
     StudentFeesController
 };
 use App\Models\Bus;
+use App\Models\BusTrack;
 use App\Models\StudentFees;
 
 /*
@@ -135,3 +136,7 @@ Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
 
 Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
+
+Route::get('/vrp', [App\Http\Controllers\API\VRPController::class, 'vrp']);
+Route::get('/busTrack/show', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
+Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
