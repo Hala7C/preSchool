@@ -40,7 +40,7 @@ class BusLocationUpdated
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('busTrack' . $this->busTrack->bus_id);
+        return new PrivateChannel('private-busTrack' . $this->busTrack->bus_id);
     }
 
     public function broadcastWith()
