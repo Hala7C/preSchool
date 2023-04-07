@@ -72,8 +72,15 @@ class AuthController extends Controller
 
         // return response()
         // ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer', 'user' => $user], 200);
-        return response()
-            ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
+        $data=collect();
+        $data->push([
+            'user'=>$user,
+            'access_token'=>$token,
+            'token_type'=>'Bearer'
+        ]);
+        return ['data'=>$data,'status'=>201];
+        // return response()
+        //     ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
     }
 
 
@@ -87,8 +94,9 @@ class AuthController extends Controller
     {
         $user->tokens()->delete();
 
-        return response()
-            ->json(['message' => 'You have successfully logged out and the token was successfully deleted'], 200);
+        // return response()
+        //     ->json(['message' => 'You have successfully logged out and the token was successfully deleted'], 200);
+            return ['data'=>'You have successfully logged out and the token was successfully deleted','status'=>200];
     }
 
 
@@ -104,8 +112,14 @@ class AuthController extends Controller
 
             'name'  => ['required', 'string', 'max:255'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-        ]);
-
+            'current_password' => ['sometimes','required', 'string'],
+            'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
+        ])->after(function ($validator) use ($user, $request) {
+            if($request->password!=null){
+            if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
+                $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
+            }}
+        });
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
@@ -113,13 +127,24 @@ class AuthController extends Controller
         if (isset($request->photo)) {
             $user->updateProfilePhoto($request->photo);
         }
-
+        if (isset($request->password)) {
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+            ])->save();
+            if (request()->hasSession()) {
+                request()->session()->put([
+                    'password_hash_' . Auth::getDefaultDriver() => Auth::user()->getAuthPassword(),
+                ]);
+            }
+        }
         $user->forceFill([
             'name' =>  $request->name,
         ])->save();
 
-        return response()
-            ->json(['message' => 'You have successfully update '], 200);
+        // return response()
+        //     ->json(['message' => 'You have successfully update '], 200);
+
+            return['data'=>'You have successfully update','status'=>200];
     }
     /////////////////////////////////////////updatepassword
 
@@ -157,6 +182,9 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return  auth()->user();
+        // return  auth()->user();
+
+        $user=User::findOrFail(Auth::user()->id);
+        return ['data'=>$user,'status'=>200];
     }
 }

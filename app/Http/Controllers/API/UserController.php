@@ -54,14 +54,11 @@ class UserController extends Controller
             'name' => ['required', 'alpha', 'max:255'],
             'role' => ['required', 'in:teacher,manager,employee,bus_supervisor,admin'],
             'status' => ['required', 'in:active,suspended']
-        ]);
-
+                ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        if (isset($request->password)) {
-            $result = (new AuthController)->updatepassword($request, $id);
-        }
+
         $user->update($request->all());
         // $user->name=$request->name;
         // $user->role=$request->role;

@@ -27,6 +27,7 @@ class EmployeeController extends Controller
             $date=explode('-',$emp->birthday);
             $age=$cuurentYear-$date[0];
             $data->push([
+                'id'=>$emp->id,
                 'fullName' => $emp->fullName,
                 'gender' => $emp->gender,
                 'birthday' =>$emp->birthday,
@@ -62,7 +63,7 @@ class EmployeeController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
+        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
@@ -90,19 +91,27 @@ class EmployeeController extends Controller
             $status = 400;
             return ['data' => $data, 'status' => $status];
         }
-
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$emp->birthday);
+        $age=$cuurentYear-$date[0];
         $data = collect();
-        $data->push([
-            'Employee info' => $emp,
-            'account info' => $account,
+        $data=([
+            'message' => 'added successfully',
+            'id'=>$emp->id,
+            'fullName' => $emp->fullName,
+            'gender' => $emp->gender,
+            'birthday' =>$emp->birthday,
+            'age'=>$age,
+            'phone' => $emp->phone,
+            'location' => $emp->location,
+            'healthInfo' => $emp->healthInfo,
+            'degree' => $emp->degree,
+            'specialization'=>$emp->specialization,
+            'account_info'=>$account,
             'pass' =>$pass
         ]);
-        $res = collect();
-        $res->push([
-            'message' => 'added successfully',
-            'data' => $data
-        ]);
-        return ['data' => $res, 'status' => 210];
+
+        return ['data' => $data, 'status' => 210];
     }
 
 
@@ -114,7 +123,8 @@ class EmployeeController extends Controller
         $date=explode('-',$emp->birthday);
         $age=$cuurentYear-$date[0];
         $data=collect();
-        $data->push([
+        $data=([
+            'id'=>$emp->id,
             'fullName' => $emp->fullName,
             'gender' => $emp->gender,
             'birthday' =>$emp->birthday,
@@ -150,7 +160,7 @@ class EmployeeController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
+        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $Employee->fullName = $request->fullName;
         $Employee->gender = $request->gender;
         $Employee->birthday = $date;
@@ -161,9 +171,23 @@ class EmployeeController extends Controller
         $Employee->specialization=$request->specialization;
         $Employee->save();
         $res = collect();
-        $res->push([
-            'message' => 'added successfully',
-            'data' => $Employee
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$Employee->birthday);
+        $age=$cuurentYear-$date[0];
+        $account=$Employee->owner;
+        $res=([
+            'message' => 'updated successfully',
+            'id'=>$Employee->id,
+            'fullName' => $Employee->fullName,
+            'gender' =>$Employee->gender,
+            'birthday' =>$Employee->birthday,
+            'age'=>$age,
+            'phone' =>$Employee->phone,
+            'location' => $Employee->location,
+            'healthInfo' =>$Employee->healthInfo,
+            'degree' => $Employee->degree,
+            'specialization'=>$Employee->specialization,
+            'account_info'=>$account
         ]);
         return ['data' => $res, 'status' => 210];
     }

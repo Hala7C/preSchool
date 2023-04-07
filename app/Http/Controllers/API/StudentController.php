@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -31,6 +29,7 @@ class StudentController extends Controller
             $date=explode('-',$std->birthday);
             $age=$cuurentYear-$date[0];
             $data->push([
+                'id'=>$std->id,
                 'fullName' => $std->fullName,
                 'gender' => $std->gender,
                 'motherName' => $std->motherName,
@@ -68,7 +67,7 @@ class StudentController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
+        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $input = [
             'fullName' => $request->fullName,
             'gender' => $request->gender,
@@ -98,19 +97,29 @@ class StudentController extends Controller
             $status = 400;
             return ['data' => $data, 'status' => $status];
         }
-
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$std->birthday);
+        $age=$cuurentYear-$date[0];
         $data = collect();
-        $data->push([
-            'student info' => $std,
-            'account info' => $account,
+        $data=([
+            'message' => 'added successfully',
+            'id'=>$std->id,
+            'fullName' => $std->fullName,
+            'gender' => $std->gender,
+            'motherName' => $std->motherName,
+            'motherLastName' =>$std->motherLastName,
+            'birthday' => $std->birthday,
+            'age' =>$age,
+            'phone' =>$std->phone,
+            'location' => $std->location,
+            'siblingNo' => $std->siblingNo,
+            'healthInfo' => $std->healthInfo,
+            'bus_id'=>$std->bus_id,
+            'account_info'=>$account,
             'pass' => $pass
         ]);
-        $res = collect();
-        $res->push([
-            'message' => 'added successfully',
-            'data' => $data
-        ]);
-        return ['data' => $res, 'status' => 210];
+
+        return ['data' => $data, 'status' => 210];
     }
 
 
@@ -122,7 +131,8 @@ class StudentController extends Controller
         $age=$cuurentYear-$date[0];
         $data=collect();
         $account=$std->owner;
-        $data->push([
+        $data=([
+            'id'=>$std->id,
             'fullName' => $std->fullName,
             'gender' => $std->gender,
             'motherName' => $std->motherName,
@@ -162,7 +172,7 @@ class StudentController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('m/d/Y', $myDate)->format('Y-m-d');
+        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $student->fullName = $request->fullName;
         $student->gender = $request->gender;
         $student->motherName = $request->motherName;
@@ -175,9 +185,26 @@ class StudentController extends Controller
         $student->bus_id=$request->bus_id;
         $student->save();
         $res = collect();
-        $res->push([
+        $cuurentYear=Carbon::now()->year;
+        $date=explode('-',$student->birthday);
+        $age=$cuurentYear-$date[0];
+        $data=collect();
+        $account=$student->owner;
+        $res=([
             'message' => 'updated successfully',
-            'data' => $student
+            'id'=>$student->id,
+            'fullName' => $student->fullName,
+            'gender' => $student->gender,
+            'motherName' => $student->motherName,
+            'motherLastName' =>$student->motherLastName,
+            'birthday' => $student->birthday,
+            'age' =>$age,
+            'phone' =>$student->phone,
+            'location' => $student->location,
+            'siblingNo' => $student->siblingNo,
+            'healthInfo' => $student->healthInfo,
+            'bus_id'=>$student->bus_id,
+            'account_info'=>$account
         ]);
         return ['data' => $res, 'status' => 210];
     }

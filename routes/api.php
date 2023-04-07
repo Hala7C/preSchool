@@ -13,6 +13,7 @@ use App\Http\Controllers\API\{
     EmployeeController,
     StudentController,
     BusController,
+    UserController,
     StudentFeesController
 };
 use App\Models\Bus;
@@ -43,8 +44,8 @@ Route::middleware([
     'auth:sanctum'
 ])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
-    Route::post('/profile/{id}/updatepassword', [AuthController::class, 'updatepassword']);
-    Route::post('/profile/{id}/update', [AuthController::class, 'updateProfile']);
+    // Route::post('/profile/{id}/updatepassword', [AuthController::class, 'updatepassword']);
+    Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
@@ -59,6 +60,7 @@ Route::middleware([
     'auth:sanctum',
     'isEmployee',
 ])->group(function () {
+    Route::get('/supervisors',  [BusController::class, 'allBusSupervisor']);
     Route::post('/buses/store', [BusController::class, 'store']);
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
@@ -130,7 +132,6 @@ Route::middleware([
 
 
 
-Route::get('/supervisors',        [BusController::class, 'allBusSupervisor']);
 Route::post('/studentFees/store', [StudentFeesController::class, 'store']);
 Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
 
