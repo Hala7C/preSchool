@@ -30,11 +30,11 @@ class BusController extends Controller
             'number' => 'required|integer',
             'bus_supervisor_id' => 'required'
         ]);
-        $emp=Employee::findOrFail($request->bus_supervisor_id);
-        $bus=Bus::findOrFail(1);
+        $emp = Employee::findOrFail($request->bus_supervisor_id);
+        $bus = Bus::findOrFail(1);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
-        }elseif($emp->bus!=null){
+        } elseif ($emp->bus != null) {
             return response()->json('the supervisor is already assignmented to another bus', 400);
         } else {
 
@@ -55,7 +55,7 @@ class BusController extends Controller
             [
                 'number'     => 'required|numeric',
                 'capacity' => 'required|numeric',
-                'bus_supervisor_id'=>'somtimes|required'
+                'bus_supervisor_id' => 'somtimes|required'
             ]
         ]);
         if ($validator->fails()) {
@@ -73,30 +73,19 @@ class BusController extends Controller
         return ['message' => 'class deleted successfly'];
     }
 
-<<<<<<< HEAD
     public function allBusSupervisor()
     {
         $supervisors_account = User::where('role', '=', 'bus_supervisor')->get();
         $data = collect();
         foreach ($supervisors_account as $supervisor) {
-            $data->push([
-                'id' => $supervisor->id,
-                'name' => Employee::select('name')->where('id', $supervisor->id)->get()
-            ]);
-=======
-    public function allBusSupervisor(){
-        $supervisors_account=User::where('role','=','bus_supervisor')->get();
-        $data=collect();
-        foreach($supervisors_account as $supervisor){
-            $emp=$supervisor->ownerable;
-            if($emp->bus==null){
+            $emp = $supervisor->ownerable;
+            if ($emp->bus == null) {
                 $data->push([
-                    'id'=>$supervisor->id,
-                    'name'=>$emp->fullName
+                    'id' => $supervisor->id,
+                    'name' => $emp->fullName
                 ]);
->>>>>>> 6c57ecd3bbd280acd0ea672624754ca6e832e64f
+            }
         }
-    }
         return ['data' => $data, 'status' => '210'];
     }
     public function allStudent($id)
@@ -105,21 +94,4 @@ class BusController extends Controller
         $students = $bus->students()->get();
         return ['data' => $students, 'status' => '210'];
     }
-<<<<<<< HEAD
-    // public function showTrack(Bus $bus)
-    // {
-    //     $busTrack = $bus->busTrack()->select([
-    //         'id',
-    //         'order_id',
-    //         'status',
-    //         DB::raw("ST_Y(current_location) AS lat"),
-    //         DB::raw("ST_X(current_location) AS lng"),
-    //     ])->first();
-
-    //     return $busTrack;
-    // }
-=======
-
-
->>>>>>> 6c57ecd3bbd280acd0ea672624754ca6e832e64f
 }
