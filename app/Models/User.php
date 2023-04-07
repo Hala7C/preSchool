@@ -32,7 +32,7 @@ class User extends Authenticatable
         'status',
         'ownerable_id',
         'ownerable_type'
-        ];
+    ];
 
     /**
      * The attributes that should be hidden for serialization.

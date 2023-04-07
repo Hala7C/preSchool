@@ -138,5 +138,6 @@ Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 
 Route::get('/vrp', [App\Http\Controllers\API\VRPController::class, 'vrp']);
-Route::get('/busTrack/show', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
+
+Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);

@@ -12,14 +12,14 @@ class BusTrackingController extends Controller
 {
     public function show($id)
     {
-        $delivery = BusTrack::query()->select([
+        $busTrack = BusTrack::query()->select([
             'id',
             'bus_id',
             'lng',
             'lat'
         ])->where('id', $id)
             ->firstOrFail();
-        return $delivery;
+        return $busTrack;
     }
     public function update(Request $request, BusTrack $busTrack)
     {

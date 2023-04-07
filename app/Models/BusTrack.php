@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BusTrack extends Model
 {
     use HasFactory;
+    protected $table = "track_bus";
     protected $fillable = [
         'bus_id', 'lng', 'lat',
     ];
