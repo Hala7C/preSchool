@@ -13,7 +13,9 @@ class Bus extends Model
     protected $fillable = [
         'capacity', 'number','bus_supervisor_id'
     ];
-
+    // protected $casts = [
+    //     'settings' => 'array'
+    // ];
     public function supervisor(){
         return $this->belongsTo(Employee::class,'bus_supervisor_id','id');
     }
@@ -21,4 +23,6 @@ class Bus extends Model
     public function students(){
         return $this->hasMany(Student::class,'bus_id','id');
     }
+
+
 }

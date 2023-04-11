@@ -14,9 +14,12 @@ use App\Http\Controllers\API\{
     StudentController,
     BusController,
     UserController,
-    StudentFeesController
+    StudentFeesController,
+    VRPPython,
+    SchoolController
 };
 use App\Models\Bus;
+use App\Models\Student;
 use App\Models\StudentFees;
 
 /*
@@ -47,6 +50,8 @@ Route::middleware([
     Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::post('/update/student/location',[Student::class,'updateStudentLocation']);
 });
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
@@ -64,7 +69,9 @@ Route::middleware([
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
-
+    Route::get('/buses/students/{id}',[BusController::class,'allStudent']);
+    Route::get('/buses/students',[BusController::class,'allBusStudent']);
+    Route::get('/vrp', [VRPPython::class, 'testPythonScript']);
 });
 
 
@@ -93,7 +100,15 @@ Route::middleware([
     Route::get('/users',        [UserController::class, 'index']);
     Route::post('/user/{id}',   [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
+
+
+    //school management
+    Route::post('/school/store',  [SchoolController::class, 'store']);
+    Route::get('/school/{id}',        [SchoolController::class, 'show']);
+    Route::post('/school/{id}',   [SchoolController::class, 'update']);
+    Route::delete('/school/{id}', [SchoolController::class, 'destroy']);
 });
+
 /**
  *
  *                    **********Class Route **********
@@ -134,7 +149,6 @@ Route::middleware([
 
 Route::post('/studentFees/store', [StudentFeesController::class, 'store']);
 Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
-
 Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 

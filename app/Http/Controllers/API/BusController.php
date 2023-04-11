@@ -94,5 +94,16 @@ class BusController extends Controller
 
     }
 
+    public function allBusStudent(){
+        $busses=Bus::all();
+        $data =collect();
+        foreach($busses as $b){
+            $data->push([
+                'bus_id'=>$b->id,
+                'students_list'=>$b->students()->get()
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
 
+    }
 }

@@ -12,7 +12,8 @@ class Student extends Model
     use HasFactory;
     public $table = "student";
     protected $fillable = [
-        'fullName', 'gender', 'age', 'motherName', 'motherLastName', 'birthday', 'phone', 'location', 'siblingNo', 'healthInfo','bus_id'
+        'fullName', 'gender', 'age', 'motherName', 'motherLastName', 'birthday', 'phone', 'location', 'siblingNo', 'healthInfo','bus_id',
+        'lng','lat'
     ];
 
 
