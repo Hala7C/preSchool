@@ -11,17 +11,21 @@ class Bus extends Model
     use HasFactory;
     public $table = "bus";
     protected $fillable = [
-        'capacity', 'number','bus_supervisor_id'
+        'capacity', 'number', 'bus_supervisor_id'
     ];
-    // protected $casts = [
-    //     'settings' => 'array'
-    // ];
-    public function supervisor(){
-        return $this->belongsTo(Employee::class,'bus_supervisor_id','id');
+
+    public function supervisor()
+    {
+        return $this->belongsTo(Employee::class, 'bus_supervisor_id', 'id');
     }
 
-    public function students(){
-        return $this->hasMany(Student::class,'bus_id','id');
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'bus_id', 'id');
+    }
+    public function busTrack()
+    {
+        return $this->hasMany(BusTrack::class, 'bus_id', 'id');
     }
 
 
