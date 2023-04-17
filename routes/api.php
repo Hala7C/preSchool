@@ -9,6 +9,7 @@ use App\Models\FeesConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\{
+    AnswerController,
     AuthController,
     EmployeeController,
     StudentController,
@@ -16,11 +17,15 @@ use App\Http\Controllers\API\{
     UserController,
     StudentFeesController,
     VRPPython,
-    SchoolController
+    SchoolController,
+    CategoryController,
+    QuestionController,
+    QuizeController
 };
 use App\Models\Bus;
 use App\Models\Student;
 use App\Models\BusTrack;
+use App\Models\Question;
 use App\Models\StudentFees;
 
 /*
@@ -39,7 +44,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
-
+Route::post('/questions',[QuestionController::class,'store']);
 
 
 
@@ -51,9 +56,10 @@ Route::middleware([
     Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::post('/update/student/location',[Student::class,'updateStudentLocation']);
 });
+
+Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum','isBusRegistry']);
+
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
 Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
@@ -70,18 +76,17 @@ Route::middleware([
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
-    Route::get('/buses/students/{id}',[BusController::class,'allStudent']);
-    Route::get('/buses/students',[BusController::class,'allBusStudent']);
-    Route::get('/vrp', [VRPPython::class, 'testPythonScript']);
+    Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
+    Route::get('/buses/students', [BusController::class, 'allBusStudent']);
+    Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware('isStudentDistributed');
 });
-
+Route::post('/student/store', [StudentController::class, 'store']);
 
 Route::middleware([
     'auth:sanctum',
     'isAdmin',
 ])->group(function () {
     //registry
-    Route::post('/student/store', [StudentController::class, 'store']);
     Route::get('/students',        [StudentController::class, 'index']);
     Route::get('/student/{id}',    [StudentController::class, 'show']);
     Route::post('/student/{id}',   [StudentController::class, 'update']);
@@ -153,7 +158,13 @@ Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
 Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 
-Route::get('/vrp', [App\Http\Controllers\API\VRPController::class, 'vrp']);
 
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
+
+
+Route::apiResource('categories',  CategoryController::class);
+Route::apiResource('answers',  AnswerController::class);
+
+
+

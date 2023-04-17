@@ -40,6 +40,7 @@ class StudentController extends Controller
                 'location' => $std->location,
                 'siblingNo' => $std->siblingNo,
                 'healthInfo' => $std->healthInfo,
+                'bus_registry'=>$std->bus_registry,
                 'bus_id'=>$std->bus_id,
                 'lng'=>$std->lng,
                 'lat'=>$std->lat,
@@ -62,7 +63,7 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            // 'bus_id'=>['required']
+            'bus_registry'=>['required','boolean']
         ]);
 
         if ($validator->fails()) {
@@ -80,7 +81,7 @@ class StudentController extends Controller
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,
             'healthInfo' => $request->healthInfo,
-            // 'bus_id'=>$request->bus_id
+            'bus_registry'=>$request->bus_registry
                 ];
         DB::beginTransaction();
         try {
@@ -116,7 +117,7 @@ class StudentController extends Controller
             'location' => $std->location,
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
-            // 'bus_id'=>$std->bus_id,
+            'bus_registry'=>$std->bus_registry,
             'account_info'=>$account,
             'pass' => $pass
         ]);
@@ -145,6 +146,7 @@ class StudentController extends Controller
             'location' => $std->location,
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
+            'bus_registry'=>$std->bus_registry,
             'bus_id'=>$std->bus_id,
             'lng'=>$std->lng,
             'lat'=>$std->lat,
@@ -168,7 +170,7 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            // 'bus_id'=>['required']
+            'bus_registry'=>['required','boolean']
 
         ]);
 
@@ -207,7 +209,7 @@ class StudentController extends Controller
             'location' => $student->location,
             'siblingNo' => $student->siblingNo,
             'healthInfo' => $student->healthInfo,
-            // 'bus_id'=>$student->bus_id,
+            'bus_registry'=>$student->bus_registry,
             'account_info'=>$account
         ]);
         return ['data' => $res, 'status' => 210];

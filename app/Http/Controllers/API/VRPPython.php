@@ -55,13 +55,14 @@ public function testPythonScript()
         $cap= $b[0];
         $bus=Bus::where('capacity','=',$cap)->get();
         foreach($b[1] as $std){
-            if($std==0){
-                continue;
-            }
-            $student_id=$students[$std]->id;
+
+            if($std!=0){
+                          $student_id=$students[$std-1]->id;
             $student=Student::findOrFail($student_id);
             $student->bus_id=$bus[0]->id;
             $student->save();
+            }
+
 
         }
     }

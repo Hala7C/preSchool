@@ -13,7 +13,7 @@ class Student extends Model
     public $table = "student";
     protected $fillable = [
         'fullName', 'gender', 'age', 'motherName', 'motherLastName', 'birthday', 'phone', 'location', 'siblingNo', 'healthInfo','bus_id',
-        'lng','lat'
+        'lng','lat','bus_registry'
     ];
 
 

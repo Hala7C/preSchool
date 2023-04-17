@@ -31,7 +31,6 @@ class BusController extends Controller
             'bus_supervisor_id' => 'required'
         ]);
         $emp = Employee::findOrFail($request->bus_supervisor_id);
-        $bus = Bus::findOrFail(1);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         } elseif ($emp->bus != null) {

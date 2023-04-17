@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\API;
+use App\Http\Controllers\Controller;
 
 use App\Events\BusLocationUpdated;
-use App\Http\Controllers\Controller;
 use App\Models\BusTrack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
