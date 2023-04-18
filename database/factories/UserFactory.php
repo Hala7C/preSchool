@@ -43,7 +43,15 @@ class UserFactory extends Factory
             //     return ;}
         ];
     }
-    public function ownerable()
+
+    public function busSupervisor()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'bus_supervisor',
+            ];
+        });
+    }    public function ownerable()
     {
         return $this->faker->randomElement([
             Student::class,

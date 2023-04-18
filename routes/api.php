@@ -78,7 +78,7 @@ Route::middleware([
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
     Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
     Route::get('/buses/students', [BusController::class, 'allBusStudent']);
-    Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware('isStudentDistributed');
+    Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed','isBusExist','BusCapacities']);
 });
 Route::post('/student/store', [StudentController::class, 'store']);
 
