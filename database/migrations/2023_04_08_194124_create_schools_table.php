@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\DB;
 return new class extends Migration
 {
     /**
@@ -21,6 +21,15 @@ return new class extends Migration
             $table->bigInteger('phone');
             $table->timestamps();
         });
+
+        DB::table('schools')->insert(
+            array(
+                'name' => 'Jaaber Al-ansari',
+                'lng' => null,
+                'lat' =>null ,
+                'phone' => '0933130997'
+            )
+        );
     }
 
     /**

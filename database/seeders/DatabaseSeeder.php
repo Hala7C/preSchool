@@ -67,14 +67,7 @@ class DatabaseSeeder extends Seeder
                 'ownerable_type' => 'employee'
             )
         );
-        DB::table('schools')->insert(
-            array(
-                'name' => 'alRaiat',
-                'lng' => '36.3037',
-                'lat' => '33.638591',
-                'phone' => '0933130997'
-            )
-        );
+
 
         Employee::factory()->has(User::factory()->state(['role' => 'bus_supervisor']), 'owner')
             ->has(Bus::factory(), 'bus')->count(6)->create();

@@ -109,10 +109,10 @@ Route::middleware([
 
 
     //school management
-    Route::post('/school/store',  [SchoolController::class, 'store']);
     Route::get('/school/{id}',        [SchoolController::class, 'show']);
     Route::post('/school/{id}',   [SchoolController::class, 'update']);
-    Route::delete('/school/{id}', [SchoolController::class, 'destroy']);
+    Route::post('/school/update/location/{id}',   [SchoolController::class, 'updatelocation']);
+
 });
 
 /**

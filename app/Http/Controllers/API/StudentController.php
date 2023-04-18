@@ -22,31 +22,30 @@ class StudentController extends Controller
         if ($students->isEmpty()) {
             return ['data' => 'there is no student', 'status' => '210'];
         }
-        $cuurentYear=Carbon::now()->year;
-        $data=collect();
-        foreach($students as $std){
-            $account=$std->owner;
-            $date=explode('-',$std->birthday);
-            $age=$cuurentYear-$date[0];
+        $cuurentYear = Carbon::now()->year;
+        $data = collect();
+        foreach ($students as $std) {
+            $account = $std->owner;
+            $date = explode('-', $std->birthday);
+            $age = $cuurentYear - $date[0];
             $data->push([
-                'id'=>$std->id,
+                'id' => $std->id,
                 'fullName' => $std->fullName,
                 'gender' => $std->gender,
                 'motherName' => $std->motherName,
-                'motherLastName' =>$std->motherLastName,
+                'motherLastName' => $std->motherLastName,
                 'birthday' => $std->birthday,
-                'age'=>$age,
-                'phone' =>$std->phone,
+                'age' => $age,
+                'phone' => $std->phone,
                 'location' => $std->location,
                 'siblingNo' => $std->siblingNo,
                 'healthInfo' => $std->healthInfo,
-                'bus_registry'=>$std->bus_registry,
-                'bus_id'=>$std->bus_id,
-                'lng'=>$std->lng,
-                'lat'=>$std->lat,
-                'account_info'=>$account
+                'bus_registry' => $std->bus_registry,
+                'bus_id' => $std->bus_id,
+                'lng' => $std->lng,
+                'lat' => $std->lat,
+                'account_info' => $account
             ]);
-
         }
         return ['data' => $data, 'status' => '210'];
     }
@@ -63,7 +62,7 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'bus_registry'=>['required','boolean']
+            'bus_registry' => ['required', 'boolean']
         ]);
 
         if ($validator->fails()) {
@@ -76,13 +75,13 @@ class StudentController extends Controller
             'gender' => $request->gender,
             'motherName' => $request->motherName,
             'motherLastName' => $request->motherLastName,
-            'birthday' =>$date,
+            'birthday' => $date,
             'phone' => $request->phone,
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,
             'healthInfo' => $request->healthInfo,
-            'bus_registry'=>$request->bus_registry
-                ];
+            'bus_registry' => $request->bus_registry
+        ];
         DB::beginTransaction();
         try {
             $std = Student::create($input);
@@ -100,25 +99,25 @@ class StudentController extends Controller
             $status = 400;
             return ['data' => $data, 'status' => $status];
         }
-        $cuurentYear=Carbon::now()->year;
-        $date=explode('-',$std->birthday);
-        $age=$cuurentYear-$date[0];
+        $cuurentYear = Carbon::now()->year;
+        $date = explode('-', $std->birthday);
+        $age = $cuurentYear - $date[0];
         $data = collect();
-        $data=([
+        $data = ([
             'message' => 'added successfully',
-            'id'=>$std->id,
+            'id' => $std->id,
             'fullName' => $std->fullName,
             'gender' => $std->gender,
             'motherName' => $std->motherName,
-            'motherLastName' =>$std->motherLastName,
+            'motherLastName' => $std->motherLastName,
             'birthday' => $std->birthday,
-            'age' =>$age,
-            'phone' =>$std->phone,
+            'age' => $age,
+            'phone' => $std->phone,
             'location' => $std->location,
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
-            'bus_registry'=>$std->bus_registry,
-            'account_info'=>$account,
+            'bus_registry' => $std->bus_registry,
+            'account_info' => $account,
             'pass' => $pass
         ]);
 
@@ -129,28 +128,28 @@ class StudentController extends Controller
     public function show($id)
     {
         $std = Student::findOrFail($id);
-        $cuurentYear=Carbon::now()->year;
-        $date=explode('-',$std->birthday);
-        $age=$cuurentYear-$date[0];
-        $data=collect();
-        $account=$std->owner;
-        $data=([
-            'id'=>$std->id,
+        $cuurentYear = Carbon::now()->year;
+        $date = explode('-', $std->birthday);
+        $age = $cuurentYear - $date[0];
+        $data = collect();
+        $account = $std->owner;
+        $data = ([
+            'id' => $std->id,
             'fullName' => $std->fullName,
             'gender' => $std->gender,
             'motherName' => $std->motherName,
-            'motherLastName' =>$std->motherLastName,
+            'motherLastName' => $std->motherLastName,
             'birthday' => $std->birthday,
-            'age' =>$age,
-            'phone' =>$std->phone,
+            'age' => $age,
+            'phone' => $std->phone,
             'location' => $std->location,
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
-            'bus_registry'=>$std->bus_registry,
-            'bus_id'=>$std->bus_id,
-            'lng'=>$std->lng,
-            'lat'=>$std->lat,
-            'account_info'=>$account
+            'bus_registry' => $std->bus_registry,
+            'bus_id' => $std->bus_id,
+            'lng' => $std->lng,
+            'lat' => $std->lat,
+            'account_info' => $account
         ]);
         return ['data' => $data, 'status' => '210'];
     }
@@ -170,7 +169,7 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'bus_registry'=>['required','boolean']
+            'bus_registry' => ['required', 'boolean']
 
         ]);
 
@@ -191,26 +190,26 @@ class StudentController extends Controller
         // $student->bus_id=$request->bus_id;
         $student->save();
         $res = collect();
-        $cuurentYear=Carbon::now()->year;
-        $date=explode('-',$student->birthday);
-        $age=$cuurentYear-$date[0];
-        $data=collect();
-        $account=$student->owner;
-        $res=([
+        $cuurentYear = Carbon::now()->year;
+        $date = explode('-', $student->birthday);
+        $age = $cuurentYear - $date[0];
+        $data = collect();
+        $account = $student->owner;
+        $res = ([
             'message' => 'updated successfully',
-            'id'=>$student->id,
+            'id' => $student->id,
             'fullName' => $student->fullName,
             'gender' => $student->gender,
             'motherName' => $student->motherName,
-            'motherLastName' =>$student->motherLastName,
+            'motherLastName' => $student->motherLastName,
             'birthday' => $student->birthday,
-            'age' =>$age,
-            'phone' =>$student->phone,
+            'age' => $age,
+            'phone' => $student->phone,
             'location' => $student->location,
             'siblingNo' => $student->siblingNo,
             'healthInfo' => $student->healthInfo,
-            'bus_registry'=>$student->bus_registry,
-            'account_info'=>$account
+            'bus_registry' => $student->bus_registry,
+            'account_info' => $account
         ]);
         return ['data' => $res, 'status' => 210];
     }
@@ -223,18 +222,23 @@ class StudentController extends Controller
         $account->save();
     }
 
-    public function updateStudentLocation(Request $request,$id){
-        $student=Student::findOrFail($id);
-        $request->validate([
-            'lng'=>['required','numeric'],
-            'lat'=>['required','numeric'],
-        ]);
-        $student->update([
-            'lng'=>$request->lng,
-            'lat'=>$request->lat,
-        ]);
-    }
+    public function updateStudentLocation(Request $request, $id)
+    {
+        $student = Student::findOrFail($id);
 
+        $validator = Validator::make($request->all(), [
+            'lng' => ['required', 'numeric'],
+            'lat' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $student->update([
+            'lng' => $request->lng,
+            'lat' => $request->lat,
+        ]);
+        return ['data' => 'student location updated successfully'];
+    }
 }
 
 
