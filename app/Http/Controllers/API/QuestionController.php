@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Quize;
 use App\Models\Question;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -17,7 +18,19 @@ class QuestionController extends Controller
     public function index()
     {
         $questions=Question::all();
-        return ['data' => $questions, 'status' => '210'];
+        $data=collect();
+        foreach($questions as $question){
+            $correct_answer=$question->answers()->where('correct_answer',true)->first();
+            $data->push([
+                'id'=>$question->id,
+                'text'=>$question->text,
+                'audio'=>$question->audio,
+                'category_id'=>$question->category_id,
+                'correct_answer_text'=>$correct_answer->text,
+                "correct_answer_symbol"=>$correct_answer->symbol
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
     }
 
     public function store(Request $request)
@@ -114,6 +127,8 @@ class QuestionController extends Controller
 
         $question->text=$request->text;
         $question->category_id=$request->category_id;
+        DB::beginTransaction();
+
         $question->save();
 
         $correct_answer=$request->correct_answer_symbol;
@@ -134,7 +149,9 @@ class QuestionController extends Controller
             if($ans->symbol==$correct_answer){
                 $ans->correct_answer=true;
                 $ans->save();
-            break;
+            }else{
+                $ans->correct_answer=false;
+                $ans->save();
             }
         }
         DB::commit();
@@ -143,7 +160,15 @@ class QuestionController extends Controller
 
     public function destroy($id)
     {
-        Question::destroy($id);
+        $question=Question::findOrFail($id);
+        if (File::exists($question->audio)) {
+            File::delete(public_path($question->audio));
+        }
+        $answers= $question->answers()->get();
+        foreach($answers as $ans){
+            (new AnswerController)->destroy($ans->id);
+        }
+        $question->destroy($id);
 
         return ['message' => 'question deleted successfly'];
     }
