@@ -45,17 +45,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
-Route::post('/questions',[QuestionController::class,'store']);
-Route::post('/questions/{id}',[QuestionController::class,'update']);
-Route::delete('/questions/{id}',[QuestionController::class,'destroy']);
-Route::get('/questions/{id}',[QuestionController::class,'show']);
-Route::get('/questions',[QuestionController::class,'index']);
 
 
 
 
 Route::middleware([
-    'auth:sanctum'
+    'auth:sanctum',
+    'isTeacher'
+])->group(function () {
+    Route::post('/questions',[QuestionController::class,'store']);
+    Route::post('/questions/{id}',[QuestionController::class,'update']);
+    Route::delete('/questions/{id}',[QuestionController::class,'destroy']);
+    Route::get('/questions/{id}',[QuestionController::class,'show']);
+    Route::get('/questions',[QuestionController::class,'index']);
+});
+
+Route::middleware([
+    'auth:sanctum',
+    'isEmployee',
+
 ])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
     // Route::post('/profile/{id}/updatepassword', [AuthController::class, 'updatepassword']);

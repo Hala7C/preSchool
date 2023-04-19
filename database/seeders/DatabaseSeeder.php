@@ -68,6 +68,26 @@ class DatabaseSeeder extends Seeder
             )
         );
 
+        DB::table('employee')->insert(
+            array(
+                'fullName'     => 'sami',
+                'gender' => 'male',
+                'birthday'    => '2012-11-12',
+                'phone' => '0959906205',
+                'location' => 'unkown',
+                'degree' => 'bachalor'
+            )
+        );
+        DB::table('users')->insert(
+            array(
+                'name'     => 'teacher',
+                'password' => Hash::make('1234567890'),
+                'role'    => 'employee',
+                'status' => 'active',
+                'ownerable_id' => 3,
+                'ownerable_type' => 'teacher'
+            )
+        );
 
         Employee::factory()->has(User::factory()->state(['role' => 'bus_supervisor']), 'owner')
             ->has(Bus::factory(), 'bus')->count(6)->create();
