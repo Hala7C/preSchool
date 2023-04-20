@@ -25,6 +25,7 @@ use App\Http\Controllers\API\{
 use App\Models\Bus;
 use App\Models\Student;
 use App\Models\BusTrack;
+use App\Models\Category;
 use App\Models\Question;
 use App\Models\StudentFees;
 use Laravel\Jetstream\Rules\Role;
@@ -58,11 +59,18 @@ Route::middleware([
     Route::delete('/questions/{id}',[QuestionController::class,'destroy']);
     Route::get('/questions/{id}',[QuestionController::class,'show']);
     Route::get('/questions',[QuestionController::class,'index']);
+
+
+
+    Route::post('/categories',[CategoryController::class,'store']);
+    Route::post('/categories/{id}',[CategoryController::class,'update']);
+    Route::delete('/categories/{id}',[CategoryController::class,'destroy']);
+    Route::get('/categories/{id}',[CategoryController::class,'categoryQuestions']);
+    Route::get('/categories',[CategoryController::class,'index']);
 });
 
 Route::middleware([
     'auth:sanctum',
-    'isEmployee',
 
 ])->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);

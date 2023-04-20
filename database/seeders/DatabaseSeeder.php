@@ -82,10 +82,10 @@ class DatabaseSeeder extends Seeder
             array(
                 'name'     => 'teacher',
                 'password' => Hash::make('1234567890'),
-                'role'    => 'employee',
+                'role'    => 'teacher',
                 'status' => 'active',
                 'ownerable_id' => 3,
-                'ownerable_type' => 'teacher'
+                'ownerable_type' => 'employee'
             )
         );
 

@@ -23,7 +23,7 @@ class Teacher
         else
         {
 
-         return redirect()->route('logout1');
+         return response()->json(['msg'=>'cant access'],401);
 
         }
     }
