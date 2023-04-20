@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Bus;
 use App\Models\Employee;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -89,9 +90,21 @@ class BusController extends Controller
     }
     public function allStudent($id)
     {
-        $bus = Bus::find($id);
+        $student=Student::findOrFail($id);
+        $bus = $student->bus()->first();
+        if($bus==null){
+            return ['data' => "students are not assigned to  buses yet !!\n please try again after sorting", 'status' => '210'];
+        }
         $students = $bus->students()->get();
-        return ['data' => $students, 'status' => '210'];
+        $data=collect();
+        foreach($students as $std){
+            $data->push([
+                'name'=>$std->fullName,
+                'lng'=>$std->lng,
+                'lat'=>$std->lat
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
     }
 
     public function allBusStudent(){

@@ -23,7 +23,7 @@ class VRPPython extends Controller
         }
 
         $students = Student::all()->whereNotNull('lat');
-        $school = School::all()->first();
+        $school = School::all()->whereNotNull('lng')->first();
         if ($school == null) {
             return response()->json('please add school location first', 400);
         }

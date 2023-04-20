@@ -98,7 +98,6 @@ Route::middleware([
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
-    Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
     Route::get('/buses/students', [BusController::class, 'allBusStudent']);
     Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed','isBusExist','BusCapacities']);
 });
@@ -134,6 +133,15 @@ Route::middleware([
     Route::get('/school/{id}',        [SchoolController::class, 'show']);
     Route::post('/school/{id}',   [SchoolController::class, 'update']);
     Route::post('/school/update/location/{id}',   [SchoolController::class, 'updatelocation']);
+
+});
+
+Route::middleware([
+    'auth:sanctum',
+    'isStudent',
+])->group(function () {
+    Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
+    Route::get('/school/{id}',        [SchoolController::class, 'show']);
 
 });
 
