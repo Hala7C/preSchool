@@ -85,7 +85,8 @@ class DatabaseSeeder extends Seeder
                 'role'    => 'teacher',
                 'status' => 'active',
                 'ownerable_id' => 3,
-                'ownerable_type' => 'employee'
+                'ownerable_type' => 'employee
+                '
             )
         );
 

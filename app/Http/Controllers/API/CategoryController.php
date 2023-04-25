@@ -96,4 +96,27 @@ class CategoryController extends Controller
         }
         return ['data' => $data, 'status' => '210'];
     }
+
+    public function categoryQuestionsStudent($id){
+        $category=Category::findOrFail($id);
+        $questions=$category->questions()->count();
+        if($questions==0){
+        return ['data' => 'there is no questions yet for this category', 'status' => '210'];
+        }
+        $questions=$category->questions()->get();
+        $data=collect();
+        foreach($questions as $question){
+            $correct_answer=$question->answers()->where('correct_answer',true)->first();
+            $data->push([
+                'id'=>$question->id,
+                'text'=>$question->text,
+                'audio'=>$question->audio,
+                'category_id'=>$question->category_id,
+                'answers'=>$question->answers()->get(),
+                'correct_answer_text'=>$correct_answer->text,
+                "correct_answer_symbol"=>$correct_answer->symbol
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
+    }
 }

@@ -33,6 +33,8 @@ class QuestionController extends Controller
         return ['data' => $data, 'status' => '210'];
     }
 
+
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

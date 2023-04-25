@@ -65,7 +65,8 @@ Route::middleware([
     Route::post('/categories',[CategoryController::class,'store']);
     Route::post('/categories/{id}',[CategoryController::class,'update']);
     Route::delete('/categories/{id}',[CategoryController::class,'destroy']);
-    Route::get('/categories/{id}',[CategoryController::class,'categoryQuestions']);
+    Route::get('/categories/teacher/{id}',[CategoryController::class,'categoryQuestions']);
+    Route::get('/categories/Student/{id}',[CategoryController::class,'categoryQuestionsStudent']);
     Route::get('/categories',[CategoryController::class,'index']);
 });
 
