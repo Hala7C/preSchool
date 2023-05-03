@@ -13,6 +13,7 @@ use App\Http\Controllers\API\{
     EmployeeController,
     StudentController,
     BusController,
+    DeviceTokenController,
     UserController,
     StudentFeesController,
     VRPPython,
@@ -52,7 +53,7 @@ Route::middleware([
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::post('/update/student/location',[Student::class,'updateStudentLocation']);
+    Route::post('/update/student/location', [Student::class, 'updateStudentLocation']);
 });
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
@@ -70,8 +71,8 @@ Route::middleware([
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
-    Route::get('/buses/students/{id}',[BusController::class,'allStudent']);
-    Route::get('/buses/students',[BusController::class,'allBusStudent']);
+    Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
+    Route::get('/buses/students', [BusController::class, 'allBusStudent']);
     Route::get('/vrp', [VRPPython::class, 'testPythonScript']);
 });
 
@@ -153,7 +154,16 @@ Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
 Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 
-Route::get('/vrp', [App\Http\Controllers\API\VRPController::class, 'vrp']);
+
 
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
+Route::post('/device-token', [DeviceTokenController::class, "store"]);
+Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerAbsence']);
+Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index']);
+Route::put('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'updateJustification']);
+Route::delete('/abs-delete', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
+Route::post('template/store', [App\Http\Controllers\API\TemplateController::class, 'store'])->middleware('auth:sanctum');
+Route::post('template/update', [App\Http\Controllers\API\TemplateController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('template/delete/{template}', [App\Http\Controllers\API\TemplateController::class, 'destroy'])->middleware('auth:sanctum');
+Route::get('templates', [App\Http\Controllers\API\TemplateController::class, 'index'])->middleware('auth:sanctum');
