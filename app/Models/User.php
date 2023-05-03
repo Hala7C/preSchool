@@ -70,4 +70,12 @@ class User extends Authenticatable
         // return $this->morphTo();
         return $this->morphTo();
     }
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
+    public function routeNotificationForFcm($notification = null)
+    {
+        return $this->deviceTokens()->pluck("token")->toArray();
+    }
 }

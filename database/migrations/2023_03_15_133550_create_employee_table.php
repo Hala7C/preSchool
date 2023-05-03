@@ -43,7 +43,7 @@ return new class extends Migration
                 'password' => Hash::make('1234567890'),
                 'role'    => 'admin',
                 'status' => 'active',
-                'ownerable_id' =>1,
+                'ownerable_id' => 1,
                 'ownerable_type' => 'employee'
             )
         );
