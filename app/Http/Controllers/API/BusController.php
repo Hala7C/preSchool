@@ -99,6 +99,7 @@ class BusController extends Controller
         $data=collect();
         foreach($students as $std){
             $data->push([
+                'id'=>$std->id,
                 'name'=>$std->fullName,
                 'lng'=>$std->lng,
                 'lat'=>$std->lat
