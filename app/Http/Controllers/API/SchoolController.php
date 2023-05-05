@@ -47,6 +47,7 @@ class SchoolController extends Controller
         $school=School::findOrFail($id);
         $validator=Validator::make($request->all(),[
             'name' => ['sometimes','required', 'alpha', 'max:255'],
+            'start_time'=>['sometimes','required','date'],
             'lng' => ['sometimes','required', 'numeric'],
             'lat' => ['sometimes','required', 'numeric'],
             'phone'=>['sometimes','required','digits:10']

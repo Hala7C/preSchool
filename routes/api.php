@@ -4,7 +4,6 @@ use App\Http\Controllers\API\ClassController;
 use App\Http\Controllers\API\FeesStudentController;
 use App\Http\Controllers\API\LevelController;
 use App\Http\Controllers\API\SubjectController as APISubjectController;
-use App\Http\Controllers\SubjectController;
 use App\Models\FeesConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,15 +18,21 @@ use App\Http\Controllers\API\{
     VRPPython,
     SchoolController,
     CategoryController,
+    HomeworkController,
+    LessonController,
     QuestionController,
-    QuizeController
+    QuizeController,
+    TeacherController,
+    SubjectController
 };
+use App\Http\Middleware\Employee;
 use App\Models\Bus;
 use App\Models\Student;
 use App\Models\BusTrack;
 use App\Models\Category;
 use App\Models\Question;
 use App\Models\StudentFees;
+use App\Models\Subject;
 use Laravel\Jetstream\Rules\Role;
 
 /*
@@ -54,6 +59,8 @@ Route::middleware([
     'auth:sanctum',
     'isTeacher'
 ])->group(function () {
+
+    //questions
     Route::post('/questions',[QuestionController::class,'store']);
     Route::post('/questions/{id}',[QuestionController::class,'update']);
     Route::delete('/questions/{id}',[QuestionController::class,'destroy']);
@@ -61,13 +68,19 @@ Route::middleware([
     Route::get('/questions',[QuestionController::class,'index']);
 
 
-
+    //categories
     Route::post('/categories',[CategoryController::class,'store']);
     Route::post('/categories/{id}',[CategoryController::class,'update']);
     Route::delete('/categories/{id}',[CategoryController::class,'destroy']);
     Route::get('/categories/teacher/{id}',[CategoryController::class,'categoryQuestions']);
     Route::get('/categories/Student/{id}',[CategoryController::class,'categoryQuestionsStudent']);
     Route::get('/categories',[CategoryController::class,'index']);
+
+
+
+
+    Route::get('/teacher/class',[EmployeeController::class,'teacherClases']);
+
 });
 
 Route::middleware([
@@ -86,7 +99,7 @@ Route::post('/update/student/location/{id}', [StudentController::class, 'updateS
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
 Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
-Route::apiResource('subject',  App\Http\Controllers\API\SubjectController::class);
+Route::apiResource('subject',  SubjectController::class);
 Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 //});
 
@@ -199,3 +212,32 @@ Route::apiResource('answers',  AnswerController::class);
 
 
 
+
+
+
+//lesson
+Route::post('/lesson',[LessonController::class,'store']);/////////////////
+Route::post('/lesson/{id}',[LessonController::class,'update']);////////////
+Route::delete('/lesson/{id}',[LessonController::class,'destroy']);///////////////
+
+Route::get('/lesson/homeworks/{id}',[LessonController::class,'homeworks']);/////////////
+Route::get('/lesson/change/stauts/{cID}/{lID}',[LessonController::class,'lessonStatus']);////////
+Route::get('/lesson/send/homework/{id}',[LessonController::class,'sendHomework']);///wait for ads and notification to finish
+
+
+
+//homeworks
+Route::post('/homework',[HomeworkController::class,'store']);///////////////
+Route::post('/homework/{id}',[HomeworkController::class,'update']);/////////
+Route::delete('/homework/{id}',[HomeworkController::class,'destroy']);//////////////
+
+
+//teacher assignment
+Route::post('/assign/teacher',[TeacherController::class,'assignTeacherToClassWithSubjects']); //:)
+Route::get('/teachers',[TeacherController::class,'allTeacher']); //:)
+Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases']);//:)
+Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects']);//:)
+Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
+Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
+Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
+Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//

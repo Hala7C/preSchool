@@ -7,17 +7,14 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
+
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('fees:cron')
                 ->dailyAt('12:00');
+        $schedule->command('lesson:status')->yearlyOn(9,1);
+        $schedule->command('lesson:notification')->dailyAt('0:0');
     }
 
     /**

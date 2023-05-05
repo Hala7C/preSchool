@@ -24,11 +24,11 @@ class SubjectController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|alpha|max:255|unique:subject,name',
-
+                'name' => 'required|alpha|max:60',
+                'level_id'=>'required|exists:level,id'
             ],
             [
-                'name.unique' => 'This subject is already exists :(',
+                // 'name.unique' => 'This subject is already exists :(',
                 'required' => 'The field (:attribute) is required ',
             ]
         );
@@ -59,11 +59,14 @@ class SubjectController extends Controller
             $request->all(),
             [
 
-                'name' => ['sometimes', 'required', 'alpha', 'max:255', Rule::unique('subject', 'name')->ignore($subject->id),]
+                'name' => ['sometimes', 'required', 'alpha', 'max:255',
+                //  Rule::unique('subject', 'name')->ignore($subject->id),
+            ],
+                 'level_id'=>['sometimes','required','exist:level,id']
 
             ],
             [
-                'name.unique' => 'This subject already exists  :(',
+                // 'name.unique' => 'This subject already exists  :(',
                 'required' => 'The field (:attribute) is required ',
             ]
         );
@@ -79,5 +82,11 @@ class SubjectController extends Controller
         //
         Subject::destroy($id);
         return ['message' => 'subject deleted successfly'];
+    }
+
+    public function subjectLessons($id){
+        $subject=Subject::findOrFail($id);
+        $lessons=$subject->lessons()->get();
+        return ['data'=>$lessons,'status'=>210];
     }
 }

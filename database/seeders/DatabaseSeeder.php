@@ -8,10 +8,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\{
     Bus,
+    Classe,
     User,
     Student,
     Employee,
+    Homework,
+    Lesson,
+    Level,
+    Subject,
 };
+use Database\Factories\ClassFactory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -92,6 +98,26 @@ class DatabaseSeeder extends Seeder
 
         Employee::factory()->has(User::factory()->state(['role' => 'bus_supervisor']), 'owner')
             ->has(Bus::factory(), 'bus')->count(6)->create();
+
         Student::factory()->has(User::factory(), 'owner')->count(60)->create();
+
+
+        // // $levels=Level::factory()->count(2)->create();
+        // // $classes=Classe::factory()->count(4)->for($levels)->create();
+        // // $subjects=Subject::factory()->count(7)->for($levels)->create();
+        // // $lessons=Lesson::factory()->count(12)->for($subjects)->hasAttached($classes,['status'=>'ungiven'])->create();
+        // // $homeworks=Homework::factory()->count(2)->for($lessons)->create();
+
+        Level::factory()->has(Classe::factory()->count(4),'classes')
+                            ->has(Subject::factory()->has(
+                                Lesson::factory()
+                                ->has(
+                                    Homework::factory()->count(2),'homeworks')->count(12),'lessons')->count(7)
+                                        ,'subjects')->count(2)->create();
+
+
+                                        Employee::factory()->has(User::factory()->state(['role' => 'teacher']), 'owner')
+                                        ->has(Bus::factory(), 'bus')->count(6)->create();
+
     }
 }

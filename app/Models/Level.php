@@ -20,4 +20,8 @@ class Level extends Model
     {
         return $this->hasMany(Classe::class, 'level_id', 'id');
     }
+
+    public function subjects(){
+        return $this->hasMany(Subject::class,'level_id','id');
+    }
 }
