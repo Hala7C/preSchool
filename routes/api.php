@@ -144,19 +144,22 @@ Route::middleware([
 
 
     //school management
-    Route::get('/school/{id}',        [SchoolController::class, 'show']);
+    // Route::get('/school/{id}',        [SchoolController::class, 'show']);
     Route::post('/school/{id}',   [SchoolController::class, 'update']);
     Route::post('/school/update/location/{id}',   [SchoolController::class, 'updatelocation']);
 
 });
-
+Route::middleware([
+    'auth:sanctum',
+    'isAdminOrUser',
+])->group(function () {
+    Route::get('/school/{id}',        [SchoolController::class, 'show']);
+});
 Route::middleware([
     'auth:sanctum',
     'isStudent',
 ])->group(function () {
     Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
-    Route::get('/school/{id}',        [SchoolController::class, 'show']);
-
 });
 
 /**

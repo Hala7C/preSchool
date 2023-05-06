@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'isEmployee'=> \App\Http\Middleware\Employee::class,
         'isStudent'=>\App\Http\Middleware\Student::class,
         'isTeacher'=>\App\Http\Middleware\Teacher::class,
+        'isAdminOrUser'=>\App\Http\Middleware\StudentAdmin::class,
         'isBusRegistry'=>\App\Http\Middleware\BusRegistry::class,
         'isStudentDistributed'=>\App\Http\Middleware\StudentDistributed::class,
         'isBusExist'=>\App\Http\Middleware\BusExist::class,
