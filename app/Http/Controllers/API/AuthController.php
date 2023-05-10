@@ -124,8 +124,14 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        if (isset($request->photo)) {
-            $user->updateProfilePhoto($request->photo);
+        $path=null;
+        if($request->hasFile('photo')){
+            $photo =  $request->file("photo");
+            $newphoto = time() . $photo->getClientOriginalName();
+            $photo->move('users/img', $newphoto);
+            $path= 'users/img/' . $newphoto;
+            $user->photo=$path;
+            $user->save();
         }
         if (isset($request->password)) {
             $user->forceFill([
