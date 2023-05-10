@@ -130,7 +130,7 @@ class AuthController extends Controller
             $newphoto = time() . $photo->getClientOriginalName();
             $photo->move('users/img', $newphoto);
             $path= 'users/img/' . $newphoto;
-            $user->photo=$path;
+            $user->profile_photo_path=$path;
             $user->save();
         }
         if (isset($request->password)) {
