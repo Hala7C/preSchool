@@ -34,4 +34,8 @@ class Classe extends Model
                     ->get('employee.*');
     }
 
+    public function students(){
+        return $this->hasMany(StudentClass::class,'class_id','id');
+    }
+
 }

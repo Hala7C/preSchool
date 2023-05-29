@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\{
     AnswerController,
+    AssignStudentsToClassController,
     AuthController,
     EmployeeController,
     StudentController,
@@ -18,18 +19,22 @@ use App\Http\Controllers\API\{
     VRPPython,
     SchoolController,
     CategoryController,
+    ExamController,
     HomeworkController,
     LessonController,
     QuestionController,
     QuizeController,
     TeacherController,
-    SubjectController
+    SubjectController,
+    StudentBusController,
+    VRPCopyController
 };
 use App\Http\Middleware\Employee;
 use App\Models\Bus;
 use App\Models\Student;
 use App\Models\BusTrack;
 use App\Models\Category;
+use App\Models\Exam;
 use App\Models\Question;
 use App\Models\StudentFees;
 use App\Models\Subject;
@@ -81,6 +86,17 @@ Route::middleware([
 
     Route::get('/teacher/class',[EmployeeController::class,'teacherClases']);
 
+
+
+
+////////Exam
+Route::get('/exams/{sID}',[ExamController::class,'index'])->middleware('TeacherSubject');
+Route::post('/exams',[ExamController::class,'store'])->middleware('TeacherSubject');
+Route::post('/exams/{id}',[ExamController::class,'update'])->middleware('TeacherSubject');
+Route::delete('/exams/{id}',[ExamController::class,'destroy'])->middleware('TeacherSubject');
+Route::get('/day/exams',[ExamController::class,'TodayExam']);
+
+
 });
 
 Route::middleware([
@@ -113,6 +129,7 @@ Route::middleware([
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
     Route::get('/buses/students', [BusController::class, 'allBusStudent']);
+    Route::get('/students/without/bus',[BusController::class,'allStudentWithoutBus']);//
     Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed','isBusExist','BusCapacities']);
 });
 Route::post('/student/store', [StudentController::class, 'store']);
@@ -244,3 +261,33 @@ Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']
 Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
 Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
 Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//
+
+
+
+
+
+
+
+
+
+
+
+//Assign students to class
+Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
+Route::post('/assign/student/{classID}',[AssignStudentsToClassController::class,'store']); //:)
+Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show']);//
+Route::get('/unassignes/students',[AssignStudentsToClassController::class,'StudentNotAssigned']);//
+
+
+
+
+
+
+////////////
+// Route::get('/buses/studentss', [StudentBusController::class, 'allBusStudent']);
+// Route::get('/buses/studentss/{id}', [StudentBusController::class, 'allStudent']);
+// Route::get('/studentss',        [StudentController::class, 'indexCopy']);
+// Route::get('/students/{id}',    [StudentController::class, 'showCopy']);
+// Route::post('/updates/student/location/{id}', [StudentController::class, 'updateStudentLocationCopy']);
+// Route::post('/update/student/time/{id}', [StudentController::class, 'updateStudentArrivalTimeCopy']);
+// Route::get('/vrp', [VRPCopyController::class, 'testPythonScript']);

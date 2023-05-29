@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LessonRequest;
+use App\Models\Classe;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -131,6 +132,18 @@ class LessonController extends Controller
     }
 
     public function sendHomework($lessonID){
+        $lesson=Lesson::findOrFail($lessonID);
+        $subject=$lesson->subject()->get();
+        $teacher=Auth::user()->ownerable;;
+        $class=DB::table('class')
+        ->join('teacher_class_subject','subject.id','=','teacher_class_subject.subject_id')
+        ->where('teacher_class_subject.subject_id','=',$subject->id)
+        ->where('teacher_class_subject.teacher_id','=',$teacher->id)
+        ->distinct()
+        ->get(['class.*']);
+        $cID=$class->id;
+        $class=Classe::findOrFail($cID);
+        $students_id=$class->students()->get();
         //send homework for all students in this class
         //send advertisment on class level with assignment info
 

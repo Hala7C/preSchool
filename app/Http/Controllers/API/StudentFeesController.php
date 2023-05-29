@@ -126,4 +126,25 @@ class StudentFeesController extends Controller
         }
         return ['data'=>$data,'status'=>210];
     }
+
+
+
+
+
+
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    ///////////////////copy
+    public function getStudentFeesCopy($id){
+        $cuurentYear=Carbon::now()->year;
+        $year_fees=YearConfig::where('year',$cuurentYear)->get();
+        $std=Student::findOrFail($id);
+        ($std->bus_registry)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+        $std_fees=$year_fees[0]->study_fees+$busFees;
+        return $std_fees;
+    }
 }

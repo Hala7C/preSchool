@@ -33,4 +33,9 @@ class Subject extends Model
         ->where('teacher_class_subject.subject_id','=',$this->id)
         ->distinct()
         ->get(['employee.*']);    }
+
+
+    public function exams(){
+        return $this->hasMany(Exam::class,'subject_id','id');
+    }
 }

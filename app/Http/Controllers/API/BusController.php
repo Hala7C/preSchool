@@ -120,4 +120,21 @@ class BusController extends Controller
         return ['data' => $data, 'status' => '210'];
 
     }
+
+
+    public function allStudentWithoutBus()
+    {
+        $students=Student::all()->where('bus_registry','=','0');
+        if($students==null){
+            return ['data' => "students are not assigned to  buses yet !!\n please try again after sorting", 'status' => '210'];
+        }
+        $data=collect();
+        foreach($students as $std){
+            $data->push([
+                'id'=>$std->id,
+                'name'=>$std->fullName,
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\EmployeeNotifi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Student;
@@ -237,7 +238,144 @@ class StudentController extends Controller
             'lng' => $request->lng,
             'lat' => $request->lat,
         ]);
+        ///* send notification to employee if current time greater than last
+        // distributed
+                event(new EmployeeNotifi());
+
+
+
         return ['data' => 'student location updated successfully'];
+    }
+/////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////
+//Copy
+
+public function indexCopy()
+    {
+        $students = Student::all();
+        if ($students->isEmpty()) {
+            return ['data' => 'there is no student', 'status' => '210'];
+        }
+        $cuurentYear = Carbon::now()->year;
+        $data = collect();
+        foreach ($students as $std) {
+            $account = $std->owner;
+            $date = explode('-', $std->birthday);
+            $age = $cuurentYear - $date[0];
+            if($std->bus_registry){
+                $bus_info=$std->buss()->get();
+                $lat=$bus_info->lat;
+                $lng=$bus_info->lng;
+                $arrival_time=$bus_info->arrival_time;
+                $bus_id=$bus_info->bus_id;
+            }else{
+                $lat=null;
+                $lng=null;
+                $arrival_time=null;
+                $bus_id=null;
+            }
+            $data->push([
+                'id' => $std->id,
+                'fullName' => $std->fullName,
+                'gender' => $std->gender,
+                'motherName' => $std->motherName,
+                'motherLastName' => $std->motherLastName,
+                'birthday' => $std->birthday,
+                'age' => $age,
+                'phone' => $std->phone,
+                'location' => $std->location,
+                'siblingNo' => $std->siblingNo,
+                'healthInfo' => $std->healthInfo,
+                'bus_registry' => $std->bus_registry,
+                'bus_id' => $bus_id,
+                'lng' => $lng,
+                'lat' => $lat,
+                'arrival_time'=>$arrival_time,
+                'account_info' => $account
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
+    }
+
+
+    public function showCopy($id)
+    {
+        $std = Student::findOrFail($id);
+        $cuurentYear = Carbon::now()->year;
+        $date = explode('-', $std->birthday);
+        $age = $cuurentYear - $date[0];
+        $data = collect();
+        $account = $std->owner;
+        if($std->bus_registry){
+            $bus_info=$std->buss()->get();
+            $lat=$bus_info->lat;
+            $lng=$bus_info->lng;
+            $arrival_time=$bus_info->arrival_time;
+            $bus_id=$bus_info->bus_id;
+        }else{
+            $lat=null;
+            $lng=null;
+            $arrival_time=null;
+            $bus_id=null;
+        }
+        $data = ([
+            'id' => $std->id,
+            'fullName' => $std->fullName,
+            'gender' => $std->gender,
+            'motherName' => $std->motherName,
+            'motherLastName' => $std->motherLastName,
+            'birthday' => $std->birthday,
+            'age' => $age,
+            'phone' => $std->phone,
+            'location' => $std->location,
+            'siblingNo' => $std->siblingNo,
+            'healthInfo' => $std->healthInfo,
+            'bus_registry' => $std->bus_registry,
+            'bus_id' => $bus_id,
+            'lng' => $lng,
+            'lat' => $lat,
+            'arrival_time'=>$arrival_time,
+            'account_info' => $account
+        ]);
+        return ['data' => $data, 'status' => '210'];
+    }
+
+
+    public function updateStudentLocationCopy(Request $request, $id)
+    {
+        $student = Student::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'lng' => ['required', 'numeric'],
+            'lat' => ['required', 'numeric'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $studentBus=$student->buss()->get();
+        $studentBus->update([
+            'lng' => $request->lng,
+            'lat' => $request->lat,
+        ]);
+        return ['data' => 'student location updated successfully'];
+    }
+
+
+    public function updateStudentArrivalTimeCopy(Request $request, $id)
+    {
+        $student = Student::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'arrival_time' => ['required', 'date_format:H:i:s'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $studentBus=$student->buss()->get();
+        $studentBus->update([
+            'arrival_time' => $request->arrival_time,
+        ]);
+        return ['data' => 'student arrival time updated successfully'];
     }
 }
 

@@ -7,6 +7,8 @@ use Symfony\Component\Process\Process;
 use App\Models\Bus;
 use App\Models\School;
 use App\Models\Student;
+use App\Models\VRP;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class VRPPython extends Controller
@@ -69,6 +71,7 @@ class VRPPython extends Controller
                 }
             }
         }
+        VRP::create();
         return "Students distrubited successfully";
     }
 }

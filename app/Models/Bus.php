@@ -27,6 +27,8 @@ class Bus extends Model
     {
         return $this->hasMany(BusTrack::class, 'bus_id', 'id');
     }
-
+    public function studentss(){
+        return $this->hasMany(StudentBus::class,'bus_id','id');
+    }
 
 }
