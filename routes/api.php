@@ -78,8 +78,6 @@ Route::middleware([
     Route::post('/categories/{id}',[CategoryController::class,'update']);
     Route::delete('/categories/{id}',[CategoryController::class,'destroy']);
     Route::get('/categories/teacher/{id}',[CategoryController::class,'categoryQuestions']);
-    Route::get('/categories/Student/{id}',[CategoryController::class,'categoryQuestionsStudent']);
-    Route::get('/categories',[CategoryController::class,'index']);
 
 
 
@@ -94,7 +92,6 @@ Route::get('/exams/{sID}',[ExamController::class,'index'])->middleware('TeacherS
 Route::post('/exams',[ExamController::class,'store'])->middleware('TeacherSubject');
 Route::post('/exams/{id}',[ExamController::class,'update'])->middleware('TeacherSubject');
 Route::delete('/exams/{id}',[ExamController::class,'destroy'])->middleware('TeacherSubject');
-Route::get('/day/exams',[ExamController::class,'TodayExam']);
 
 
 });
@@ -108,6 +105,12 @@ Route::middleware([
     Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+
+
+    ///quizes for student
+    Route::get('/categories',[CategoryController::class,'index'])->middleware('role:user,teacher');
+
 });
 
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum','isBusRegistry']);
@@ -131,6 +134,9 @@ Route::middleware([
     Route::get('/buses/students', [BusController::class, 'allBusStudent']);
     Route::get('/students/without/bus',[BusController::class,'allStudentWithoutBus']);//
     Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed','isBusExist','BusCapacities']);
+
+    Route::get('/day/exams',[ExamController::class,'TodayExam']);
+
 });
 Route::post('/student/store', [StudentController::class, 'store']);
 
@@ -176,6 +182,7 @@ Route::middleware([
     'auth:sanctum',
     'isStudent',
 ])->group(function () {
+    Route::get('/categories/Student/{id}',[CategoryController::class,'categoryQuestionsStudent']);
     Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
 });
 
@@ -227,8 +234,8 @@ Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingControlle
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
 
 
-Route::apiResource('categories',  CategoryController::class);
-Route::apiResource('answers',  AnswerController::class);
+// Route::apiResource('categories',  CategoryController::class);
+// Route::apiResource('answers',  AnswerController::class);
 
 
 

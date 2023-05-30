@@ -77,6 +77,8 @@ class Kernel extends HttpKernel
         'isBusExist'=>\App\Http\Middleware\BusExist::class,
         'BusCapacities'=>\App\Http\Middleware\BusCapacity::class,
         'isTeacher\'sClass'=>\App\Http\Middleware\ClassTeacher::class,
-        'TeacherSubject'=>\App\Http\Middleware\AddExamFromTeacher::class
+        'TeacherSubject'=>\App\Http\Middleware\AddExamFromTeacher::class,
+        'role' => \App\Http\Middleware\Role::class,
+
     ];
 }
