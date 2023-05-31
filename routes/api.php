@@ -137,6 +137,14 @@ Route::middleware([
 
     Route::get('/day/exams',[ExamController::class,'TodayExam']);
 
+
+///assign
+    Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
+    Route::post('/assign/student/{classID}',[AssignStudentsToClassController::class,'store']); //:)
+    Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show']);//
+    Route::get('/unassignes/students',[AssignStudentsToClassController::class,'StudentNotAssigned']);//
+
+
 });
 Route::post('/student/store', [StudentController::class, 'store']);
 
@@ -280,11 +288,6 @@ Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons'])
 
 
 //Assign students to class
-Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
-Route::post('/assign/student/{classID}',[AssignStudentsToClassController::class,'store']); //:)
-Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show']);//
-Route::get('/unassignes/students',[AssignStudentsToClassController::class,'StudentNotAssigned']);//
-
 
 
 
