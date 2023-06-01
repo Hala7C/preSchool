@@ -14,6 +14,7 @@ use App\Http\Controllers\API\{
     EmployeeController,
     StudentController,
     BusController,
+    DeviceTokenController,
     UserController,
     StudentFeesController,
     VRPPython,
@@ -66,34 +67,32 @@ Route::middleware([
 ])->group(function () {
 
     //questions
-    Route::post('/questions',[QuestionController::class,'store']);
-    Route::post('/questions/{id}',[QuestionController::class,'update']);
-    Route::delete('/questions/{id}',[QuestionController::class,'destroy']);
-    Route::get('/questions/{id}',[QuestionController::class,'show']);
-    Route::get('/questions',[QuestionController::class,'index']);
+    Route::post('/questions', [QuestionController::class, 'store']);
+    Route::post('/questions/{id}', [QuestionController::class, 'update']);
+    Route::delete('/questions/{id}', [QuestionController::class, 'destroy']);
+    Route::get('/questions/{id}', [QuestionController::class, 'show']);
+    Route::get('/questions', [QuestionController::class, 'index']);
 
 
     //categories
-    Route::post('/categories',[CategoryController::class,'store']);
-    Route::post('/categories/{id}',[CategoryController::class,'update']);
-    Route::delete('/categories/{id}',[CategoryController::class,'destroy']);
-    Route::get('/categories/teacher/{id}',[CategoryController::class,'categoryQuestions']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::post('/categories/{id}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+    Route::get('/categories/teacher/{id}', [CategoryController::class, 'categoryQuestions']);
 
 
 
 
-    Route::get('/teacher/class',[EmployeeController::class,'teacherClases']);
+    Route::get('/teacher/class', [EmployeeController::class, 'teacherClases']);
 
 
 
 
-////////Exam
-Route::get('/exams/{sID}',[ExamController::class,'index'])->middleware('TeacherSubject');
-Route::post('/exams',[ExamController::class,'store'])->middleware('TeacherSubject');
-Route::post('/exams/{id}',[ExamController::class,'update'])->middleware('TeacherSubject');
-Route::delete('/exams/{id}',[ExamController::class,'destroy'])->middleware('TeacherSubject');
-
-
+    ////////Exam
+    Route::get('/exams/{sID}', [ExamController::class, 'index'])->middleware('TeacherSubject');
+    Route::post('/exams', [ExamController::class, 'store'])->middleware('TeacherSubject');
+    Route::post('/exams/{id}', [ExamController::class, 'update'])->middleware('TeacherSubject');
+    Route::delete('/exams/{id}', [ExamController::class, 'destroy'])->middleware('TeacherSubject');
 });
 
 Route::middleware([
@@ -105,15 +104,11 @@ Route::middleware([
     Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
-
-
-
     ///quizes for student
-    Route::get('/categories',[CategoryController::class,'index'])->middleware('role:user,teacher');
-
+    Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
 });
 
-Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum','isBusRegistry']);
+Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
 
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 
@@ -129,10 +124,10 @@ Route::middleware([
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
     Route::get('/buses/students', [BusController::class, 'allBusStudent']);
-    Route::get('/students/without/bus',[BusController::class,'allStudentWithoutBus']);//
-    Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed','isBusExist','BusCapacities']);
+    Route::get('/students/without/bus', [BusController::class, 'allStudentWithoutBus']); //
+    Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed', 'isBusExist', 'BusCapacities']);
 
-    Route::get('/day/exams',[ExamController::class,'TodayExam']);
+    Route::get('/day/exams', [ExamController::class, 'TodayExam']);
 
 
 ///assign
@@ -181,7 +176,6 @@ Route::middleware([
     // Route::get('/school/{id}',        [SchoolController::class, 'show']);
     Route::post('/school/{id}',   [SchoolController::class, 'update']);
     Route::post('/school/update/location/{id}',   [SchoolController::class, 'updatelocation']);
-
 });
 Route::middleware([
     'auth:sanctum',
@@ -193,7 +187,7 @@ Route::middleware([
     'auth:sanctum',
     'isStudent',
 ])->group(function () {
-    Route::get('/categories/Student/{id}',[CategoryController::class,'categoryQuestionsStudent']);
+    Route::get('/categories/Student/{id}', [CategoryController::class, 'categoryQuestionsStudent']);
     Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
 });
 
@@ -241,6 +235,19 @@ Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 
 
+
+Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
+Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
+Route::post('/device-token', [DeviceTokenController::class, "store"]);
+Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerAbsence']);
+Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index']);
+Route::put('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'updateJustification']);
+Route::delete('/abs-delete', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
+Route::post('template/store', [App\Http\Controllers\API\TemplateController::class, 'store'])->middleware('auth:sanctum');
+Route::post('template/update', [App\Http\Controllers\API\TemplateController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('template/delete/{template}', [App\Http\Controllers\API\TemplateController::class, 'destroy'])->middleware('auth:sanctum');
+Route::get('templates', [App\Http\Controllers\API\TemplateController::class, 'index'])->middleware('auth:sanctum');
+
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
 
@@ -254,20 +261,20 @@ Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingControll
 
 
 //lesson
-Route::post('/lesson',[LessonController::class,'store']);/////////////////
-Route::post('/lesson/{id}',[LessonController::class,'update']);////////////
-Route::delete('/lesson/{id}',[LessonController::class,'destroy']);///////////////
+Route::post('/lesson', [LessonController::class, 'store']); /////////////////
+Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////
+Route::delete('/lesson/{id}', [LessonController::class, 'destroy']); ///////////////
 
-Route::get('/lesson/homeworks/{id}',[LessonController::class,'homeworks']);/////////////
-Route::get('/lesson/change/stauts/{cID}/{lID}',[LessonController::class,'lessonStatus']);////////
-Route::get('/lesson/send/homework/{id}',[LessonController::class,'sendHomework']);///wait for ads and notification to finish
+Route::get('/lesson/homeworks/{id}', [LessonController::class, 'homeworks']); /////////////
+Route::get('/lesson/change/stauts/{cID}/{lID}', [LessonController::class, 'lessonStatus']); ////////
+Route::get('/lesson/send/homework/{id}', [LessonController::class, 'sendHomework']); ///wait for ads and notification to finish
 
 
 
 //homeworks
-Route::post('/homework',[HomeworkController::class,'store']);///////////////
-Route::post('/homework/{id}',[HomeworkController::class,'update']);/////////
-Route::delete('/homework/{id}',[HomeworkController::class,'destroy']);//////////////
+Route::post('/homework', [HomeworkController::class, 'store']); ///////////////
+Route::post('/homework/{id}', [HomeworkController::class, 'update']); /////////
+Route::delete('/homework/{id}', [HomeworkController::class, 'destroy']); //////////////
 
 
 //teacher assignment

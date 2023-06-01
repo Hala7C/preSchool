@@ -240,17 +240,17 @@ class StudentController extends Controller
         ]);
         ///* send notification to employee if current time greater than last
         // distributed
-                event(new EmployeeNotifi());
+        event(new EmployeeNotifi());
 
 
 
         return ['data' => 'student location updated successfully'];
     }
-/////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////
-//Copy
+    /////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////
+    //Copy
 
-public function indexCopy()
+    public function indexCopy()
     {
         $students = Student::all();
         if ($students->isEmpty()) {
@@ -262,17 +262,17 @@ public function indexCopy()
             $account = $std->owner;
             $date = explode('-', $std->birthday);
             $age = $cuurentYear - $date[0];
-            if($std->bus_registry){
-                $bus_info=$std->buss()->get();
-                $lat=$bus_info->lat;
-                $lng=$bus_info->lng;
-                $arrival_time=$bus_info->arrival_time;
-                $bus_id=$bus_info->bus_id;
-            }else{
-                $lat=null;
-                $lng=null;
-                $arrival_time=null;
-                $bus_id=null;
+            if ($std->bus_registry) {
+                $bus_info = $std->buss()->get();
+                $lat = $bus_info->lat;
+                $lng = $bus_info->lng;
+                $arrival_time = $bus_info->arrival_time;
+                $bus_id = $bus_info->bus_id;
+            } else {
+                $lat = null;
+                $lng = null;
+                $arrival_time = null;
+                $bus_id = null;
             }
             $data->push([
                 'id' => $std->id,
@@ -290,7 +290,7 @@ public function indexCopy()
                 'bus_id' => $bus_id,
                 'lng' => $lng,
                 'lat' => $lat,
-                'arrival_time'=>$arrival_time,
+                'arrival_time' => $arrival_time,
                 'account_info' => $account
             ]);
         }
@@ -306,17 +306,17 @@ public function indexCopy()
         $age = $cuurentYear - $date[0];
         $data = collect();
         $account = $std->owner;
-        if($std->bus_registry){
-            $bus_info=$std->buss()->get();
-            $lat=$bus_info->lat;
-            $lng=$bus_info->lng;
-            $arrival_time=$bus_info->arrival_time;
-            $bus_id=$bus_info->bus_id;
-        }else{
-            $lat=null;
-            $lng=null;
-            $arrival_time=null;
-            $bus_id=null;
+        if ($std->bus_registry) {
+            $bus_info = $std->buss()->get();
+            $lat = $bus_info->lat;
+            $lng = $bus_info->lng;
+            $arrival_time = $bus_info->arrival_time;
+            $bus_id = $bus_info->bus_id;
+        } else {
+            $lat = null;
+            $lng = null;
+            $arrival_time = null;
+            $bus_id = null;
         }
         $data = ([
             'id' => $std->id,
@@ -334,7 +334,7 @@ public function indexCopy()
             'bus_id' => $bus_id,
             'lng' => $lng,
             'lat' => $lat,
-            'arrival_time'=>$arrival_time,
+            'arrival_time' => $arrival_time,
             'account_info' => $account
         ]);
         return ['data' => $data, 'status' => '210'];
@@ -352,7 +352,7 @@ public function indexCopy()
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $studentBus=$student->buss()->get();
+        $studentBus = $student->buss()->get();
         $studentBus->update([
             'lng' => $request->lng,
             'lat' => $request->lat,
@@ -371,7 +371,7 @@ public function indexCopy()
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $studentBus=$student->buss()->get();
+        $studentBus = $student->buss()->get();
         $studentBus->update([
             'arrival_time' => $request->arrival_time,
         ]);

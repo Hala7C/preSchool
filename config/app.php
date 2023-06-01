@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Pusher\Pusher;
 
 return [
 
@@ -167,7 +168,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Kreait\Laravel\Firebase\ServiceProvider::class,
         /*
          * Application Service Providers...
          */

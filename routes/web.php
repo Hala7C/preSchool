@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,8 +12,10 @@ use Illuminate\Support\Facades\Broadcast;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Broadcast::routes();
 
+Broadcast::routes();
 Route::get('/', function () {
     return view('welcome');
 });
@@ -29,6 +30,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-Route::get('/pusher',function(){
+Route::get('/pusher', function () {
     return view('pushertest');
 });
