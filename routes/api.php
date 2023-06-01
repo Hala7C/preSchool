@@ -111,10 +111,7 @@ Route::middleware([
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
 
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
-Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
-Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
-Route::apiResource('subject',  SubjectController::class);
-Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
+
 //});
 
 Route::middleware([
@@ -139,6 +136,11 @@ Route::middleware([
     Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show']); //
     Route::get('/unassignes/students', [AssignStudentsToClassController::class, 'StudentNotAssigned']); //
 
+
+    Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
+Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
+Route::apiResource('subject',  SubjectController::class);
+Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 
 });
 Route::post('/student/store', [StudentController::class, 'store']);
