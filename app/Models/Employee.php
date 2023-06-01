@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-
+use Illuminate\Support\Facades\DB;
 class Employee extends Model
 {
     use HasFactory;
@@ -29,4 +29,29 @@ class Employee extends Model
     public function bus(){
         return $this->hasOne(Bus::class,'bus_supervisor_id','id');
     }
+
+    // public function classes(){
+    //     return $this->belongsToMany(Classe::class,'teacher_class_subject');
+    // }
+
+    // public function subjects(){
+    //     return $this->belongsToMany(Subject::class,'teacher_class_subject');
+    // }
+
+    public function classes(){
+        return DB::table('class')
+        ->join('teacher_class_subject','class.id','=','teacher_class_subject.class_id')
+        ->where('teacher_class_subject.teacher_id','=',$this->id)
+        ->distinct()
+        ->get(['class.*']);
+    }
+
+    public function subjects($id){
+        return DB::table('subject')
+        ->join('teacher_class_subject','subject.id','=','teacher_class_subject.subject_id')
+        ->where('teacher_class_subject.teacher_id','=',$id)
+        ->distinct()
+        ->get(['subject.*']);
+    }
+
 }

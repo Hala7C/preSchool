@@ -195,7 +195,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // ...
-        'Pusher' => Pusher\Pusher::class
+        'Pusher' => Pusher\Pusher::class,
+
     ])->toArray(),
 
 ];

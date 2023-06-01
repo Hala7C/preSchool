@@ -10,6 +10,6 @@ class School extends Model
     use HasFactory;
     public $table="schools";
     protected $fillable = [
-        'name', 'phone','lng','lat'
+        'name', 'phone','lng','lat','start_time'
     ];
 }

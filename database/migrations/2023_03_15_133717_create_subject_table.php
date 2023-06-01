@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('subject', function (Blueprint $table) {
             $table->id();
-            $table->string("name")->unique();
+            $table->string("name");
+            $table->foreignId('level_id')->constrained('level');
             $table->timestamps();
         });
     }

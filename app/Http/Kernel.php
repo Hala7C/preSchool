@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\BusExist;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,16 @@ class Kernel extends HttpKernel
         'isManager'=> \App\Http\Middleware\Manager::class,
         'isBusSupervisor'=> \App\Http\Middleware\BusSupervisor::class,
         'isEmployee'=> \App\Http\Middleware\Employee::class,
+        'isStudent'=>\App\Http\Middleware\Student::class,
+        'isTeacher'=>\App\Http\Middleware\Teacher::class,
+        'isAdminOrUser'=>\App\Http\Middleware\StudentAdmin::class,
+        'isBusRegistry'=>\App\Http\Middleware\BusRegistry::class,
+        'isStudentDistributed'=>\App\Http\Middleware\StudentDistributed::class,
+        'isBusExist'=>\App\Http\Middleware\BusExist::class,
+        'BusCapacities'=>\App\Http\Middleware\BusCapacity::class,
+        'isTeacher\'sClass'=>\App\Http\Middleware\ClassTeacher::class,
+        'TeacherSubject'=>\App\Http\Middleware\AddExamFromTeacher::class,
+        'role' => \App\Http\Middleware\Role::class,
+
     ];
 }

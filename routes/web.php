@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 Broadcast::routes();
+
+Broadcast::routes();
 Route::get('/', function () {
     return view('welcome');
 });
@@ -23,6 +25,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');

@@ -12,8 +12,8 @@ class Student extends Model
     use HasFactory;
     public $table = "student";
     protected $fillable = [
-        'fullName', 'gender', 'age', 'motherName', 'motherLastName', 'birthday', 'phone', 'location', 'siblingNo', 'healthInfo', 'bus_id',
-        'lng', 'lat'
+        'fullName', 'gender', 'motherName', 'motherLastName', 'birthday', 'phone', 'location', 'siblingNo', 'healthInfo', 'bus_id',
+        'lng', 'lat', 'bus_registry'
     ];
     public function owner(): MorphOne
     {
@@ -40,5 +40,14 @@ class Student extends Model
     public function class()
     {
         return $this->belongsTo(Classe::class, "class_id", "id");
+    }
+
+    // public function class(){
+    //     return $this->hasOne(StudentClass::class,'student_id','id');
+    // }
+
+    public function buss()
+    {
+        return $this->hasOne(StudentBus::class, 'student_id', 'id');
     }
 }

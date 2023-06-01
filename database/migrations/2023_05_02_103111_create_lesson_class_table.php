@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('lesson_class', function (Blueprint $table) {
+            $table->id();
+            $table->enum('status',['given','ungiven']);
+            $table->foreignId('lesson_id')->constrained('lessons')->cascadeOnUpdate();
+            $table->foreignId('class_id')->constrained('class')->cascadeOnUpdate();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('lesson_class');
+    }
+};

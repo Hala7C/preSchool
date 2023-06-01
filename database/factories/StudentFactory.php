@@ -29,6 +29,7 @@ class StudentFactory extends Factory
             'location' => $this->faker->company(),
             'siblingNo' => $this->faker->numberBetween(0,10),
             'healthInfo' => $this->faker->text(),
+            'bus_registry'=>true,
             'bus_id'=>null,
             'lng'=> $this->faker->latitude(
                 $min = ($lang * 10000 - rand(0, 50)) / 10000,

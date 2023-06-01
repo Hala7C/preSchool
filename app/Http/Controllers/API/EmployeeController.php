@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\API;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Teacher;
+use App\Models\Classe;
 use Illuminate\Http\Request;
 use App\Models\Employee;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use function PHPUnit\Framework\isEmpty;
 
 class EmployeeController extends Controller
 {
@@ -203,4 +208,6 @@ class EmployeeController extends Controller
         $account->status='suspended';
         $account->save();
     }
+
+
 }
