@@ -136,7 +136,8 @@ Route::middleware([
 
 
 ///assign
-    Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
+    // Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
+    Route::delete('/remove/students/{sid}/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
     Route::post('/assign/student/{classID}',[AssignStudentsToClassController::class,'store']); //:)
     Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show']);//
     Route::get('/unassignes/students',[AssignStudentsToClassController::class,'StudentNotAssigned']);//
@@ -277,6 +278,7 @@ Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects'
 Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
 Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
 Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
+
 Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//
 
 

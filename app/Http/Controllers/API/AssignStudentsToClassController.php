@@ -88,7 +88,7 @@ class AssignStudentsToClassController extends Controller
     }
 
 
-    public function deleteStudentFromClass(Request $request, $classID)
+    public function deleteStudentSFromClass(Request $request, $classID)
     {
         $class=Classe::findOrFail($classID);
         $validator=Validator::make($request->all(),[
@@ -114,6 +114,13 @@ class AssignStudentsToClassController extends Controller
         }
         DB::commit();
         return ['data'=>'updated successfully','status'=>210];
+    }
+
+    public function deleteStudentFromClass( $sid, $classID)
+    {
+        $stdClass=StudentClass::where('student_id','=',$sid)->where('class_id','=',$classID)->get();
+        StudentClass::destroy($stdClass[0]->id);
+        return ['data'=>'deleted successfully','status'=>210];
     }
 
 }
