@@ -25,8 +25,10 @@ class TeacherController extends Controller
         $users=User::all()->where('role','=','teacher');
         $teacher =collect();
         foreach ($users as $u){
+            $user=$u->ownerable;
             $teacher->push([
-                $u->ownerable
+                'id'=>$user->id,
+                'fullName'=>$user->fullName,
             ]);
         }
         return ['data'=>$teacher,'status'=>210];

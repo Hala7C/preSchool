@@ -143,6 +143,16 @@ Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
 Route::apiResource('subject',  SubjectController::class);
 Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 
+
+//////
+//teacher assignment
+Route::post('/assign/teacher',[TeacherController::class,'assignTeacherToClassWithSubjects']); //:)
+Route::get('/teachers',[TeacherController::class,'allTeacher']); //:)
+Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases']);//:)
+Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects']);//:)
+Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
+Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
+Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
 });
 Route::post('/student/store', [StudentController::class, 'store']);
 
@@ -277,14 +287,7 @@ Route::post('/homework/{id}', [HomeworkController::class, 'update']); /////////
 Route::delete('/homework/{id}', [HomeworkController::class, 'destroy']); //////////////
 
 
-//teacher assignment
-Route::post('/assign/teacher',[TeacherController::class,'assignTeacherToClassWithSubjects']); //:)
-Route::get('/teachers',[TeacherController::class,'allTeacher']); //:)
-Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases']);//:)
-Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects']);//:)
-Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
-Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
-Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
+
 
 Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//
 
