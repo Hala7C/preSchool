@@ -128,4 +128,32 @@ class TeacherController extends Controller
         }
         return ['data'=>$teachers,'status'=>210];
     }
+
+    public function allAssignDate(){
+        $users=User::all()->where('role','=','teacher');
+        $data =collect();
+        foreach ($users as $u){
+            $user=$u->ownerable;
+            $clases=$user->classes();
+            foreach($clases as $class){
+                $subjects=DB::table('subject')
+                ->join('teacher_class_subject','subject.id','=','teacher_class_subject.subject_id')
+                ->where('teacher_class_subject.class_id','=',$class->id)
+                ->where('teacher_class_subject.teacher_id','=',$user->id)
+                ->distinct()
+                ->get(['subject.*']);
+                $info=['class_id'=>$class->id,
+                        'class_name'=>$class->name,
+                        'subjects'=>$subjects
+                        ];
+                $data->push([
+                    'id'=>$user->id,
+                    'fullName'=>$user->fullName,
+                    'classes_subjects'=>$info
+                ]);
+            }
+
+        }
+    return ['data'=>$data,'status'=>210];
+    }
 }

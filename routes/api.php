@@ -153,6 +153,10 @@ Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects'
 Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
 Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
 Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
+
+Route::get('/all/data',[TeacherController::class,'allAssignDate']);//:)
+
+
 });
 Route::post('/student/store', [StudentController::class, 'store']);
 
