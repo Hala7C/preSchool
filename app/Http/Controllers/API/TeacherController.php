@@ -156,4 +156,25 @@ class TeacherController extends Controller
         }
     return ['data'=>$data,'status'=>210];
     }
+
+    public function unAssignsubjectFromTeacher($classID,$tID,$sid){
+        $tClass=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->where('subject_id','=',$sid)->get();
+        if(count($tClass)==0){
+            return ['data' =>'there is no entry with this data','status'=>210];
+        }
+        TeacherClassSubject::destroy($tClass[0]->id);
+        return ['data' =>'deleted successfully','status'=>210];
+    }
+
+    public function unAssignAllsubjectFromTeacher($classID,$tID){
+        $tClasses=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->get();
+        if(count($tClasses)==0){
+            return ['data' =>'there is no entry with this data','status'=>210];
+        }
+        // return $tClasses;
+        foreach ($tClasses as $sub){
+            TeacherClassSubject::destroy($sub->id);
+        }
+        return ['data' =>'deleted successfully','status'=>210];
+    }
 }

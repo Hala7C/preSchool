@@ -154,6 +154,11 @@ Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']
 Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
 Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
 
+
+Route::delete('/teacher/subject/in/class/{cid}/{tid}/{sid}', [TeacherController::class, 'unAssignsubjectFromTeacher']);//
+
+Route::delete('/teacher/all/subject/in/class/{cid}/{tid}', [TeacherController::class, 'unAssignAllsubjectFromTeacher']);//
+
 Route::get('/all/data',[TeacherController::class,'allAssignDate']);//:)
 
 
