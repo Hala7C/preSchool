@@ -100,7 +100,7 @@ class EmployeeController extends Controller
         $date=explode('-',$emp->birthday);
         $age=$cuurentYear-$date[0];
         $data = collect();
-        $data->push([
+        $data=([
             'message' => 'added successfully',
             'id'=>$emp->id,
             'fullName' => $emp->fullName,
@@ -128,7 +128,7 @@ class EmployeeController extends Controller
         $date=explode('-',$emp->birthday);
         $age=$cuurentYear-$date[0];
         $data=collect();
-        $data->push([
+        $data=([
             'id'=>$emp->id,
             'fullName' => $emp->fullName,
             'gender' => $emp->gender,
