@@ -200,7 +200,8 @@ class AuthController extends Controller
         }else{
             $id=$cid[0]->id;
         }
-        $data=([
+        $data=collect();
+        $data->push([
             "id"=> $user->id,
             "name"=> $user->name,
             "email_verified_at"=>$user->name ,
