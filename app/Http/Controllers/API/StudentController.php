@@ -96,9 +96,7 @@ class StudentController extends Controller
             DB::commit();
         } catch (\Exception $exp) {
             DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
-            $data = ['message' => $exp->getMessage(), 'status' => 'failed'];
-            $status = 400;
-            return ['data' => $data, 'status' => $status];
+            return ['data' =>  $exp->getMessage(), 'status' => '400'];
         }
         $cuurentYear = Carbon::now()->year;
         $date = explode('-', $std->birthday);
@@ -122,7 +120,7 @@ class StudentController extends Controller
             'pass' => $pass
         ]);
 
-        return ['data' => $data, 'status' => 210];
+        return ['data' => $data, 'status' => '210'];
     }
 
 
