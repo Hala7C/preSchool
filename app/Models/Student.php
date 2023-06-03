@@ -42,9 +42,9 @@ class Student extends Model
         return $this->belongsTo(Classe::class, "class_id", "id");
     }
 
-    // public function class(){
-    //     return $this->hasOne(StudentClass::class,'student_id','id');
-    // }
+    public function classs(){
+        return $this->hasOne(StudentClass::class,'student_id','id');
+    }
 
     public function buss()
     {
