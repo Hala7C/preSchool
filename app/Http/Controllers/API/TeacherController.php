@@ -177,4 +177,14 @@ class TeacherController extends Controller
         }
         return ['data' =>'deleted successfully','status'=>210];
     }
+
+    public function teacherClasess(){
+        $user=Auth::user();
+        $teacher=$user->ownerable;
+        $clases=$teacher->classes();
+        if(count($clases)==0){
+            return ['data'=>'this teacher do not assignted to any class yet','status'=>210];
+        }
+        return ['data'=>$clases,'status'=>210];
+    }
 }

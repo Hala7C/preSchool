@@ -83,7 +83,8 @@ Route::middleware([
 
 
 
-    Route::get('/teacher/class', [EmployeeController::class, 'teacherClases']);
+    Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
+
 
 
 
