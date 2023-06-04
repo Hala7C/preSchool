@@ -181,7 +181,7 @@ class TeacherController extends Controller
     public function teacherClasess(){
         $user=Auth::user();
         $teacher=$user->ownerable;
-        $clases=$teacher->classes();
+        $clases=$teacher->classess($teacher->id);
         if(count($clases)==0){
             return ['data'=>'this teacher do not assignted to any class yet','status'=>210];
         }
