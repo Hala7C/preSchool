@@ -37,7 +37,7 @@ class SubjectController extends Controller
         } else {
             $input = [
                 'name' => $request->name,
-
+                'level_id'=>$request->level_id
             ];
             $subject = Subject::create($input);
             return ['data' => $subject, 'status' => '210'];
