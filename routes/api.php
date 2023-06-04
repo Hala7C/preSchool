@@ -83,7 +83,7 @@ Route::middleware([
 
 
 
-    Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
+    // Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
 
 
 
@@ -110,6 +110,7 @@ Route::middleware([
 });
 
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
+Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee,teacher');;//:)
 
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 
@@ -149,7 +150,6 @@ Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::c
 //teacher assignment
 Route::post('/assign/teacher',[TeacherController::class,'assignTeacherToClassWithSubjects']); //:)
 Route::get('/teachers',[TeacherController::class,'allTeacher']); //:)
-Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases']);//:)
 Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects']);//:)
 Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
 Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
