@@ -107,10 +107,11 @@ Route::middleware([
     Route::post('/logout', [AuthController::class, 'logout']);
     ///quizes for student
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
+    Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee,teacher');;//:)
+
 });
 
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
-Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee,teacher');;//:)
 
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 
