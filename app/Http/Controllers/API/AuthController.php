@@ -193,8 +193,9 @@ class AuthController extends Controller
 
         $user=User::findOrFail(Auth::user()->id);
         $student=$user->ownerable;
-        $cid=$student->classs()->get();
-        // $class=Classe::findOrFail($cid);
+        if($user->role=='user'){
+            $cid=$student->classs()->get();
+             // $class=Classe::findOrFail($cid);
         if(count($cid)==0){
             $id=null;
         }else{
@@ -217,6 +218,10 @@ class AuthController extends Controller
             "profile_photo_url"=>$user->profile_photo_url,
             "class_id"=>$id
         ]);
+        }else{
+            $data=$user;
+        }
+
         return ['data'=>$data,'status'=>200];
     }
 }

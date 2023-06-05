@@ -83,7 +83,7 @@ Route::middleware([
 
 
 
-    // Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
+    Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
 
 
 
@@ -107,7 +107,7 @@ Route::middleware([
     Route::post('/logout', [AuthController::class, 'logout']);
     ///quizes for student
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
-    Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee,teacher');;//:)
+    Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee');;//:)
 
 });
 
