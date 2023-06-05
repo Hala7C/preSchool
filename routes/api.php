@@ -107,6 +107,7 @@ Route::middleware([
     Route::post('/logout', [AuthController::class, 'logout']);
     ///quizes for student
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
+    Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show'])->middleware('role:employee,teacher');;//
     Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee');;//:)
 
 });
@@ -137,7 +138,6 @@ Route::middleware([
     // Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
     Route::delete('/remove/students/{sid}/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
     Route::post('/assign/student/{classID}',[AssignStudentsToClassController::class,'store']); //:)
-    Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show']);//
     Route::get('/unassignes/students',[AssignStudentsToClassController::class,'StudentNotAssigned']);//
 
 
