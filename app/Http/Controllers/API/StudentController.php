@@ -42,7 +42,7 @@ class StudentController extends Controller
                 'siblingNo' => $std->siblingNo,
                 'healthInfo' => $std->healthInfo,
                 'bus_registry' => $std->bus_registry,
-                'bus_id' => $std->bus_id,
+                // 'bus_id' => $std->bus_id
                 'lng' => $std->lng,
                 'lat' => $std->lat,
                 'account_info' => $account
@@ -69,6 +69,7 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+
         $myDate =  $request->birthday;
         $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
         $input = [
@@ -101,7 +102,6 @@ class StudentController extends Controller
         $cuurentYear = Carbon::now()->year;
         $date = explode('-', $std->birthday);
         $age = $cuurentYear - $date[0];
-        $data = collect();
         $data = ([
             'message' => 'added successfully',
             'id' => $std->id,
@@ -121,6 +121,7 @@ class StudentController extends Controller
         ]);
 
         return ['data' => $data, 'status' => '210'];
+
     }
 
 

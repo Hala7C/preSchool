@@ -91,9 +91,9 @@ Route::middleware([
 
     ////////Exam
     Route::get('/exams/{sID}', [ExamController::class, 'index'])->middleware('TeacherSubject');
-    Route::post('/exams', [ExamController::class, 'store'])->middleware('TeacherSubject');
-    Route::post('/exams/{id}', [ExamController::class, 'update'])->middleware('TeacherSubject');
-    Route::delete('/exams/{id}', [ExamController::class, 'destroy'])->middleware('TeacherSubject');
+    Route::post('/exams', [ExamController::class, 'store'])->middleware('addExam');;
+    Route::post('/exams/{id}', [ExamController::class, 'update'])->middleware('addExam');;
+    Route::delete('/exams/{id}', [ExamController::class, 'destroy']);//validate if auth teacher own this exam in controller
 });
 
 Route::middleware([
