@@ -92,7 +92,8 @@ class QuestionController extends Controller
     {
         $question=Question::findOrFail($id);
         $answers=$question->answers()->get();
-        $data=([
+        $data=array();
+        array_push($data,[
             'id'=>$question->id,
             'text'=>$question->text,
             'audio'=>$question->audio,
