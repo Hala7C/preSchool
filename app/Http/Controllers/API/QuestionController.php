@@ -93,11 +93,13 @@ class QuestionController extends Controller
         $question=Question::findOrFail($id);
         $answers=$question->answers()->get();
         $data=array();
+        $correctSymbol=Answer::where('question_id','=',$id)->where('correct_answer',true)->first();
         array_push($data,[
             'id'=>$question->id,
             'text'=>$question->text,
             'audio'=>$question->audio,
             'category_id'=>$question->category_id,
+            'correct_Symbol'=>$correctSymbol->symbol,
             'answers'=>$answers
         ]);
         return ['data' => $data, 'status' => '210'];
