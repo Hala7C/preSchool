@@ -85,6 +85,8 @@ Route::middleware([
 
     Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
 
+    Route::get('/teacher/subjects',[TeacherController::class,'OwnteacherSubjects']);//:)
+
 
 
 

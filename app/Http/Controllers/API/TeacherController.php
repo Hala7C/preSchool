@@ -90,11 +90,19 @@ class TeacherController extends Controller
         $teacher=Employee::findOrFail($Tid);
         $subjects=$teacher->subjects($teacher->id);
         if(count($subjects)==0){
-            return ['data'=>'this teacher do not assignted to any subject yet','status'=>210];
+            return ['data'=>['this teacher do not assignted to any subject yet'],'status'=>210];
         }
         return ['data'=>$subjects,'status'=>210];
     }
-
+    public function OwnteacherSubjects(){
+        $user=Auth::user()->ownerable;
+        $teacher=Employee::findOrFail($user->id);
+        $subjects=$teacher->subjects($teacher->id);
+        if(count($subjects)==0){
+            return ['data'=>['this teacher do not assignted to any subject yet'],'status'=>210];
+        }
+        return ['data'=>$subjects,'status'=>210];
+    }
 
 
     public function teacherSubjectinXClass($classID,$tID){
