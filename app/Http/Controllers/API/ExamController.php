@@ -20,7 +20,7 @@ class ExamController extends Controller
         $subject=Subject::findOrFail($id);
         $subjectsExam=$subject->exams()->get();
         if($subjectsExam->count()==0){
-            return ['data'=>'there are no exams for this subject yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$subjectsExam,'status'=>210];
     }
@@ -81,7 +81,9 @@ class ExamController extends Controller
         $published = Carbon::parse($publishDay)->format("Y-m-d");
         $cuurent=Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
         if( Carbon::parse($cuurent)->gt($published) ){
-                return ['data'=>'You can\'t edit this exam anymore becuase the time out','status'=>210];
+                // return ['data'=>['You can\'t edit this exam anymore becuase the time out'],'status'=>210];
+                return ['data'=>[],'status'=>210];
+
         }
 
         $validator=Validator::make($request->all(),[
@@ -122,7 +124,7 @@ class ExamController extends Controller
             File::delete(public_path($exam->file_path));
         }
         $exam->destroy($id);
-        return ['message' => 'question deleted successfly'];
+        return ['data' => 'question deleted successfly'];
     }
 
 
