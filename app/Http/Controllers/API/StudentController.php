@@ -67,7 +67,9 @@ class StudentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            // return response()->json($validator->errors(), 400);
+            return ['data'=>$validator->errors(),'status'=>400];
+
         }
 
         $myDate =  $request->birthday;
@@ -97,7 +99,7 @@ class StudentController extends Controller
             DB::commit();
         } catch (\Exception $exp) {
             DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
-            return ['data' =>  $exp->getMessage(), 'status' => '400'];
+            return ['data' =>  $exp->getMessage(), 'status' => 400];
         }
         $cuurentYear = Carbon::now()->year;
         $date = explode('-', $std->birthday);
