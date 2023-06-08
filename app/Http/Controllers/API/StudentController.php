@@ -53,24 +53,24 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'fullName' => ['required', 'alpha', 'max:255'],
-            'gender' => ['required', 'in:male,female'],
-            'motherName' => ['required', 'alpha', 'max:255'],
-            'motherLastName' => ['required', 'alpha', 'max:255'],
-            'birthday' => ['required'],
-            'phone' => ['required', 'digits:10'],
-            'location' => ['required', 'string'],
-            'siblingNo' => ['required', 'numeric'],
-            'healthInfo' => ['string', 'alpha', 'max:255'],
-            'bus_registry' => ['required', 'boolean']
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'fullName' => ['required', 'alpha', 'max:255'],
+        //     'gender' => ['required', 'in:male,female'],
+        //     'motherName' => ['required', 'alpha', 'max:255'],
+        //     'motherLastName' => ['required', 'alpha', 'max:255'],
+        //     'birthday' => ['required'],
+        //     'phone' => ['required', 'digits:10'],
+        //     'location' => ['required', 'string'],
+        //     'siblingNo' => ['required', 'numeric'],
+        //     'healthInfo' => ['string', 'alpha', 'max:255'],
+        //     'bus_registry' => ['required', 'boolean']
+        // ]);
 
-        if ($validator->fails()) {
-            // return response()->json($validator->errors(), 400);
-            return ['data'=>$validator->errors(),'status'=>400];
+        // if ($validator->fails()) {
+        //     // return response()->json($validator->errors(), 400);
+        //     return ['data'=>$validator->errors(),'status'=>400];
 
-        }
+        // }
 
         $myDate =  $request->birthday;
         $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
