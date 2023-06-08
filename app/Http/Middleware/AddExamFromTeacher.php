@@ -19,7 +19,6 @@ class AddExamFromTeacher
             ->where('teacher_class_subject.teacher_id','=',$authTeacherID)
             ->distinct()
             ->first('employee.*');
-            return response()->json($Rteacher,400);;
             if(empty($Rteacher)){
                 return response()->json('you do not have the right to add exam to this subject ',400);
             }
