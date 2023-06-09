@@ -202,7 +202,7 @@ Route::middleware([
 });
 Route::middleware([
     'auth:sanctum',
-    'isAdminOrUser',
+    // 'isAdminOrUser',
 ])->group(function () {
     Route::get('/school/{id}',        [SchoolController::class, 'show']);
 });

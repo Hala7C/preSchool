@@ -42,7 +42,7 @@ class StudentController extends Controller
                 'siblingNo' => $std->siblingNo,
                 'healthInfo' => $std->healthInfo,
                 'bus_registry' => $std->bus_registry,
-                // 'bus_id' => $std->bus_id
+                'bus_id' => $std->bus_id,
                 'lng' => $std->lng,
                 'lat' => $std->lat,
                 'account_info' => $account
