@@ -76,7 +76,7 @@ class LessonController extends Controller
         $l=Lesson::findOrFail($id);
         $homeworks=$l->homeworks()->get();
         if(count($homeworks)==0){
-            return ['msg'=>'there is no homeworks for this lesson yet'];
+            return ['msg'=>[],'status'=>210];
         }
         return ['data'=>$homeworks,'status'=>210];
     }
@@ -98,7 +98,7 @@ class LessonController extends Controller
             if($homeworksCount != 0){
                 return ['data'=>$homeworks,'status'=>210];
             }
-            return ['data'=>'there are no homeworks for this lesson'];
+            return ['data'=>['there are no homeworks for this lesson']];
     }
 
 
@@ -128,7 +128,7 @@ class LessonController extends Controller
             if($homeworksCount != 0){
                 return ['data'=>$homeworks,'status'=>210];
             }
-            return ['data'=>'there are no homeworks for this lesson'];
+            return ['data'=>['there are no homeworks for this lesson'],'status'=>210];
     }
 
     public function sendHomework($lessonID){

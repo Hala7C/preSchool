@@ -96,6 +96,33 @@ Route::middleware([
     Route::post('/exams', [ExamController::class, 'store'])->middleware('addExam');;
     Route::post('/exams/{id}', [ExamController::class, 'update'])->middleware('addExam');;
     Route::delete('/exams/{id}', [ExamController::class, 'destroy']);//validate if auth teacher own this exam in controller
+
+
+
+
+
+
+//lesson
+Route::post('/lesson', [LessonController::class, 'store']); /////////////////
+Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////
+Route::delete('/lesson/{id}', [LessonController::class, 'destroy']); ///////////////
+
+Route::get('/lesson/homeworks/{id}', [LessonController::class, 'homeworks']); /////////////
+Route::get('/lesson/change/stauts/{cID}/{lID}', [LessonController::class, 'lessonStatus']); ////////
+Route::get('/lesson/send/homework/{id}', [LessonController::class, 'sendHomework']); ///wait for ads and notification to finish
+
+
+
+//homeworks
+Route::post('/homework', [HomeworkController::class, 'store']); ///////////////
+Route::post('/homework/{id}', [HomeworkController::class, 'update']); /////////
+Route::delete('/homework/{id}', [HomeworkController::class, 'destroy']); //////////////
+
+
+
+
+Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//
+
 });
 
 Route::middleware([
@@ -282,27 +309,6 @@ Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingControll
 
 
 
-
-//lesson
-Route::post('/lesson', [LessonController::class, 'store']); /////////////////
-Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////
-Route::delete('/lesson/{id}', [LessonController::class, 'destroy']); ///////////////
-
-Route::get('/lesson/homeworks/{id}', [LessonController::class, 'homeworks']); /////////////
-Route::get('/lesson/change/stauts/{cID}/{lID}', [LessonController::class, 'lessonStatus']); ////////
-Route::get('/lesson/send/homework/{id}', [LessonController::class, 'sendHomework']); ///wait for ads and notification to finish
-
-
-
-//homeworks
-Route::post('/homework', [HomeworkController::class, 'store']); ///////////////
-Route::post('/homework/{id}', [HomeworkController::class, 'update']); /////////
-Route::delete('/homework/{id}', [HomeworkController::class, 'destroy']); //////////////
-
-
-
-
-Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//
 
 
 

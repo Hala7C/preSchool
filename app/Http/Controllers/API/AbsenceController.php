@@ -15,6 +15,7 @@ class AbsenceController extends Controller
     public function index(Request $request)
     {
         $absences_students = Absence::filters($request->query())->get();
+
         return $absences_students;
     }
     public function registerAbsence(Request $request)
