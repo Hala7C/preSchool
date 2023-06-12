@@ -98,7 +98,7 @@ class LessonController extends Controller
             if($homeworksCount != 0){
                 return ['data'=>$homeworks,'status'=>210];
             }
-            return ['data'=>['there are no homeworks for this lesson']];
+            return ['data'=>['there are no homeworks for this lesson'],'status'=>210];
     }
 
 
