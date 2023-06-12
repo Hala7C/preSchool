@@ -15,7 +15,7 @@ class BusExist
         if($busCount !=0){
             return $next($request);
         }else{
-            return redirect()->back()->withErrors(['msg'=>'there is no buses yet to run script']);
+            return response()->json('there is no buses yet',400);
         }
     }
 }
