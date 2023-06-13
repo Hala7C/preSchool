@@ -67,7 +67,7 @@ class AbsenceController extends Controller
         if ($absence) {
             Absence::destroy($id);
 
-            return ['data' => $absence, 'status' => '210'];
+            return ['data' => ["Absence fixed"], 'status' => '210'];
         }
         return ["data" => ["Sorry you can't delete "], 'status' => '401'];
     }
