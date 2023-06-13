@@ -138,6 +138,7 @@ Route::middleware([
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
     Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show'])->middleware('role:employee,teacher');;//
     Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee');;//:)
+    Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
 
 });
 
@@ -194,15 +195,14 @@ Route::get('/all/data',[TeacherController::class,'allAssignDate']);//:)
 
 
 });
-Route::post('/student/store', [StudentController::class, 'store']);
 
 Route::middleware([
     'auth:sanctum',
     'isAdmin',
 ])->group(function () {
     //registry
+    Route::post('/student/store', [StudentController::class, 'store1']);
     Route::get('/students',        [StudentController::class, 'index']);
-    Route::get('/student/{id}',    [StudentController::class, 'show']);
     Route::post('/student/{id}',   [StudentController::class, 'update']);
     Route::delete('/student/{id}', [StudentController::class, 'destroy']);
 
