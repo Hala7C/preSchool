@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -191,6 +192,36 @@ class AuthController extends Controller
         // return  auth()->user();
 
         $user=User::findOrFail(Auth::user()->id);
-        return ['data'=>$user,'status'=>200];
+        $student=$user->ownerable;
+        if($user->role=='user'){
+            $cid=$student->classs()->get();
+             // $class=Classe::findOrFail($cid);
+        if(count($cid)==0){
+            $id=null;
+        }else{
+            $id=$cid[0]->id;
+        }
+        $data=collect();
+        $data=([
+            "id"=> $user->id,
+            "name"=> $user->name,
+            "email_verified_at"=>$user->name ,
+            "two_factor_confirmed_at"=>$user-> email_verified_at,
+            "current_team_id"=>$user-> current_team_id,
+            "profile_photo_path"=> $user->profile_photo_path,
+            "role"=> $user->role,
+            "status"=> $user->status,
+            "ownerable_type"=> $user->ownerable_type,
+            "ownerable_id"=> $user->ownerable_id,
+            "created_at"=> $user->created_at,
+            "updated_at"=> $user->updated_at,
+            "profile_photo_url"=>$user->profile_photo_url,
+            "class_id"=>$id
+        ]);
+        }else{
+            $data=$user;
+        }
+
+        return ['data'=>$data,'status'=>200];
     }
 }

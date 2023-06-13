@@ -72,6 +72,6 @@ class VRPPython extends Controller
             }
         }
         VRP::create();
-        return "Students distrubited successfully";
+        return ['data'=>"Students distrubited successfully",'status'=>210];
     }
 }

@@ -20,7 +20,7 @@ class ExamController extends Controller
         $subject=Subject::findOrFail($id);
         $subjectsExam=$subject->exams()->get();
         if($subjectsExam->count()==0){
-            return ['data'=>'there are no exams for this subject yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$subjectsExam,'status'=>210];
     }
@@ -30,7 +30,7 @@ class ExamController extends Controller
 
         $validator=Validator::make($request->all(),[
             // 'name'=>['required','unique:exams,name','string'],
-            'file'=>['required','file','mimes:pdf,xlx,csv,docs', 'max:2048', Rule::unique('exams', 'name')],
+            'file'=>['required','file','mimes:pdf,xlx,csv,docx', 'max:2048', Rule::unique('exams', 'name')],
             'status'=>['required','in:avilable,unavilable'],
             'term'=>['required','in:s1,s2'],
             'type'=>['required','in:first,second,final'],
@@ -38,7 +38,7 @@ class ExamController extends Controller
             'subject_id'=>['required','exists:subject,id'],
         ]);
         if($validator->fails()){
-            return response()->json($validator->errors(),210);
+            return response()->json($validator->errors(),400);
         }
         $fileName =$request->file->getClientOriginalName();
         $validat=['name'=> $fileName];
@@ -46,7 +46,7 @@ class ExamController extends Controller
             'name'=>[Rule::unique('exams', 'name')]
         ]);
         if($validator->fails()){
-            return response()->json($validator->errors(),210);
+            return response()->json($validator->errors(),400);
         }
         $request->file->move(public_path('exams'), $fileName);
         $myDate =  $request->publish_date;
@@ -81,11 +81,13 @@ class ExamController extends Controller
         $published = Carbon::parse($publishDay)->format("Y-m-d");
         $cuurent=Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
         if( Carbon::parse($cuurent)->gt($published) ){
-                return ['data'=>'You can\'t edit this exam anymore becuase the time out','status'=>210];
+                // return ['data'=>['You can\'t edit this exam anymore becuase the time out'],'status'=>210];
+                return ['data'=>[],'status'=>210];
+
         }
 
         $validator=Validator::make($request->all(),[
-            'file'=>['sometimes','mimes:pdf,xlx,csv,docs', 'max:2048', Rule::unique('exams', 'name')->ignore($exam->id)],
+            'file'=>['sometimes','mimes:pdf,xlx,csv,docx', 'max:2048', Rule::unique('exams', 'name')->ignore($exam->id)],
             'status'=>['required','in:avilable,unavilable'],
             'term'=>['required','in:s1,s2'],
             'type'=>['required','in:first,second,final'],
@@ -122,7 +124,7 @@ class ExamController extends Controller
             File::delete(public_path($exam->file_path));
         }
         $exam->destroy($id);
-        return ['message' => 'question deleted successfly'];
+        return ['data' => 'question deleted successfly'];
     }
 
 
@@ -130,19 +132,21 @@ class ExamController extends Controller
     /////////employee section
     public function TodayExam(){
         //file - subject - class - teacher
+        $cuurent=Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
         $data=collect();
-        $exams=Exam::where('status','=','avilable')->get();
+        $exams=Exam::whereDate('publish_date', $cuurent)->where('status','=','avilable')->get();
         if($exams->count()==0){
             return ['data'=>'there are not any exam for today','status'=>210];
         }
         foreach($exams as $exam){
-        $publishDay=$exam->publish_date;
-        $published = Carbon::parse($publishDay)->format("Y-m-d");
-        $cuurent=Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
-        if( Carbon::parse($cuurent)->eq($published) ){
             $examDate=$exam->publish_date;
             $date = Carbon::parse($examDate)->format('H:i');
             // return $examDate;
+            $subName=$exam->subject()->get()[0]->name;
+            $subID=$exam->subject()->get()[0]->id;
+            $teacherName=$exam->teacher()->get()[0]->fullName;
+            $className=$exam->class()->get('name');
+            $classID=$exam->class()->get('id');
             $data->push([
             'name'=>$exam->name,
             'file_path'=>$exam->file_path,
@@ -150,17 +154,14 @@ class ExamController extends Controller
             'term'=>$exam->term,
             'type'=>$exam->type,
             'publish_date'=>$date,
-            'subject_name'=>$exam->subject()->get('name'),
-            'subject_id'=>$exam->subject()->get('id'),
+            'subject_name'=>$subName,
+            'subject_id'=>$subID,
             'teacher_id'=>$exam->teacher_id,
-            'teacher_name'=>$exam->teacher()->get('fullName'),
-            'class_id'=>$exam->class()->get('id'),
-            'class_name'=>$exam->class()->get('name')
+            'teacher_name'=>$teacherName,
+            'class_id'=>$classID,
+            'class_name'=>$className
             ]);
-        }}
-        if ($data->count()==0){
-            return ['data'=>'there are not any exams for today','status'=>210];
-        }
+    }
         return ['data'=>$data,'status'=>210];
     }
 }

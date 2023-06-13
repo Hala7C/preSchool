@@ -26,10 +26,9 @@ class AbsenceController extends Controller
                 'fullName' => $std->fullName,
                 'phone' => $std->phone
             ]);
-            return ['data' => $data, 'status' => 210];
         }
 
-        return $absences_students;
+        return ['data' => $data, 'status' => 210];
     }
     public function registerAbsence(Request $request)
     {

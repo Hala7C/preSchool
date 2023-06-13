@@ -6,13 +6,13 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-class AddExamFromTeacher
+class ExamsRule
 {
 
     public function handle(Request $request, Closure $next)
     {
         $authTeacherID=Auth::user()->ownerable->id;
-        $subID=$request->route()->parameter('sID');
+        $subID= $request->get('subject_id');
         $Rteacher=DB::table('employee')
             ->join('teacher_class_subject','employee.id','=','teacher_class_subject.teacher_id')
             ->where('teacher_class_subject.subject_id','=',$subID)

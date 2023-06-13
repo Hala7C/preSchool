@@ -46,6 +46,14 @@ class Employee extends Model
         ->get(['class.*']);
     }
 
+    public function classess($id){
+        return DB::table('class')
+        ->join('teacher_class_subject','class.id','=','teacher_class_subject.class_id')
+        ->where('teacher_class_subject.teacher_id','=',$id)
+        ->distinct()
+        ->get(['class.*']);
+    }
+
     public function subjects($id){
         return DB::table('subject')
         ->join('teacher_class_subject','subject.id','=','teacher_class_subject.subject_id')

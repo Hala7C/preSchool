@@ -77,9 +77,9 @@ class CategoryController extends Controller
 
     public function categoryQuestions($id){
         $category=Category::findOrFail($id);
-        $questions=$category->questions()->count();
-        if($questions==0){
-        return ['data' => 'there is no questions yet for this category', 'status' => '210'];
+        $questions=$category->questions()->get();
+        if(count($questions)==0){
+        return ['data' => [], 'status' => '210'];
         }
         $questions=$category->questions()->get();
         $data=collect();
@@ -101,7 +101,7 @@ class CategoryController extends Controller
         $category=Category::findOrFail($id);
         $questions=$category->questions()->count();
         if($questions==0){
-        return ['data' => 'there is no questions yet for this category', 'status' => '210'];
+        return ['data' => [], 'status' => '210'];
         }
         $questions=$category->questions()->get();
         $data=collect();

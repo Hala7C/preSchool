@@ -15,7 +15,7 @@ class StudentDistributed
         if ($students==$studentsLocations) {
                 return $next($request);
         } else {
-                return redirect()->route('logout1');
+                return response()->json('Registered students have not updated their locations yet',400);
         }
     }
 }
