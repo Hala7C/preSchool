@@ -85,7 +85,7 @@ Route::middleware([
 
     Route::get('/teacher/class', [TeacherController::class, 'teacherClasess']);
 
-    Route::get('/teacher/subjects',[TeacherController::class,'OwnteacherSubjects']);//:)
+    Route::get('/teacher/subjects', [TeacherController::class, 'OwnteacherSubjects']); //:)
 
 
 
@@ -95,33 +95,33 @@ Route::middleware([
     Route::get('/exams/{sID}', [ExamController::class, 'index'])->middleware('TeacherSubject');
     Route::post('/exams', [ExamController::class, 'store'])->middleware('addExam');;
     Route::post('/exams/{id}', [ExamController::class, 'update'])->middleware('addExam');;
-    Route::delete('/exams/{id}', [ExamController::class, 'destroy']);//validate if auth teacher own this exam in controller
+    Route::delete('/exams/{id}', [ExamController::class, 'destroy']); //validate if auth teacher own this exam in controller
 
 
 
 
 
 
-//lesson
-Route::post('/lesson', [LessonController::class, 'store']); /////////////////
-Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////
-Route::delete('/lesson/{id}', [LessonController::class, 'destroy']); ///////////////
+    //lesson
+    Route::post('/lesson', [LessonController::class, 'store']); /////////////////
+    Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////
+    Route::delete('/lesson/{id}', [LessonController::class, 'destroy']); ///////////////
 
-Route::get('/lesson/homeworks/{id}', [LessonController::class, 'homeworks']); /////////////
-Route::get('/lesson/change/stauts/{cID}/{lID}', [LessonController::class, 'lessonStatus']); ////////
-Route::get('/lesson/send/homework/{id}', [LessonController::class, 'sendHomework']); ///wait for ads and notification to finish
-
-
-
-//homeworks
-Route::post('/homework', [HomeworkController::class, 'store']); ///////////////
-Route::post('/homework/{id}', [HomeworkController::class, 'update']); /////////
-Route::delete('/homework/{id}', [HomeworkController::class, 'destroy']); //////////////
+    Route::get('/lesson/homeworks/{id}', [LessonController::class, 'homeworks']); /////////////
+    Route::get('/lesson/change/stauts/{cID}/{lID}', [LessonController::class, 'lessonStatus']); ////////
+    Route::get('/lesson/send/homework/{id}', [LessonController::class, 'sendHomework']); ///wait for ads and notification to finish
 
 
 
+    //homeworks
+    Route::post('/homework', [HomeworkController::class, 'store']); ///////////////
+    Route::post('/homework/{id}', [HomeworkController::class, 'update']); /////////
+    Route::delete('/homework/{id}', [HomeworkController::class, 'destroy']); //////////////
 
-Route::get('/subject/lessons/{sid}',[SubjectController::class,'subjectLessons']);//
+
+
+
+    Route::get('/subject/lessons/{sid}', [SubjectController::class, 'subjectLessons']); //
 
 });
 
@@ -136,10 +136,9 @@ Route::middleware([
     Route::post('/logout', [AuthController::class, 'logout']);
     ///quizes for student
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
-    Route::get('/class/students/{classID}',[AssignStudentsToClassController::class,'show'])->middleware('role:employee,teacher');;//
-    Route::get('/teacher/classes/{tid}',[TeacherController::class,'teacherClases'])->middleware('role:employee');;//:)
+    Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher');; //
+    Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee');; //:)
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
-
 });
 
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
@@ -164,34 +163,34 @@ Route::middleware([
     Route::get('/day/exams', [ExamController::class, 'TodayExam']);
 
 
-///assign
+    ///assign
     // Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
-    Route::delete('/remove/students/{sid}/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
-    Route::post('/assign/student/{classID}',[AssignStudentsToClassController::class,'store']); //:)
-    Route::get('/unassignes/students',[AssignStudentsToClassController::class,'StudentNotAssigned']);//
+    Route::delete('/remove/students/{sid}/{classID}', [AssignStudentsToClassController::class, 'deleteStudentFromClass']); //
+    Route::post('/assign/student/{classID}', [AssignStudentsToClassController::class, 'store']); //:)
+    Route::get('/unassignes/students', [AssignStudentsToClassController::class, 'StudentNotAssigned']); //
 
 
     Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
-Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
-Route::apiResource('subject',  SubjectController::class);
-Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
+    Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
+    Route::apiResource('subject',  SubjectController::class);
+    Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
 
 
-//////
-//teacher assignment
-Route::post('/assign/teacher',[TeacherController::class,'assignTeacherToClassWithSubjects']); //:)
-Route::get('/teachers',[TeacherController::class,'allTeacher']); //:)
-Route::get('/teacher/subjects/{tid}',[TeacherController::class,'teacherSubjects']);//:)
-Route::get('/subject/teacher/{sid}',[TeacherController::class,'SubjectTeachers']);//:)
-Route::get('/class/teacher/{cid}',[TeacherController::class,'ClassTeachers']); //:)
-Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']);//
+    //////
+    //teacher assignment
+    Route::post('/assign/teacher', [TeacherController::class, 'assignTeacherToClassWithSubjects']); //:)
+    Route::get('/teachers', [TeacherController::class, 'allTeacher']); //:)
+    Route::get('/teacher/subjects/{tid}', [TeacherController::class, 'teacherSubjects']); //:)
+    Route::get('/subject/teacher/{sid}', [TeacherController::class, 'SubjectTeachers']); //:)
+    Route::get('/class/teacher/{cid}', [TeacherController::class, 'ClassTeachers']); //:)
+    Route::get('/teacher/subject/in/class/{cid}/{tid}', [TeacherController::class, 'teacherSubjectinXClass']); //
 
 
-Route::delete('/teacher/subject/in/class/{cid}/{tid}/{sid}', [TeacherController::class, 'unAssignsubjectFromTeacher']);//
+    Route::delete('/teacher/subject/in/class/{cid}/{tid}/{sid}', [TeacherController::class, 'unAssignsubjectFromTeacher']); //
 
-Route::delete('/teacher/all/subject/in/class/{cid}/{tid}', [TeacherController::class, 'unAssignAllsubjectFromTeacher']);//
+    Route::delete('/teacher/all/subject/in/class/{cid}/{tid}', [TeacherController::class, 'unAssignAllsubjectFromTeacher']); //
 
-Route::get('/all/data',[TeacherController::class,'allAssignDate']);//:)
+    Route::get('/all/data', [TeacherController::class, 'allAssignDate']); //:)
 
 
 });
@@ -292,7 +291,7 @@ Route::post('/device-token', [DeviceTokenController::class, "store"]);
 Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerAbsence']);
 Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index']);
 Route::put('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'updateJustification']);
-Route::delete('/abs-delete', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
+Route::delete('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
 Route::post('template/store', [App\Http\Controllers\API\TemplateController::class, 'store'])->middleware('auth:sanctum');
 Route::post('template/update', [App\Http\Controllers\API\TemplateController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('template/delete/{template}', [App\Http\Controllers\API\TemplateController::class, 'destroy'])->middleware('auth:sanctum');
