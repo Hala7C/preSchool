@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\Absence;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,19 @@ class AbsenceController extends Controller
     public function index(Request $request)
     {
         $absences_students = Absence::filters($request->query())->get();
+        $data = collect();
+        foreach ($absences_students as $student_info) {
+            $std = Student::findOrFail($student_info->student_id);
+            $data->push([
+                'id' => $std->id,
+                'date' => $student_info->date,
+                'justification' => $student_info->justification,
+                'fullName' => $std->fullName,
+                'phone' => $std->phone
+            ]);
+            return ['data' => $data, 'status' => 210];
+        }
+
         return $absences_students;
     }
     public function registerAbsence(Request $request)
@@ -47,13 +61,14 @@ class AbsenceController extends Controller
         DB::table('absences')->where('id', $id)->update(['justification' => $request->justification]);
         return ['data' => ["Absence fixed"], 'status' => '210'];
     }
-    public function deleteStudentFromAbsence(Request $request)
+    public function deleteStudentFromAbsence($id)
     {
-        $students = $request->students;
-        foreach ($students as $student) {
-            $student = Absence::where('date', Carbon::today())
-                ->where('student_id', $student)->delete();
+        $absence = Absence::where('id', $id)->where('date', Carbon::today()->format('Y/m/d'))->first();
+        if ($absence) {
+            Absence::destroy($id);
+
+            return ['data' => $absence, 'status' => '210'];
         }
-        return ['data' => ["Absence fixed"], 'status' => '210'];
+        return ["data" => ["Sorry you can't delete "], 'status' => '401'];
     }
 }
