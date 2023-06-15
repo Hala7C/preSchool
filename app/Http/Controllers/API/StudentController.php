@@ -223,6 +223,7 @@ class StudentController extends Controller
         $account = $student->owner;
         $account->status = 'suspended';
         $account->save();
+        return ['data'=>'suspended successfully','status'=>210];
     }
 
     public function updateStudentLocation(Request $request, $id)
