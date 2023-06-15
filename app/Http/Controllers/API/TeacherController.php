@@ -119,6 +119,21 @@ class TeacherController extends Controller
         return ['data' =>$subjects,'status'=>210];
     }
 
+
+    public function teacherClassinXSubject($subid){
+        $subject=Subject::findOrFail($subid);
+        $user=Auth::user();
+        $teacher=$user->ownerable;
+        $teacher=Employee::findOrFail($teacher->id);
+        $classes=DB::table('class')
+        ->join('teacher_class_subject','class.id','=','teacher_class_subject.class_id')
+        ->where('teacher_class_subject.subject_id','=',$subject->id)
+        ->where('teacher_class_subject.teacher_id','=',$teacher->id)
+        ->distinct()
+        ->get(['class.*']);
+        return ['data' =>$classes,'status'=>210];
+    }
+
     public function SubjectTeachers( $id){
         $subject=Subject::findOrFail($id);
         $teachers=$subject->teachers();
