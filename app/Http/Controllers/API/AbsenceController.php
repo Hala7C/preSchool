@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\Absence;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class AbsenceController extends Controller
 {
@@ -30,23 +32,59 @@ class AbsenceController extends Controller
 
         return ['data' => $data, 'status' => 210];
     }
-    public function registerAbsence(Request $request)
+
+
+
+    public function registerjson(Request $request)
     {
-        $students = $request->post("students");
-        $absences_students_ids = Absence::where('date', Carbon::today())
-            ->pluck('student_id')
-            ->toArray();
-        foreach ($students as $student_id => $justification) {
-            if (!in_array($student_id, $absences_students_ids)) {
-                Absence::create([
-                    "date" => Carbon::today(),
-                    "student_id" => $student_id,
-                    "justification" => $justification,
-                ]);
+        $encodded_data = $request->json()->all();
+        $decodded_data = json_encode($encodded_data);
+        $data = json_decode($decodded_data);
+        $absences_students_ids = Absence::where('date', Carbon::today())->pluck('student_id')->toArray();
+        foreach ($data as $student) {
+            $absences = collect();
+            //  foreach ($students as $student) {
+            foreach ($student as $key => $Value) {
+                //  DB::beginTransaction();
+                if ($key == "id") {
+                    $id = $Value;
+                    // $absences->push($id);
+
+                    if (!in_array($id, $absences_students_ids)) {
+                        Absence::create([
+                            "date" => Carbon::today(),
+                            "student_id" => $id,
+                            "justification" => null,
+                        ]);
+                    }
+                }
             }
+            //  }
+
+
         }
-        return ["absence done"];
+        return ['data' => ["Absence done"], 'status' => 210];
+        // DB::commit();
+        //  return $absences;
+        //return ['data' => ["Absence dont"], 'status' => 401];
     }
+    // public function registerAbsence(Request $request)
+    // {
+    //     $students = $request->post("students");
+    //     $absences_students_ids = Absence::where('date', Carbon::today())
+    //         ->pluck('student_id')
+    //         ->toArray();
+    //     foreach ($students as $student_id => $justification) {
+    //         if (!in_array($student_id, $absences_students_ids)) {
+    //             Absence::create([
+    //                 "date" => Carbon::today(),
+    //                 "student_id" => $student_id,
+    //                 "justification" => $justification,
+    //             ]);
+    //         }
+    //     }
+    //     return ["absence done"];
+    // }
     public function updateJustification(Request $request, $id)
     {
         //  $absence = Absence::findOrFail($id);
