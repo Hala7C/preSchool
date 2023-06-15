@@ -102,6 +102,8 @@ Route::middleware([
 
 
 
+    Route::get('/subject/class/{id}', [TeacherController::class, 'teacherClassinXSubject']); /////////////
+
     //lesson
     Route::post('/lesson', [LessonController::class, 'store']); /////////////////
     Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////

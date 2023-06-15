@@ -81,7 +81,7 @@ class TeacherController extends Controller
         $teacher=Employee::findOrFail($tID);
         $clases=$teacher->classes();
         if(count($clases)==0){
-            return ['data'=>'this teacher do not assignted to any class yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$clases,'status'=>210];
     }
@@ -90,7 +90,7 @@ class TeacherController extends Controller
         $teacher=Employee::findOrFail($Tid);
         $subjects=$teacher->subjects($teacher->id);
         if(count($subjects)==0){
-            return ['data'=>['this teacher do not assignted to any subject yet'],'status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$subjects,'status'=>210];
     }
@@ -99,7 +99,7 @@ class TeacherController extends Controller
         $teacher=Employee::findOrFail($user->id);
         $subjects=$teacher->subjects($teacher->id);
         if(count($subjects)==0){
-            return ['data'=>['this teacher do not assignted to any subject yet'],'status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$subjects,'status'=>210];
     }
@@ -119,11 +119,26 @@ class TeacherController extends Controller
         return ['data' =>$subjects,'status'=>210];
     }
 
+
+    public function teacherClassinXSubject($subid){
+        $subject=Subject::findOrFail($subid);
+        $user=Auth::user();
+        $teacher=$user->ownerable;
+        $teacher=Employee::findOrFail($teacher->id);
+        $classes=DB::table('class')
+        ->join('teacher_class_subject','class.id','=','teacher_class_subject.class_id')
+        ->where('teacher_class_subject.subject_id','=',$subject->id)
+        ->where('teacher_class_subject.teacher_id','=',$teacher->id)
+        ->distinct()
+        ->get(['class.*']);
+        return ['data' =>$classes,'status'=>210];
+    }
+
     public function SubjectTeachers( $id){
         $subject=Subject::findOrFail($id);
         $teachers=$subject->teachers();
         if(count($teachers)==0){
-            return ['data'=>'this subject do not assignted to any teacher yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$teachers,'status'=>210];
     }
@@ -132,7 +147,7 @@ class TeacherController extends Controller
         $class=Classe::findOrFail($id);
         $teachers=$class->teachers();
         if(count($teachers)==0){
-            return ['data'=>'this class do not assignted to any teacher yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$teachers,'status'=>210];
     }
@@ -168,7 +183,7 @@ class TeacherController extends Controller
     public function unAssignsubjectFromTeacher($classID,$tID,$sid){
         $tClass=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->where('subject_id','=',$sid)->get();
         if(count($tClass)==0){
-            return ['data' =>'there is no entry with this data','status'=>210];
+            return ['data' =>[],'status'=>210];
         }
         TeacherClassSubject::destroy($tClass[0]->id);
         return ['data' =>'deleted successfully','status'=>210];
@@ -177,7 +192,7 @@ class TeacherController extends Controller
     public function unAssignAllsubjectFromTeacher($classID,$tID){
         $tClasses=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->get();
         if(count($tClasses)==0){
-            return ['data' =>'there is no entry with this data','status'=>210];
+            return ['data' =>[],'status'=>210];
         }
         // return $tClasses;
         foreach ($tClasses as $sub){
@@ -191,7 +206,7 @@ class TeacherController extends Controller
         $teacher=$user->ownerable;
         $clases=$teacher->classess($teacher->id);
         if(count($clases)==0){
-            return ['data'=>'this teacher do not assignted to any class yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$clases,'status'=>210];
     }

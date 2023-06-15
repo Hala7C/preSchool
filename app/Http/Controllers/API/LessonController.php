@@ -76,7 +76,7 @@ class LessonController extends Controller
         $l=Lesson::findOrFail($id);
         $homeworks=$l->homeworks()->get();
         if(count($homeworks)==0){
-            return ['msg'=>[],'status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         return ['data'=>$homeworks,'status'=>210];
     }

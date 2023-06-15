@@ -67,7 +67,6 @@ class User extends Authenticatable
 
     public function ownerable(): MorphTo
     {
-        // return $this->morphTo();
         return $this->morphTo();
     }
     public function deviceTokens()
