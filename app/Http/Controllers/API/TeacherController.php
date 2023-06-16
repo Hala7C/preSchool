@@ -192,7 +192,7 @@ class TeacherController extends Controller
     public function unAssignAllsubjectFromTeacher($classID,$tID){
         $tClasses=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->get();
         if(count($tClasses)==0){
-            return ['data' =>[],'status'=>210];
+            return ['data' =>[],'status'=>400];
         }
         // return $tClasses;
         foreach ($tClasses as $sub){
