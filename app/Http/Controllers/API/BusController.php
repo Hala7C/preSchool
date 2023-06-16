@@ -70,7 +70,7 @@ class BusController extends Controller
     public function destroy($id)
     {
         Bus::destroy($id);
-        return ['message' => 'class deleted successfly'];
+        return ['data' => 'bus deleted successfly','status'=>210];
     }
 
     public function allBusSupervisor()

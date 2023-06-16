@@ -54,6 +54,7 @@ use Laravel\Jetstream\Rules\Role;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+
 });
 
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
@@ -141,6 +142,8 @@ Route::middleware([
     Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher');; //
     Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee');; //:)
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
+
+
 });
 
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
@@ -228,6 +231,7 @@ Route::middleware([
     Route::post('/school/{id}',   [SchoolController::class, 'update']);
     Route::post('/school/update/location/{id}',   [SchoolController::class, 'updatelocation']);
 });
+
 Route::middleware([
     'auth:sanctum',
     // 'isAdminOrUser',
