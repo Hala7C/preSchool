@@ -15,7 +15,7 @@ class StudentDistributed
         if ($students==$studentsLocations) {
                 return $next($request);
         } else {
-                return response()->json('Registered students have not updated their locations yet',400);
+            return ['data'=>'Registered students have not updated their locations yet','status'=>400];
         }
     }
 }

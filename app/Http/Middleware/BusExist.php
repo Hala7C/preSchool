@@ -15,7 +15,7 @@ class BusExist
         if($busCount !=0){
             return $next($request);
         }else{
-            return response()->json('there is no buses yet',400);
+            return ['data'=>'there is no buses yet','status'=>400];
         }
     }
 }

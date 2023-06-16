@@ -18,7 +18,7 @@ class BusCapacity
         if ($busCapacity >= $studentNumber) {
             return $next($request);;
         } else {
-            return response()->json( 'the buses capacity is not enough !! there is ' . $remindStudent . ' students without seat !!',400);
+            return ['data'=>'the buses capacity is not enough !! there is ' . $remindStudent . ' students without seat !!','status'=>400];
         }
     }
 }

@@ -14,7 +14,7 @@ class BusRegistry
         if ($std->bus_registry == true) {
             return $next($request);
         } else {
-            return response()->json(['data'=>'your not register in buses service']) ;
+            return ['data'=>'your not register in buses service','status'=>400];
         }
     }
 }
