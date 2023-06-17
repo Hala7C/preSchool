@@ -21,7 +21,7 @@ class AssignStudentsToClassController extends Controller
         $data=collect();
         $i=0;
         foreach($students as $std){
-            if( $std->withCount('class')->get()[$i]->class_count == 0){
+            if( $std->withCount('classs')->get()[$i]->class_count == 0){
                 $data->push([
                     'id'=>$std->id,
                     'name'=>$std->fullName
