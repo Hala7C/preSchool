@@ -50,7 +50,8 @@ class SchoolController extends Controller
             'start_time'=>['sometimes','required'],
             'lng' => ['sometimes','required', 'numeric'],
             'lat' => ['sometimes','required', 'numeric'],
-            'phone'=>['sometimes','required','digits:10']
+            'phone'=>['sometimes','required','digits:10'],
+            'bus_departure_time'=>['sometimes','required']
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
