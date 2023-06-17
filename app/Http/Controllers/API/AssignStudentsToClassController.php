@@ -104,7 +104,7 @@ class AssignStudentsToClassController extends Controller
                 $stdClass=StudentClass::where('student_id','=',$std)->where('class_id','=',$classID)->get();
                 if(count($stdClass)==0){
                     DB::rollBack();
-                    return ['data'=>[].$std,'status'=>210];
+                    return ['data'=>[],'status'=>210];
                 }
                 StudentClass::destroy($stdClass[0]->id);
             }else{
