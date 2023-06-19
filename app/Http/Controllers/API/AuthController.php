@@ -199,7 +199,7 @@ class AuthController extends Controller
         if(count($cid)==0){
             $id=null;
         }else{
-            $id=$cid[0]->id;
+            $id=$cid[0]->class_id;
         }
         $data=collect();
         $data=([

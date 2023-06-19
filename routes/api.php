@@ -144,6 +144,9 @@ Route::middleware([
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
 
 
+    Route::get('/buses/students', [BusController::class, 'allBusStudent'])->middleware('role:employee,user,admin,bus_supervisor');
+
+
 });
 
 Route::post('/update/student/location/{id}', [StudentController::class, 'updateStudentLocation'])->middleware(['auth:sanctum', 'isBusRegistry']);
@@ -161,7 +164,6 @@ Route::middleware([
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
-    Route::get('/buses/students', [BusController::class, 'allBusStudent']);
     Route::get('/students/without/bus', [BusController::class, 'allStudentWithoutBus']); //
     Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed', 'isBusExist', 'BusCapacities']);
 
