@@ -198,6 +198,14 @@ Route::middleware([
 
     Route::get('/all/data', [TeacherController::class, 'allAssignDate']); //:)
 
+});
+
+Route::middleware([
+    'auth:sanctum',
+    'isAdmin',
+])->group(function () {
+
+
     //registry
     Route::post('/student/store', [StudentController::class, 'store1']);
     Route::get('/students',        [StudentController::class, 'index']);
@@ -211,14 +219,6 @@ Route::middleware([
     Route::get('/employee/{id}',    [EmployeeController::class, 'show']);
     Route::post('/employee/{id}',   [EmployeeController::class, 'update']);
     Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
-});
-
-Route::middleware([
-    'auth:sanctum',
-    'isAdmin',
-])->group(function () {
-
-
 
     //user management
     // Route::post('/user/store', [App\Http\Controllers\API\UserController::class, 'store']);
