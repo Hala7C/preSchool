@@ -111,6 +111,29 @@ class BusController extends Controller
         return ['data' => $data, 'status' => '210'];
     }
 
+    public function SupervisorAllStudent($id)
+    {
+        $supervisor=Employee::find($id);
+        if(is_null($supervisor)){
+            return ['data'=>[],'status'=>200];
+        }
+        $bus = $supervisor->bus()->first();
+        if($bus==null){
+            return ['data' => [], 'status' => '210'];
+        }
+        $students = $bus->students()->get();
+        $data=collect();
+        foreach($students as $std){
+            $data->push([
+                'id'=>$std->id,
+                'name'=>$std->fullName,
+                'lng'=>$std->lng,
+                'lat'=>$std->lat
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
+    }
+
     public function allBusStudent(){
         $busses=Bus::all();
         $data =collect();
