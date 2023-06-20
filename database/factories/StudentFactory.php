@@ -27,7 +27,7 @@ class StudentFactory extends Factory
             'birthday' => $this->faker->dateTime()->format('Y-m-d'),
             'phone' =>$this->faker->numerify('##########'),
             'location' => $this->faker->company(),
-            'siblingNo' => $this->faker->numberBetween(0,10),
+            'siblingNo' => $this->faker->numberBetween(0,6),
             'healthInfo' => $this->faker->text(),
             'bus_registry'=>true,
             'bus_id'=>null,

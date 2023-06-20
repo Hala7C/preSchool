@@ -16,9 +16,7 @@ class AnswerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'text'=>['required', 'max:255'],
-            'img'=>['nullable','mimes:jpg,jpeg,png', 'max:1024'],
-            // 'symbol'=>['required','in:a,b,c,d,e'],
-            // 'question_id'=>['required','exists:questions,id']
+            'img'=>['nullable','mimes:jpg,jpeg,png', 'max:1024']
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -33,13 +31,11 @@ class AnswerController extends Controller
         }
             $input = [
                 'text'=>$request->text,
-                // 'correct_answer'     => $request->correct_answer,
                 'img'     =>$path,
                 'symbol'     => $symbol,
                 'question_id'     => $quesId,
             ];
             $answer = Answer::create($input);
-            // return ['data' => $answer, 'status' => '210'];
     }
 
     public function update(Request $request,$quesId,$symbol)
@@ -49,8 +45,6 @@ class AnswerController extends Controller
         $validator = Validator::make($request->all(), [
             'text'=>['required', 'max:255'],
             'img'=>['nullable','mimes:jpg,jpeg,png', 'max:1024'],
-            // 'symbol'=>['required','in:a,b,c,d,e'],
-            // 'question_id'=>['required','exists:questions,id']
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);

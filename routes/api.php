@@ -142,9 +142,7 @@ Route::middleware([
     Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher');; //
     Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee');; //:)
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
-
     Route::get('supervisor/bus/students/{id}', [BusController::class, 'SupervisorAllStudent'])->middleware('role:bus_supervisor');
-
     Route::get('/buses/students', [BusController::class, 'allBusStudent'])->middleware('role:employee,user,admin,bus_supervisor');
 
 

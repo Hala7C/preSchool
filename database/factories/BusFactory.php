@@ -17,9 +17,9 @@ class BusFactory extends Factory
     public function definition()
     {
         return [
-            'capacity'=>$this->faker->randomElement(['6','8','14','16','22','32']),
+            'capacity'=>$this->faker->randomElement(['6','8','14','16','22','24']),
             'number'=>$this->faker->numerify("####"),
-            'bus_supervisor_id'=>1
+            // 'bus_supervisor_id'=>1
         ];
     }
 }
