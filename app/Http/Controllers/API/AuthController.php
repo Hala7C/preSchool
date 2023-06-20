@@ -112,7 +112,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name'  => ['required', 'string', 'max:255'],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+            'profile_photo_path' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'current_password' => ['sometimes','required', 'string'],
             'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
         ])->after(function ($validator) use ($user, $request) {
@@ -126,8 +126,8 @@ class AuthController extends Controller
         }
 
         $path=null;
-        if($request->hasFile('photo')){
-            $photo =  $request->file("photo");
+        if($request->hasFile('profile_photo_path')){
+            $photo =  $request->file("profile_photo_path");
             $newphoto = time() . $photo->getClientOriginalName();
             $photo->move('users/img', $newphoto);
             $path= 'users/img/' . $newphoto;
@@ -195,12 +195,14 @@ class AuthController extends Controller
         $student=$user->ownerable;
         if($user->role=='user'){
             $cid=$student->classs()->get();
+            $bus_id=$student->bus_id;
              // $class=Classe::findOrFail($cid);
         if(count($cid)==0){
             $id=null;
         }else{
             $id=$cid[0]->class_id;
         }
+
         $data=collect();
         $data=([
             "id"=> $user->id,
@@ -216,7 +218,8 @@ class AuthController extends Controller
             "created_at"=> $user->created_at,
             "updated_at"=> $user->updated_at,
             "profile_photo_url"=>$user->profile_photo_url,
-            "class_id"=>$id
+            "class_id"=>$id,
+            "bus_id"=>$bus_id
         ]);
         }else{
             $data=$user;

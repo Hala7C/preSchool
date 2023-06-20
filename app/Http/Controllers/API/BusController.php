@@ -90,10 +90,13 @@ class BusController extends Controller
     }
     public function allStudent($id)
     {
-        $student=Student::findOrFail($id);
+        $student=Student::find($id);
+        if(is_null($student)){
+            return ['data'=>[],'status'=>200];
+        }
         $bus = $student->bus()->first();
         if($bus==null){
-            return ['data' => "students are not assigned to  buses yet !!\n please try again after sorting", 'status' => '210'];
+            return ['data' => [], 'status' => '210'];
         }
         $students = $bus->students()->get();
         $data=collect();
