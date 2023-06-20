@@ -15,6 +15,7 @@ use App\Models\{
     Homework,
     Lesson,
     Level,
+    StudentClass,
     Subject,
 };
 use Database\Factories\ClassFactory;
@@ -24,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-//std
+/////////std
         DB::table('student')->insert(
             array(
                 'fullName' => "hala",
@@ -129,8 +130,23 @@ class DatabaseSeeder extends Seeder
                                         ,'subjects')->count(2)->create();
 
 
-        // Employee::factory()->has(User::factory()->state(['role' => 'teacher']), 'owner')
-        //                     ->has(Bus::factory(), 'bus')->count(6)->create();
+
+
+
+            $classes=Classe::all();
+            $students=Student::all();
+            $count=0;
+            foreach($classes as $class){
+                for($i=0;$i<$class->capacity;$i++){
+                    if($count < count($students)){
+                    StudentClass::create([
+                        'student_id'=>$students[$count]->id,
+                        'class_id'=>$class->id
+                    ]);
+                    $count++;
+                }}
+            }
+
 
     }
 }

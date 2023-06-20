@@ -70,9 +70,6 @@ class AuthController extends Controller
         $user = User::where('name', $request['name'])->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        // return response()
-        // ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer', 'user' => $user], 200);
         $data=collect();
         $data->push([
             'user'=>$user,
@@ -80,8 +77,6 @@ class AuthController extends Controller
             'token_type'=>'Bearer'
         ]);
         return ['data'=>$data,'status'=>201];
-        // return response()
-        //     ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
     }
 
 
@@ -94,9 +89,6 @@ class AuthController extends Controller
     public function logout(User $user)
     {
         $user->tokens()->delete();
-
-        // return response()
-        //     ->json(['message' => 'You have successfully logged out and the token was successfully deleted'], 200);
             return ['data'=>'You have successfully logged out and the token was successfully deleted','status'=>200];
     }
 
@@ -147,10 +139,6 @@ class AuthController extends Controller
         $user->forceFill([
             'name' =>  $request->name,
         ])->save();
-
-        // return response()
-        //     ->json(['message' => 'You have successfully update '], 200);
-
             return['data'=>'You have successfully update','status'=>200];
     }
     /////////////////////////////////////////updatepassword
@@ -189,14 +177,11 @@ class AuthController extends Controller
 
     public function profile()
     {
-        // return  auth()->user();
-
         $user=User::findOrFail(Auth::user()->id);
         $student=$user->ownerable;
         if($user->role=='user'){
             $cid=$student->classs()->get();
             $bus_id=$student->bus_id;
-             // $class=Classe::findOrFail($cid);
         if(count($cid)==0){
             $id=null;
         }else{
