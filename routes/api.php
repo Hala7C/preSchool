@@ -296,7 +296,7 @@ Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNoti
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
 Route::post('/device-token', [DeviceTokenController::class, "store"]);
-Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerAbsence']);
+Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerjson']);
 Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index']);
 Route::put('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'updateJustification']);
 Route::delete('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
