@@ -17,6 +17,7 @@ use App\Models\{
     Level,
     StudentClass,
     Subject,
+    TeacherClassSubject
 };
 use Database\Factories\ClassFactory;
 
@@ -145,6 +146,32 @@ class DatabaseSeeder extends Seeder
                     ]);
                     $count++;
                 }}
+            }
+/////////////////teachers
+            Employee::factory()->has(User::factory()->state(['role' => 'teacher']), 'owner')->count(7)->create();
+            //TeacherClassSubject
+            $classes=Classe::all();
+            $users=User::all()->where('role','=','teacher');
+            $teachers =collect();
+            foreach ($users as $u){
+                $user=$u->ownerable;
+                $teachers->push([
+                    'id'=>$user->id,
+                ]);
+            }
+            $subjects=Subject::all();
+            $count=0;
+            foreach($classes as $class){
+                foreach($subjects as  $subject){
+                    if($class->level_id == $subject->level_id ){
+                        if($count < count($teachers)){
+                        TeacherClassSubject::create([
+                        'teacher_id'=>$teachers[$count]["id"],
+                        'class_id'=>$class->id,
+                        'subject_id'=>$subject->id
+                    ]);
+
+                }}}$count++;
             }
 
 
