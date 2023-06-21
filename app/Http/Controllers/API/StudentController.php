@@ -267,7 +267,7 @@ class StudentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ['data'=>$validator->errors(),'status'=>400];
+            return response()->json($validator->errors(), 400);
 
         }
 
