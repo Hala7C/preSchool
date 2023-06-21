@@ -79,7 +79,8 @@ class BusController extends Controller
         $data = collect();
         foreach ($supervisors_account as $supervisor) {
             $emp = $supervisor->ownerable;
-            if ($emp->bus == null) {
+
+            if ($emp->bus() != null) {
                 $data->push([
                     'id' => $supervisor->id,
                     'name' => $emp->fullName
