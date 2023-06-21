@@ -137,7 +137,7 @@ Route::middleware([
     Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
 
 
-    Route::post('web/profile/{id}', [AuthController::class, 'updateProfileWeb']);
+    Route::post('/web/profile/{id}', [AuthController::class, 'updateProfileWeb']);
 
     //  Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
