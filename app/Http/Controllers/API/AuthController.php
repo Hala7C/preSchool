@@ -168,6 +168,54 @@ class AuthController extends Controller
             ->json(['message' => 'password successfully update '], 200);
     }
 
+
+
+
+
+    //////copy
+    public function updateProfileWeb(Request $request, $id)
+    {
+
+
+        $user = User::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+
+            'name'  => ['required', 'string', 'max:255'],
+            'profile_photo_path' => ['nullable'],
+            'current_password' => ['sometimes','required', 'string'],
+            'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
+        ])->after(function ($validator) use ($user, $request) {
+            if($request->password!=null){
+            if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
+                $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
+            }}
+        });
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $path=null;
+        if($request->has('profile_photo_path')){
+            $path= $request->profile_photo_path;
+            $user->profile_photo_path=$path;
+            $user->save();
+        }
+        if (isset($request->password)) {
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+            ])->save();
+            if (request()->hasSession()) {
+                request()->session()->put([
+                    'password_hash_' . Auth::getDefaultDriver() => Auth::user()->getAuthPassword(),
+                ]);
+            }
+        }
+        $user->forceFill([
+            'name' =>  $request->name,
+        ])->save();
+            return['data'=>'You have successfully update','status'=>200];
+    }
     /////////////////////////////////////////profile
 
 
