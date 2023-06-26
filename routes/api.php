@@ -297,6 +297,8 @@ Route::get('/paided/studentFees', [StudentFeesController::class, 'PaidedStudent'
 Route::get('/complete/studentFees', [StudentFeesController::class, 'CompletePaidedStudent'])->middleware('InitYearConfig');;///
 Route::get('/latePaymentStudents/studentFees', [StudentFeesController::class, 'latePaymentStudents'])->middleware('InitYearConfig');///
 
+Route::get('/allStudent/studentFees', [StudentFeesController::class, 'allStudentInfo'])->middleware('InitYearConfig');;///
+
 
 Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 

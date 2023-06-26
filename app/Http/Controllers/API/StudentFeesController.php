@@ -95,12 +95,57 @@ class StudentFeesController extends Controller
             }
         return ['data' => $data, 'status' => '210'];
     }
+    public function allStudentInfo(){
+        $data=collect();
+        $students=Student::all();
+        $cuurentYear=Carbon::now()->year;
+        $year_fees=YearConfig::where('year',$cuurentYear)->get();
+        foreach($students as $std){
+            $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+            $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+            $cPaid=$std_fees -$remind;
+            $status=(new StudentFeesController)->getStatus($std->id);
+            // $payments =$std->withCount('fees')->where('id',$std->id)->get();
+            ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+            ($std->study_discount==true)?$discountFees=$year_fees[0]->discount_without_bus:$discountFees=0;
+            ($std->bus_discount==true)?$discountbusFees=$year_fees[0]->discount_bus:$discountbusFees=0;
+                    $data->push([
+                        'id'=>$std->id,
+                        'name'=>$std->fullName,
+                        'fees'=>$std_fees,
+                        'current_amount'=>$cPaid,
+                        'remind'=>$remind,
+                        'bus_fees'=>$busFees,
+                        'study_discount'=>$discountFees,
+                        'bus_discount'=>$discountbusFees,
+                        'status'=>$status,
+                    ]);
+
+            }
+        return ['data' => $data, 'status' => '210'];
+    }
+
+    public function getStatus($id){
+        $std=Student::findOrFail($id);
+        $payments =$std->withCount('fees')->where('id',$id)->get();
+        if ($payments[0]->fees_count==0) {
+            $remind='unPaid';
+        }elseif($std->currentPayment()->remaind==0){
+            $remind='complete';
+        }
+        else{
+            $remind = 'Paid' ;
+        }
+        return $remind;
+    }
     public function getStudentFees($id){
         $cuurentYear=Carbon::now()->year;
         $year_fees=YearConfig::where('year',$cuurentYear)->get();
         $std=Student::findOrFail($id);
         ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
-        $std_fees=$year_fees[0]->study_fees+$busFees;
+        ($std->study_discount==true)?$discountFees=$year_fees[0]->discount_without_bus:$discountFees=0;
+        ($std->bus_discount==true)?$discountbusFees=$year_fees[0]->discount_bus:$discountbusFees=0;
+        $std_fees=$year_fees[0]->study_fees+$busFees+$discountFees+$discountbusFees;
         return $std_fees;
     }
 
