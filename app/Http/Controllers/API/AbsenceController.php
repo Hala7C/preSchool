@@ -41,27 +41,23 @@ class AbsenceController extends Controller
         $decodded_data = json_encode($encodded_data);
         $data = json_decode($decodded_data);
         $absences_students_ids = Absence::where('date', Carbon::today())->pluck('student_id')->toArray();
-        foreach ($data as $student) {
+        foreach ($data as $students) {
             $absences = collect();
-            //  foreach ($students as $student) {
-            foreach ($student as $key => $Value) {
-                //  DB::beginTransaction();
-                if ($key == "id") {
-                    $id = $Value;
-                    // $absences->push($id);
-
-                    if (!in_array($id, $absences_students_ids)) {
-                        Absence::create([
-                            "date" => Carbon::today(),
-                            "student_id" => $id,
-                            "justification" => null,
-                        ]);
+            foreach ($students as $student) {
+                foreach ($student as $key => $Value) {
+                    //  DB::beginTransaction();
+                    if ($key == "id") {
+                        $id = $Value;
+                        if (!in_array($id, $absences_students_ids)) {
+                            Absence::create([
+                                "date" => Carbon::today(),
+                                "student_id" => $id,
+                                "justification" => null,
+                            ]);
+                        }
                     }
                 }
             }
-            //  }
-
-
         }
         return ['data' => ["Absence done"], 'status' => 210];
         // DB::commit();
@@ -95,15 +91,15 @@ class AbsenceController extends Controller
             return response()->json($validator->errors(), 400);
         }
         //Absence::where("id", $id)->update((["justification", $request->justification]));
-        DB::table('absences')->where('id', $id)->update(['justification' => $request->justification]);
+        DB::table('absences')->where('student_id', $id)->update(['justification' => $request->justification]);
         return ['data' => ["Absence fixed"], 'status' => '210'];
     }
     public function deleteStudentFromAbsence($id)
     {
-        $absence = Absence::where('id', $id)->where('date', Carbon::today()->format('Y/m/d'))->first();
+        $absence = Absence::where('student_id', $id)->where('date', Carbon::today()->format('Y/m/d'))->first();
         if ($absence) {
-            Absence::destroy($id);
-
+            //Absence::destroy($id);
+            $absence->delete();
             return ['data' => ["Absence fixed"], 'status' => '210'];
         }
         return ["data" => ["Sorry you can't delete "], 'status' => '401'];

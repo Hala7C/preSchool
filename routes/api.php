@@ -146,7 +146,7 @@ Route::middleware([
     Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher');; //
     Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee');; //:)
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
-    Route::get('supervisor/bus/students/{id}', [BusController::class, 'SupervisorAllStudent'])->middleware('role:bus_supervisor');
+    Route::get('supervisor/bus/students/{id}', [BusController::class, 'SupervisorAllStudent'])->middleware('role:admin');
     Route::get('/buses/students', [BusController::class, 'allBusStudent'])->middleware('role:employee,user,admin,bus_supervisor');
 
 
@@ -157,6 +157,7 @@ Route::post('/update/student/location/{id}', [StudentController::class, 'updateS
 //Route::middleware(['auth:sanctum', 'isManager'])->group(function () {
 
 //});
+Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware([ 'isBusExist', 'BusCapacities']);
 
 Route::middleware([
     'auth:sanctum',
@@ -168,10 +169,9 @@ Route::middleware([
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
     Route::get('/students/without/bus', [BusController::class, 'allStudentWithoutBus']); //
-    Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed', 'isBusExist', 'BusCapacities']);
+    // Route::get('/vrp', [VRPPython::class, 'testPythonScript'])->middleware(['isStudentDistributed', 'isBusExist', 'BusCapacities']);
 
     Route::get('/day/exams', [ExamController::class, 'TodayExam']);
-
 
     ///assign
     // Route::post('/remove/students/{classID}',[AssignStudentsToClassController::class,'deleteStudentFromClass']);//
@@ -290,11 +290,15 @@ Route::middleware([
 
 
 
-Route::post('/studentFees/store', [StudentFeesController::class, 'store']);
-Route::get('/studentFees/{id}', [StudentFeesController::class, 'index']);
-Route::get('/studentFees', [StudentFeesController::class, 'unPaidedStudent']);
-Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
+Route::post('/studentFees/store', [StudentFeesController::class, 'store'])->middleware('InitYearConfig');///
+Route::get('/studentFees/{id}', [StudentFeesController::class, 'index'])->middleware('InitYearConfig');///
+Route::get('/unpaided/studentFees', [StudentFeesController::class, 'unPaidedStudent'])->middleware('InitYearConfig');///
+Route::get('/paided/studentFees', [StudentFeesController::class, 'PaidedStudent'])->middleware('InitYearConfig');;///
+Route::get('/complete/studentFees', [StudentFeesController::class, 'CompletePaidedStudent'])->middleware('InitYearConfig');;///
+Route::get('/latePaymentStudents/studentFees', [StudentFeesController::class, 'latePaymentStudents'])->middleware('InitYearConfig');///
 
+
+Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
 
 
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);

@@ -11,18 +11,19 @@ use App\Models\FeesConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-use function PHPUnit\Framework\isEmpty;
 
 class StudentFeesController extends Controller
 {
 
     public function index($id)
     {
-        $payments = Student::find($id)->with('fees')->get();
-        if ($payments ==null) {
-            return ['data' => 'there is no payments yet', 'status' => '210'];
+        $student=Student::find($id);
+        $payments =$student->withCount('fees')->where('id',$id)->get();
+        if ($payments[0]->fees_count==0) {
+            return ['data' => [], 'status' => '210'];
         }
-        return ['data' => $payments, 'status' => '210'];
+        $data=$student->fees()->get();
+        return ['data' => $data, 'status' => '210'];
     }
 
 
@@ -43,6 +44,9 @@ class StudentFeesController extends Controller
             'student_id' => $request->student_id,
             'remaind' => $remind,
         ];
+        if($remind < 0 ){
+            return response()->json(['data'=>'the entered amount is greater than remaining amount !!', 'status'=>400], 400);
+        }
         $payment = StudentFees::create($input);
         return ['data' => $payment, 'status' => '210'];
     }
@@ -51,22 +55,51 @@ class StudentFeesController extends Controller
         $data=collect();
         $students=Student::all();
         foreach($students as $std){
-            if($std->withCount('fees')->get()[0]->fees_count==0){
-                if($std->currentPayment()->remaind!=0){
+            $payments =$std->withCount('fees')->where('id',$std->id)->get();
+            if ($payments[0]->fees_count==0) {
                     $data->push([
-                        'student'=>$std
+                        'id'=>$std->id,
+                        'name'=>$std->fullName
                     ]);
                 }
             }
-        }
         return ['data' => $data, 'status' => '210'];
     }
-
+    public function PaidedStudent(){
+        $data=collect();
+        $students=Student::all();
+        foreach($students as $std){
+            $payments =$std->withCount('fees')->where('id',$std->id)->get();
+            if ($payments[0]->fees_count>0) {
+                    $data->push([
+                        'id'=>$std->id,
+                        'name'=>$std->fullName
+                    ]);
+                }
+            }
+        return ['data' => $data, 'status' => '210'];
+    }
+    public function CompletePaidedStudent(){
+        $data=collect();
+        $students=Student::all();
+        foreach($students as $std){
+            $payments =$std->withCount('fees')->where('id',$std->id)->get();
+            if ($payments[0]->fees_count>0) {
+                if($std->currentPayment()->remaind==0){
+                    $data->push([
+                        'id'=>$std->id,
+                        'name'=>$std->fullName
+                    ]);
+                }
+                }
+            }
+        return ['data' => $data, 'status' => '210'];
+    }
     public function getStudentFees($id){
         $cuurentYear=Carbon::now()->year;
         $year_fees=YearConfig::where('year',$cuurentYear)->get();
         $std=Student::findOrFail($id);
-        ($std->bus()!=null)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+        ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
         $std_fees=$year_fees[0]->study_fees+$busFees;
         return $std_fees;
     }
@@ -74,7 +107,9 @@ class StudentFeesController extends Controller
 
     public function calculateStudentRemind($std_fees,$id,$amount){
         $std=Student::findOrFail($id);
-        if($std->withCount('fees')->get()[0]->fees_count==0){
+        $payments =$std->withCount('fees')->where('id',$id)->get();
+        if ($payments[0]->fees_count==0) {
+
             $remind=$std_fees-$amount;
         }elseif($std->currentPayment()->remaind==0){
             $remind='the fees are completed';
@@ -88,7 +123,8 @@ class StudentFeesController extends Controller
 
     public function getStudentRemind($std_fees,$id){
         $std=Student::findOrFail($id);
-        if($std->withCount('fees')->get()[0]->fees_count==0){
+        $payments =$std->withCount('fees')->where('id',$id)->get();
+        if ($payments[0]->fees_count==0) {
             $remind=$std_fees;
         }elseif($std->currentPayment()->remaind==0){
             $remind=0;
@@ -129,7 +165,27 @@ class StudentFeesController extends Controller
 
 
 
-
+    public function latePaymentStudents(){
+        $data=collect();
+        $cd=Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
+        $wantedDate=FeesConfig::whereDate('date','<', $cd)->orderBy('date','desc')->first();
+        $students=Student::all();
+        $persent=$wantedDate->amount;
+        foreach($students as $std){
+            $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+            $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+            $cPaid=$std_fees -$remind;
+            if($cPaid<$persent){
+                $should_paid=$persent-$cPaid;
+                $data->push([
+                    'id'=>$std->id,
+                    'name'=>$std->fullName,
+                    'current_amount'=>$cPaid,
+                    'assumed_amount'=>$should_paid,
+                ]);
+            }}
+        return ['data'=>$data,'status'=>210];
+    }
 
 
 

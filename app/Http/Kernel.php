@@ -80,6 +80,8 @@ class Kernel extends HttpKernel
         'TeacherSubject'=>\App\Http\Middleware\AddExamFromTeacher::class,
         'addExam'=>\App\Http\Middleware\ExamsRule::class,
         'role' => \App\Http\Middleware\Role::class,
+        'myAuth'=>\App\Http\Middleware\MyAuth::class,
+        'InitYearConfig'=>\App\Http\Middleware\InitYearConfig::class
 
     ];
 }

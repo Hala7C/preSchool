@@ -67,13 +67,15 @@ class AuthController extends Controller
         }
         $user = User::where('name', $request['name'])->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
-        $data=collect();
-        $data->push([
-            'user'=>$user,
-            'access_token'=>$token,
-            'token_type'=>'Bearer'
-        ]);
-        return ['data'=>$data,'status'=>201];
+        // $data=collect();
+        // $data->push([
+        //     'user'=>$user,
+        //     'access_token'=>$token,
+        //     'token_type'=>'Bearer'
+        // ]);
+        // return ['data'=>$data,'status'=>201];
+          return response()
+            ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
     }
 
 
