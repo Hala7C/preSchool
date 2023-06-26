@@ -184,6 +184,8 @@ Route::middleware([
     Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
     Route::apiResource('subject',  SubjectController::class);
     Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
+    Route::apiResource('yearFees',   App\Http\Controllers\API\YearConfigController::class);
+
 
 
     //////
