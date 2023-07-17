@@ -53,43 +53,95 @@ class StudentFeesController extends Controller
 
     public function unPaidedStudent(){
         $data=collect();
+        $cuurentYear=Carbon::now()->year;
+        $year_fees=YearConfig::where('year',$cuurentYear)->get();
         $students=Student::all();
         foreach($students as $std){
             $payments =$std->withCount('fees')->where('id',$std->id)->get();
             if ($payments[0]->fees_count==0) {
-                    $data->push([
-                        'id'=>$std->id,
-                        'name'=>$std->fullName
-                    ]);
+                $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+                $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+                $cPaid=$std_fees -$remind;
+                $status=(new StudentFeesController)->getStatus($std->id);
+                // $payments =$std->withCount('fees')->where('id',$std->id)->get();
+                ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+                ($std->study_discount==true)?$discountFees=$year_fees[0]->discount_without_bus:$discountFees=0;
+                ($std->bus_discount==true)?$discountbusFees=$year_fees[0]->discount_bus:$discountbusFees=0;
+                        $data->push([
+                            'id'=>$std->id,
+                            'name'=>$std->fullName,
+                            'fees'=>$std_fees,
+                            'current_amount'=>$cPaid,
+                            'remind'=>$remind,
+                            'bus_fees'=>$busFees,
+                            'study_discount'=>$discountFees,
+                            'bus_discount'=>$discountbusFees,
+                            'status'=>$status,
+                        ]);
                 }
             }
         return ['data' => $data, 'status' => '210'];
     }
     public function PaidedStudent(){
         $data=collect();
+        $cuurentYear=Carbon::now()->year;
+        $year_fees=YearConfig::where('year',$cuurentYear)->get();
         $students=Student::all();
         foreach($students as $std){
             $payments =$std->withCount('fees')->where('id',$std->id)->get();
             if ($payments[0]->fees_count>0) {
-                    $data->push([
-                        'id'=>$std->id,
-                        'name'=>$std->fullName
-                    ]);
+                $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+                $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+                $cPaid=$std_fees -$remind;
+                $status=(new StudentFeesController)->getStatus($std->id);
+                // $payments =$std->withCount('fees')->where('id',$std->id)->get();
+                ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+                ($std->study_discount==true)?$discountFees=$year_fees[0]->discount_without_bus:$discountFees=0;
+                ($std->bus_discount==true)?$discountbusFees=$year_fees[0]->discount_bus:$discountbusFees=0;
+                        $data->push([
+                            'id'=>$std->id,
+                            'name'=>$std->fullName,
+                            'fees'=>$std_fees,
+                            'current_amount'=>$cPaid,
+                            'remind'=>$remind,
+                            'bus_fees'=>$busFees,
+                            'study_discount'=>$discountFees,
+                            'bus_discount'=>$discountbusFees,
+                            'status'=>$status,
+                        ]);
                 }
             }
         return ['data' => $data, 'status' => '210'];
     }
     public function CompletePaidedStudent(){
         $data=collect();
+        $cuurentYear=Carbon::now()->year;
+        $year_fees=YearConfig::where('year',$cuurentYear)->get();
         $students=Student::all();
         foreach($students as $std){
             $payments =$std->withCount('fees')->where('id',$std->id)->get();
             if ($payments[0]->fees_count>0) {
                 if($std->currentPayment()->remaind==0){
-                    $data->push([
-                        'id'=>$std->id,
-                        'name'=>$std->fullName
-                    ]);
+                    $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+                    $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+                    $cPaid=$std_fees -$remind;
+                    $status=(new StudentFeesController)->getStatus($std->id);
+                    // $payments =$std->withCount('fees')->where('id',$std->id)->get();
+                    ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+                    ($std->study_discount==true)?$discountFees=$year_fees[0]->discount_without_bus:$discountFees=0;
+                    ($std->bus_discount==true)?$discountbusFees=$year_fees[0]->discount_bus:$discountbusFees=0;
+                            $data->push([
+                                'id'=>$std->id,
+                                'name'=>$std->fullName,
+                                'fees'=>$std_fees,
+                                'current_amount'=>$cPaid,
+                                'remind'=>$remind,
+                                'bus_fees'=>$busFees,
+                                'study_discount'=>$discountFees,
+                                'bus_discount'=>$discountbusFees,
+                                'status'=>$status,
+                            ]);
+
                 }
                 }
             }
@@ -212,11 +264,18 @@ class StudentFeesController extends Controller
 
     public function latePaymentStudents(){
         $data=collect();
+        $cuurentYear=Carbon::now()->year;
+        $year_fees=YearConfig::where('year',$cuurentYear)->get();
         $cd=Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
         $wantedDate=FeesConfig::whereDate('date','<', $cd)->orderBy('date','desc')->first();
         $students=Student::all();
         $persent=$wantedDate->amount;
         foreach($students as $std){
+
+            ($std->bus_registry==true)?$busFees=$year_fees[0]->bus_fees:$busFees=0;
+            ($std->study_discount==true)?$discountFees=$year_fees[0]->discount_without_bus:$discountFees=0;
+            ($std->bus_discount==true)?$discountbusFees=$year_fees[0]->discount_bus:$discountbusFees=0;
+            $status=(new StudentFeesController)->getStatus($std->id);
             $std_fees=(new StudentFeesController)->getStudentFees($std->id);
             $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
             $cPaid=$std_fees -$remind;
@@ -226,7 +285,14 @@ class StudentFeesController extends Controller
                     'id'=>$std->id,
                     'name'=>$std->fullName,
                     'current_amount'=>$cPaid,
+                    'remind'=>$remind,
+                    'fees'=>$std_fees,
+                    'bus_fees'=>$busFees,
+                    'study_discount'=>$discountFees,
+                    'bus_discount'=>$discountbusFees,
+                    'status'=>$status,
                     'assumed_amount'=>$should_paid,
+
                 ]);
             }}
         return ['data'=>$data,'status'=>210];

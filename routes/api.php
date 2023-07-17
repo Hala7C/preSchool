@@ -294,6 +294,7 @@ Route::middleware([
 
 Route::post('/studentFees/store', [StudentFeesController::class, 'store'])->middleware('InitYearConfig');///
 Route::get('/studentFees/{id}', [StudentFeesController::class, 'index'])->middleware('InitYearConfig');///
+
 Route::get('/unpaided/studentFees', [StudentFeesController::class, 'unPaidedStudent'])->middleware('InitYearConfig');///
 Route::get('/paided/studentFees', [StudentFeesController::class, 'PaidedStudent'])->middleware('InitYearConfig');;///
 Route::get('/complete/studentFees', [StudentFeesController::class, 'CompletePaidedStudent'])->middleware('InitYearConfig');;///
