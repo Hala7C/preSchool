@@ -61,27 +61,21 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
         if (!Auth::attempt($request->only('name', 'password'))) {
             return response()
                 ->json(['message' => 'Unauthorized'], 401);
         }
-
         $user = User::where('name', $request['name'])->firstOrFail();
-
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        // return response()
-        // ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer', 'user' => $user], 200);
-        $data=collect();
-        $data->push([
-            'user'=>$user,
-            'access_token'=>$token,
-            'token_type'=>'Bearer'
-        ]);
-        return ['data'=>$data,'status'=>201];
-        // return response()
-        //     ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
+        // $data=collect();
+        // $data->push([
+        //     'user'=>$user,
+        //     'access_token'=>$token,
+        //     'token_type'=>'Bearer'
+        // ]);
+        // return ['data'=>$data,'status'=>201];
+          return response()
+            ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
     }
 
 
@@ -94,9 +88,6 @@ class AuthController extends Controller
     public function logout(User $user)
     {
         $user->tokens()->delete();
-
-        // return response()
-        //     ->json(['message' => 'You have successfully logged out and the token was successfully deleted'], 200);
             return ['data'=>'You have successfully logged out and the token was successfully deleted','status'=>200];
     }
 
@@ -112,7 +103,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name'  => ['required', 'string', 'max:255'],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+            'profile_photo_path' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'current_password' => ['sometimes','required', 'string'],
             'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
         ])->after(function ($validator) use ($user, $request) {
@@ -126,8 +117,8 @@ class AuthController extends Controller
         }
 
         $path=null;
-        if($request->hasFile('photo')){
-            $photo =  $request->file("photo");
+        if($request->hasFile('profile_photo_path')){
+            $photo =  $request->file("profile_photo_path");
             $newphoto = time() . $photo->getClientOriginalName();
             $photo->move('users/img', $newphoto);
             $path= 'users/img/' . $newphoto;
@@ -147,10 +138,6 @@ class AuthController extends Controller
         $user->forceFill([
             'name' =>  $request->name,
         ])->save();
-
-        // return response()
-        //     ->json(['message' => 'You have successfully update '], 200);
-
             return['data'=>'You have successfully update','status'=>200];
     }
     /////////////////////////////////////////updatepassword
@@ -183,24 +170,71 @@ class AuthController extends Controller
             ->json(['message' => 'password successfully update '], 200);
     }
 
+
+
+
+
+    //////copy
+    public function updateProfileWeb(Request $request, $id)
+    {
+
+
+        $user = User::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+
+            'name'  => ['required', 'string', 'max:255'],
+            'profile_photo_path' => ['nullable'],
+            'current_password' => ['sometimes','required', 'string'],
+            'password' => ['sometimes','required', 'string', (new Password)->length(10)->requireNumeric()],
+        ])->after(function ($validator) use ($user, $request) {
+            if($request->password!=null){
+            if (!isset($request->current_password) || !Hash::check($request->current_password, $user->password)) {
+                $validator->errors()->add('current_password', __('The provided password does not match your current password.'));
+            }}
+        });
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $path=null;
+        if($request->has('profile_photo_path')){
+            $path= $request->profile_photo_path;
+            $user->profile_photo_path=$path;
+            $user->save();
+        }
+        if (isset($request->password)) {
+            $user->forceFill([
+                'password' => Hash::make($request->password),
+            ])->save();
+            if (request()->hasSession()) {
+                request()->session()->put([
+                    'password_hash_' . Auth::getDefaultDriver() => Auth::user()->getAuthPassword(),
+                ]);
+            }
+        }
+        $user->forceFill([
+            'name' =>  $request->name,
+        ])->save();
+            return['data'=>'You have successfully update','status'=>200];
+    }
     /////////////////////////////////////////profile
 
 
 
     public function profile()
     {
-        // return  auth()->user();
-
         $user=User::findOrFail(Auth::user()->id);
         $student=$user->ownerable;
         if($user->role=='user'){
             $cid=$student->classs()->get();
-             // $class=Classe::findOrFail($cid);
+            $bus_id=$student->bus_id;
         if(count($cid)==0){
             $id=null;
         }else{
-            $id=$cid[0]->id;
+            $id=$cid[0]->class_id;
         }
+
         $data=collect();
         $data=([
             "id"=> $user->id,
@@ -216,7 +250,8 @@ class AuthController extends Controller
             "created_at"=> $user->created_at,
             "updated_at"=> $user->updated_at,
             "profile_photo_url"=>$user->profile_photo_url,
-            "class_id"=>$id
+            "class_id"=>$id,
+            "bus_id"=>$bus_id
         ]);
         }else{
             $data=$user;

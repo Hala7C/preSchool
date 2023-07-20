@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\YearConfig;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-
-class Admin
+class InitYearConfig
 {
     /**
      * Handle an incoming request.
@@ -18,15 +17,11 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::user()->role === 'admin')
-        {
+        $config=YearConfig::all()->count();
+        if($config !=0){
             return $next($request);
-        }
-        else
-        {
-
-         return response()->json('Unotherized',403);
-
+        }else{
+            return response()->json(['data'=>'Enter fees config first !!','status'=>400],400);
         }
     }
 }

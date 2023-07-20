@@ -70,7 +70,7 @@ class BusController extends Controller
     public function destroy($id)
     {
         Bus::destroy($id);
-        return ['message' => 'class deleted successfly'];
+        return ['data' => 'bus deleted successfly','status'=>210];
     }
 
     public function allBusSupervisor()
@@ -79,7 +79,8 @@ class BusController extends Controller
         $data = collect();
         foreach ($supervisors_account as $supervisor) {
             $emp = $supervisor->ownerable;
-            if ($emp->bus == null) {
+
+            if ($emp->bus() != null) {
                 $data->push([
                     'id' => $supervisor->id,
                     'name' => $emp->fullName
@@ -90,10 +91,36 @@ class BusController extends Controller
     }
     public function allStudent($id)
     {
-        $student=Student::findOrFail($id);
+        $student=Student::find($id);
+        if(is_null($student)){
+            return ['data'=>[],'status'=>200];
+        }
         $bus = $student->bus()->first();
         if($bus==null){
-            return ['data' => "students are not assigned to  buses yet !!\n please try again after sorting", 'status' => '210'];
+            return ['data' => [], 'status' => '210'];
+        }
+        $students = $bus->students()->get();
+        $data=collect();
+        foreach($students as $std){
+            $data->push([
+                'id'=>$std->id,
+                'name'=>$std->fullName,
+                'lng'=>$std->lng,
+                'lat'=>$std->lat
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
+    }
+
+    public function SupervisorAllStudent($id)
+    {
+        $supervisor=Employee::find($id);
+        if(is_null($supervisor)){
+            return ['data'=>[],'status'=>200];
+        }
+        $bus = $supervisor->bus()->first();
+        if($bus==null){
+            return ['data' => [], 'status' => '210'];
         }
         $students = $bus->students()->get();
         $data=collect();

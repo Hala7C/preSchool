@@ -21,17 +21,17 @@ class AssignStudentsToClassController extends Controller
         $data=collect();
         $i=0;
         foreach($students as $std){
-            if( $std->withCount('class')->get()[$i]->class_count == 0){
+            if( $std->withCount('classs')->get()[$i]->classs_count == 0){
                 $data->push([
                     'id'=>$std->id,
-                    'name'=>$std->fullName
+                    'name'=>$std->fullName,
                 ]);
             }
             ++$i;
         }
 
         if($data->count()==0){
-            return ['data'=>'All Students have been assignded','status'=>210];
+            return ['data'=>[],'status'=>210];
 
         }
         return ['data'=>$data,'status'=>210];
@@ -50,7 +50,7 @@ class AssignStudentsToClassController extends Controller
         $students=$request->students;
         $studentsCount=count($students);
         if($studentsCount > $class->capacity){
-            return ['data'=>'student number more than class capacity ','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         DB::beginTransaction();
         foreach($students as $std){
@@ -61,7 +61,7 @@ class AssignStudentsToClassController extends Controller
                 ]);
             }else{
                 DB::rollBack();
-                return ['data'=>'there is no student with id '.$std,'status'=>210];
+                return ['data'=>[],'status'=>210];
             }
         }
         DB::commit();
@@ -74,7 +74,7 @@ class AssignStudentsToClassController extends Controller
         $class=Classe::findOrFail($classID);
         $students=$class->students()->get();
         if(count($students)==0){
-            return ['data'=>'No students assign to this class yet','status'=>210];
+            return ['data'=>[],'status'=>210];
         }
         $data=collect();
         foreach($students as $std){
@@ -104,12 +104,12 @@ class AssignStudentsToClassController extends Controller
                 $stdClass=StudentClass::where('student_id','=',$std)->where('class_id','=',$classID)->get();
                 if(count($stdClass)==0){
                     DB::rollBack();
-                    return ['data'=>'there is no student with id '.$std,'status'=>210];
+                    return ['data'=>[],'status'=>210];
                 }
                 StudentClass::destroy($stdClass[0]->id);
             }else{
                 DB::rollBack();
-                return ['data'=>'there is no student with id '.$std,'status'=>210];
+                return ['data'=>[],'status'=>210];
             }
         }
         DB::commit();

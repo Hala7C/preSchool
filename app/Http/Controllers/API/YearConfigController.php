@@ -21,7 +21,7 @@ class YearConfigController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            'year' => 'required',
+            'year' => 'required|unique:year_config,year',
             'study_fees' => 'required|integer',
             'bus_fees' => 'required|integer',
             'discount_bus' => 'required',

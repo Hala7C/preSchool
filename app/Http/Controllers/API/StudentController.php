@@ -45,86 +45,13 @@ class StudentController extends Controller
                 'bus_id' => $std->bus_id,
                 'lng' => $std->lng,
                 'lat' => $std->lat,
+                'bus_discount'=>$std->bus_discount,
+                'study_discount'=>$std->study_discount,
                 'class_id'=>$std->classs()->get(),
                 'account_info' => $account
             ]);
         }
         return ['data' => $data, 'status' => '210'];
-    }
-
-    public function store(Request $request)
-    {
-        // $validator = Validator::make($request->all(), [
-        //     'fullName' => ['required', 'alpha', 'max:255'],
-        //     'gender' => ['required', 'in:male,female'],
-        //     'motherName' => ['required', 'alpha', 'max:255'],
-        //     'motherLastName' => ['required', 'alpha', 'max:255'],
-        //     'birthday' => ['required'],
-        //     'phone' => ['required', 'digits:10'],
-        //     'location' => ['required', 'string'],
-        //     'siblingNo' => ['required', 'numeric'],
-        //     'healthInfo' => ['string', 'alpha', 'max:255'],
-        //     'bus_registry' => ['required', 'boolean']
-        // ]);
-
-        // if ($validator->fails()) {
-        //     // return response()->json($validator->errors(), 400);
-        //     return ['data'=>$validator->errors(),'status'=>400];
-
-        // }
-
-        $myDate =  $request->birthday;
-        $date = Carbon::createFromFormat('d/m/Y', $myDate)->format('Y-m-d');
-        $input = [
-            'fullName' => $request->fullName,
-            'gender' => $request->gender,
-            'motherName' => $request->motherName,
-            'motherLastName' => $request->motherLastName,
-            'birthday' => $date,
-            'phone' => $request->phone,
-            'location' => $request->location,
-            'siblingNo' => $request->siblingNo,
-            'healthInfo' => $request->healthInfo,
-            'bus_registry' => $request->bus_registry
-        ];
-        DB::beginTransaction();
-        try {
-            $std = Student::create($input);
-            $pass = Str::random(7);
-            $account = $std->owner()->create([
-                'name' => Str::random(5),
-                'role' => 'user',
-                'password' => Hash::make($pass),
-                'status' => 'active'
-            ]);
-            DB::commit();
-        } catch (\Exception $exp) {
-            DB::rollBack(); // Tell Laravel, "It's not you, it's me. Please don't persist to DB"
-            return ['data' =>  $exp->getMessage(), 'status' => 400];
-        }
-        $cuurentYear = Carbon::now()->year;
-        $date = explode('-', $std->birthday);
-        $age = $cuurentYear - $date[0];
-        $data = ([
-            'message' => 'added successfully',
-            'id' => $std->id,
-            'fullName' => $std->fullName,
-            'gender' => $std->gender,
-            'motherName' => $std->motherName,
-            'motherLastName' => $std->motherLastName,
-            'birthday' => $std->birthday,
-            'age' => $age,
-            'phone' => $std->phone,
-            'location' => $std->location,
-            'siblingNo' => $std->siblingNo,
-            'healthInfo' => $std->healthInfo,
-            'bus_registry' => $std->bus_registry,
-            'account_info' => $account,
-            'pass' => $pass
-        ]);
-
-        return ['data' => $data, 'status' => '210'];
-
     }
 
 
@@ -149,6 +76,8 @@ class StudentController extends Controller
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
             'bus_registry' => $std->bus_registry,
+            'bus_discount'=>$std->bus_discount,
+            'study_discount'=>$std->study_discount,
             'bus_id' => $std->bus_id,
             'lng' => $std->lng,
             'lat' => $std->lat,
@@ -172,8 +101,9 @@ class StudentController extends Controller
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'bus_registry' => ['required', 'boolean']
-
+            'bus_registry' => ['required', 'boolean'],
+            'bus_discount'=>['required', 'boolean'],
+            'study_discount'=>['required', 'boolean'],
         ]);
 
         if ($validator->fails()) {
@@ -190,7 +120,11 @@ class StudentController extends Controller
         $student->location = $request->location;
         $student->siblingNo = $request->siblingNo;
         $student->healthInfo = $request->healthInfo;
-        // $student->bus_id=$request->bus_id;
+        $student->bus_registry=$request->bus_registry;
+
+        $student->bus_discount=$request->bus_discount;
+        $student->study_discount=$request->study_discount;
+
         $student->save();
         $res = collect();
         $cuurentYear = Carbon::now()->year;
@@ -212,6 +146,8 @@ class StudentController extends Controller
             'siblingNo' => $student->siblingNo,
             'healthInfo' => $student->healthInfo,
             'bus_registry' => $student->bus_registry,
+            'bus_discount'=>$student->bus_discount,
+            'study_discount'=>$student->study_discount,
             'account_info' => $account
         ]);
         return ['data' => $res, 'status' => 210];
@@ -223,6 +159,7 @@ class StudentController extends Controller
         $account = $student->owner;
         $account->status = 'suspended';
         $account->save();
+        return ['data'=>'suspended successfully','status'=>210];
     }
 
     public function updateStudentLocation(Request $request, $id)
@@ -257,16 +194,18 @@ class StudentController extends Controller
             'gender' => ['required', 'in:male,female'],
             'motherName' => ['required', 'alpha', 'max:255'],
             'motherLastName' => ['required', 'alpha', 'max:255'],
-            'birthday' => ['required','date_format:d/m/Y'],
+            'birthday' => ['required'],
             'phone' => ['required', 'digits:10'],
             'location' => ['required', 'string'],
             'siblingNo' => ['required', 'numeric'],
             'healthInfo' => ['string', 'alpha', 'max:255'],
-            'bus_registry' => ['required', 'boolean']
+            'bus_registry' => ['required', 'boolean'],
+            'bus_discount'=>['required', 'boolean'],
+            'study_discount'=>['required', 'boolean'],
         ]);
 
         if ($validator->fails()) {
-            return ['data'=>$validator->errors(),'status'=>400];
+            return response()->json($validator->errors(), 400);
 
         }
 
@@ -282,7 +221,10 @@ class StudentController extends Controller
             'location' => $request->location,
             'siblingNo' => $request->siblingNo,
             'healthInfo' => $request->healthInfo,
-            'bus_registry' => $request->bus_registry
+            'bus_registry' => $request->bus_registry,
+            'bus_discount'=>$request->bus_discount,
+            'study_discount'=>$request->study_discount,
+
         ];
         DB::beginTransaction();
         try {
@@ -317,6 +259,8 @@ class StudentController extends Controller
             'siblingNo' => $std->siblingNo,
             'healthInfo' => $std->healthInfo,
             'bus_registry' => $std->bus_registry,
+            'bus_discount'=>$std->bus_discount,
+            'study_discount'=>$std->study_discount,
             'account_info' => $account,
             'pass' => $pass
         ]);

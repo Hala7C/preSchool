@@ -27,8 +27,8 @@ return new class extends Migration
             array(
                 'name' => 'Jaaber Al-ansari',
                 'start_time'=>'07:00:00',
-                'lng' => null,
-                'lat' =>null ,
+                'lng' => 36.317718,
+                'lat' =>33.492711 ,
                 'phone' => '0933130997'
             )
         );

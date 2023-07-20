@@ -21,21 +21,30 @@ class Absence extends Model
             "date"    => Carbon::today(),
             "class_id" => null,
             "level_id" => null,
+            "bus_id" => null
         ], $query);
         $builder->when($filters['date'], function ($builder, $value) {
             $builder->where('date', $value);
         });
         $builder->when($filters['class_id'], function ($builder, $value) {
             $builder->whereHas('student', function ($builder) use ($value) {
-                $builder->where('class_id', $value);
+                $builder->whereHas('classs', function ($builder) use ($value) {
+                    $builder->where('class_id', '=', $value);
+                });
+            });
+        });
+        $builder->when($filters['bus_id'], function ($builder, $value) {
+            $builder->whereHas('student', function ($builder) use ($value) {
+                $builder->whereHas('buss', function ($builder) use ($value) {
+                    $builder->where('bus_id', '=', $value);
+                });
             });
         });
         $builder->when($filters['level_id'], function ($builder, $value) {
-            $builder->whereHas('student', function ($builder) use ($value) {
-                $builder->whereHas('class', function ($builder) use ($value) {
-                    $builder->where('level_id', '=', $value);
-                });
-            });
+            $builder->join('student', 'absences.student_id', '=', 'student.id')
+                ->join('student_class', 'student_class.student_id', '=', 'student.id')
+                ->join('class', 'student_class.class_id', '=', 'class.id')
+                ->where('level_id', $value);
         });
     }
 }

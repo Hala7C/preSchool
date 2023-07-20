@@ -15,7 +15,9 @@ use App\Models\{
     Homework,
     Lesson,
     Level,
+    StudentClass,
     Subject,
+    TeacherClassSubject
 };
 use Database\Factories\ClassFactory;
 
@@ -24,7 +26,7 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-
+/////////std
         DB::table('student')->insert(
             array(
                 'fullName' => "hala",
@@ -53,6 +55,8 @@ class DatabaseSeeder extends Seeder
             )
         );
 
+
+        /////emp
         DB::table('employee')->insert(
             array(
                 'fullName'     => 'rami',
@@ -74,6 +78,8 @@ class DatabaseSeeder extends Seeder
             )
         );
 
+
+        //////teacher
         DB::table('employee')->insert(
             array(
                 'fullName'     => 'sami',
@@ -99,8 +105,17 @@ class DatabaseSeeder extends Seeder
         Employee::factory()->has(User::factory()->state(['role' => 'bus_supervisor']), 'owner')
             ->has(Bus::factory(), 'bus')->count(6)->create();
 
-        Student::factory()->has(User::factory(), 'owner')->count(60)->create();
 
+        ///create 6 std in same region
+        Student::factory()->state(['lng' => 36.318054,'lat'=>33.490909,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+        Student::factory()->state(['lng' => 36.314659,'lat'=>33.491373,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+        Student::factory()->state(['lng' => 36.315196,'lat'=>33.494584,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+        Student::factory()->state(['lng' => 36.308919,'lat'=>33.492954,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+        Student::factory()->state(['lng' => 36.306030,'lat'=>33.489854,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+        Student::factory()->state(['lng' => 36.304149,'lat'=>33.492808,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+        Student::factory()->state(['lng' => 36.310897,'lat'=>33.495811,'bus_id'=>1])->has(User::factory(), 'owner')->create();
+//////////////////////
+        Student::factory()->has(User::factory(), 'owner')->count(53)->create();
 
         // // $levels=Level::factory()->count(2)->create();
         // // $classes=Classe::factory()->count(4)->for($levels)->create();
@@ -116,8 +131,49 @@ class DatabaseSeeder extends Seeder
                                         ,'subjects')->count(2)->create();
 
 
-                                        Employee::factory()->has(User::factory()->state(['role' => 'teacher']), 'owner')
-                                        ->has(Bus::factory(), 'bus')->count(6)->create();
+
+
+
+            $classes=Classe::all();
+            $students=Student::all();
+            $count=0;
+            foreach($classes as $class){
+                for($i=0;$i<$class->capacity;$i++){
+                    if($count < count($students)){
+                    StudentClass::create([
+                        'student_id'=>$students[$count]->id,
+                        'class_id'=>$class->id
+                    ]);
+                    $count++;
+                }}
+            }
+/////////////////teachers
+            Employee::factory()->has(User::factory()->state(['role' => 'teacher']), 'owner')->count(7)->create();
+            //TeacherClassSubject
+            $classes=Classe::all();
+            $users=User::all()->where('role','=','teacher');
+            $teachers =collect();
+            foreach ($users as $u){
+                $user=$u->ownerable;
+                $teachers->push([
+                    'id'=>$user->id,
+                ]);
+            }
+            $subjects=Subject::all();
+            $count=0;
+            foreach($classes as $class){
+                foreach($subjects as  $subject){
+                    if($class->level_id == $subject->level_id ){
+                        if($count < count($teachers)){
+                        TeacherClassSubject::create([
+                        'teacher_id'=>$teachers[$count]["id"],
+                        'class_id'=>$class->id,
+                        'subject_id'=>$subject->id
+                    ]);
+
+                }}}$count++;
+            }
+
 
     }
 }

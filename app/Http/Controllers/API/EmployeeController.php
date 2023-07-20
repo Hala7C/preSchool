@@ -207,6 +207,7 @@ class EmployeeController extends Controller
         // return ['data' => $account, 'status' => 210];
         $account->status='suspended';
         $account->save();
+        return ['data'=>'suspended successfully','status'=>210];
     }
 
 
