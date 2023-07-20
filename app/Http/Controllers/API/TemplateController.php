@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Http\Controllers\API;
 
 use App\Models\Template;
@@ -24,28 +26,35 @@ class TemplateController extends Controller
         $template = Template::all();
         return $template;
     }
-    public function employeeTemplates(Request $request)
+    public function teacherTemplates()
     {
-        $employee_id = $request->get('employee_id');
-        $employeeTemplates = Template::where('employee_id', $employee_id)->get();
-        return $employeeTemplates;
+        $template = Template::where("status", "=", "available")->get();
+        return $template;
     }
     public function store(Request $request)
     {
-        $template = $request->file('template');
-        $templateName = $template->getClientOriginalName();
-        $exist = Template::where('name', '=', $templateName)->first();
-        if (!$exist) {
-            $template->move(public_path('uploads'), $templateName);
-            $template =  Template::create([
-                'name' => $templateName,
-                'path' => 'uploads/' . $templateName,
-                'employee_id' => Auth::id(),
+        $validator = Validator::make($request->all(), [
+            'path' => ['required', 'string'],
+            'status' => ['in:available,unavailable']
+        ], [
+            'required' => 'The field (:attribute) is required ',
 
-            ]);
-            return ['data' => $template, 'status' => '210'];
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
         }
+
+        $path = $request->path;
+        $status = $request->status;
+        $template =  Template::create([
+            'path' => $path,
+            'manager_id' => Auth::id(),
+            'status' => $status,
+
+        ]);
+        return ['data' => $template, 'status' => '210'];
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -54,40 +63,26 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function updateStatus(Request $request, $id)
     {
         //
-        $newtemplate = $request->file('template');
-        $templateName = $newtemplate->getClientOriginalName();
-        $updatedTemplate = Template::where('name', '=', $templateName)->first();
-        $id = Auth::id();
-        if ($updatedTemplate->employee_id == $id) {
-            $old_template = $updatedTemplate->path;
-            Storage::disk('public')->delete($old_template);
-            $newtemplate->move(public_path('uploads'), $templateName);
-            $updatedTemplate->update([
-                'path' => 'uploads/' . $templateName,
-            ]);
-            return ['data' => $updatedTemplate, 'status' => '210'];
-        }
+
+        //
+        //$status = $request->status;
+        Template::where('id', $id)->update(['status' => $request->status]);
+        $template = Template::findOrFail($id);
+        return $template;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Template  $template
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Template $template)
+
+
+    public function destroy($id)
     {
         //
-        $id = Auth::id();
-        if ($template->employee_id == $id) {
-            // $deletedTemplate = $template->path;
-            Storage::disk('public')->delete($template->path);
-            $template->delete();
+        $template = Template::findOrFail($id);
+        if ($template) {
             return ['data' => 'Template deleted successfuly :)'];
         }
-        return ['data' => 'Delete this template is denied!'];
+        return ['data' => 'this template is not found'];
     }
 }

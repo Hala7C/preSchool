@@ -8,6 +8,7 @@ use App\Models\FeesConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\{
+    AdvertisementController,
     AnswerController,
     AssignStudentsToClassController,
     AuthController,
@@ -31,6 +32,7 @@ use App\Http\Controllers\API\{
     VRPCopyController
 };
 use App\Http\Middleware\Employee;
+use App\Models\Advertisement;
 use App\Models\Bus;
 use App\Models\Student;
 use App\Models\BusTrack;
@@ -241,7 +243,7 @@ Route::middleware([
     Route::get('/categories/Student/{id}', [CategoryController::class, 'categoryQuestionsStudent']);
     Route::get('/buses/students/{id}', [BusController::class, 'allStudent']);
 });
-
+Route::post('/adv', [AdvertisementController::class, 'store']);
 /**
  *
  *                    **********Class Route **********
@@ -290,14 +292,16 @@ Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNoti
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
 Route::post('/device-token', [DeviceTokenController::class, "store"]);
-Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerAbsence']);
+Route::post('/abs', [App\Http\Controllers\API\AbsenceController::class, 'registerjson']);
+//Route::post('/absjs', [App\Http\Controllers\API\AbsenceController::class, 'registerjson']);
 Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index']);
 Route::put('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'updateJustification']);
 Route::delete('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
 Route::post('template/store', [App\Http\Controllers\API\TemplateController::class, 'store'])->middleware('auth:sanctum');
-Route::post('template/update', [App\Http\Controllers\API\TemplateController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('template/delete/{template}', [App\Http\Controllers\API\TemplateController::class, 'destroy'])->middleware('auth:sanctum');
-Route::get('templates', [App\Http\Controllers\API\TemplateController::class, 'index'])->middleware('auth:sanctum');
+Route::put('template/updateStatus/{id}', [App\Http\Controllers\API\TemplateController::class, 'updateStatus'])->middleware('auth:sanctum');
+Route::delete('template/delete/{id}', [App\Http\Controllers\API\TemplateController::class, 'destroy'])->middleware('auth:sanctum');
+Route::get('manager/templates', [App\Http\Controllers\API\TemplateController::class, 'index'])->middleware('auth:sanctum');
+Route::get('teacher/templates', [App\Http\Controllers\API\TemplateController::class, 'teacherTemplates'])->middleware('auth:sanctum');
 
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
