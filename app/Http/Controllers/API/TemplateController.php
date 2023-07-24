@@ -34,19 +34,21 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'path' => ['required', 'string'],
+            'path' => ['required', 'string', 'unique:templates,path'],
+            'name' => ['required', 'string', 'unique:templates,name'],
             'status' => ['in:available,unavailable']
         ], [
             'required' => 'The field (:attribute) is required ',
-
+            'unique' => 'The field (:attribute) must be unique ',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+        $name = $request->name;
         $path = $request->path;
         $status = $request->status;
         $template =  Template::create([
+            'name' => $name,
             'path' => $path,
             'manager_id' => Auth::id(),
             'status' => $status,
