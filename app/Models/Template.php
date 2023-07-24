@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Template extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'path', 'employee_id'];
+    protected $fillable = ['name', 'path', 'manager_id', 'status'];
 }

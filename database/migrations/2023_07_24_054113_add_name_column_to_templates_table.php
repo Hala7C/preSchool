@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('templates', function (Blueprint $table) {
-            $table->id();
-            $table->String('name');
-            $table->String('path');
-            $table->foreignId('employee_id')->nullable()->constrained('employee')->nullOnDelete();
-            $table->timestamps();
+        Schema::table('templates', function (Blueprint $table) {
+            //
+            $table->string("name")->after("id");
         });
     }
 
@@ -29,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('templates');
+        Schema::table('templates', function (Blueprint $table) {
+            //
+            $table->dropColumn('name');
+        });
     }
 };

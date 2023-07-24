@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('student', function (Blueprint $table) {
-            //
-            $table->foreignId("class_id")->nullable()->constrained("class")->nullOnDelete()->after("gender");
+        Schema::create('templates', function (Blueprint $table) {
+            $table->id();
+            $table->string("path");
+            $table->foreignId("manager_id")->nullable()->constrained("employee")->nullOnDelete();
+            $table->enum("status", ["available", "unavailable"])->default("unavailable");
+            $table->timestamps();
         });
     }
 
@@ -26,9 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('student', function (Blueprint $table) {
-            //
-            $table->dropColumn("class_id");
-        });
+        Schema::dropIfExists('templates');
     }
 };
