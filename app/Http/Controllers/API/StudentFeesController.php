@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\StudentFees;
 use App\Models\YearConfig;
 use App\Models\FeesConfig;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -232,35 +233,65 @@ class StudentFeesController extends Controller
         return $remind;
     }
 
-    public function sendNotification(){
+    // public function sendNotification(){
+    //     $data=collect();
+    //     $wantedDates=FeesConfig::all();
+    //     $currentDate= Carbon::createFromFormat('m/d/Y', Carbon::now());
+    //     $students=Student::all();
+    //     foreach($wantedDates as $wdate ){
+    //         $wantedDay = Carbon::createFromFormat('m/d/Y',$wdate->date);
+    //         if($currentDate->eq($wantedDay)){
+    //             $persent=$wdate->amount;
+    //             foreach($students as $std){
+    //                 $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+    //                 $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+    //                 $cPaid=$std_fees -$remind;
+    //                 // $std_persernt=($cPaid *100)/ $std_fees;
+    //                 if($cPaid<$persent){
+    //                     /*send notification*/
+    //                     $current_remaining_payment=$persent-$cPaid;
+    //                     $data->push([
+    //                         'id'=>$std->id,
+    //                         'name'=>$std->fullName,
+    //                         'current_amount'=>$cPaid,
+    //                         'current_remaining_payment'=>$current_remaining_payment,
+    //                         'total_remaining_payment'=>$remind,
+    //                         'type'=>'late paid'
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return ['data'=>$data,'status'=>210];
+    // }
+
+    public function getAllLateStudentNotifications(){
+        $notifications=Notification::all()->where('type','=','late paid');
         $data=collect();
-        $wantedDates=FeesConfig::all();
-        $currentDate= Carbon::createFromFormat('m/d/Y', Carbon::now());
-        $students=Student::all();
-        foreach($wantedDates as $wdate ){
-            $wantedDay = Carbon::createFromFormat('m/d/Y',$wdate->date);
-            if($currentDate->eq($wantedDay)){
-                $persent=$wdate->amount;
-                foreach($students as $std){
-                    $std_fees=(new StudentFeesController)->getStudentFees($std->id);
-                    $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
-                    $cPaid=$std_fees -$remind;
-                    $std_persernt=($cPaid *100)/ $std_fees;
-                    if($std_persernt<$persent){
-                        /*send notification*/
-                        $data->push([
-                            'student_name'=>$std->fullName,
-                            'content'=>'pleas pay your fees',
-                            'amount'=>$cPaid
-                        ]);
-                    }
-                }
-            }
+        foreach($notifications as $notification){
+            $student=$notification->student()->get();
+            $std=Student::find($student[0]->id);
+            $std_fees=(new StudentFeesController)->getStudentFees($std->id);
+            $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
+            $cPaid=$std_fees -$remind;
+            $current_remaining_payment=$notification->current_remaining_payment;
+            $data->push([
+                'notification_id'=>$notification->id,
+                'id'=>$std->id,
+                'name'=>$std->fullName,
+                'current_amount'=>$cPaid,
+                'current_remaining_payment'=>$current_remaining_payment,
+                'total_remaining_payment'=>$remind,
+            ]);
         }
-        return ['data'=>$data,'status'=>210];
+        return ['data'=>$data,'type'=>'late paid','status'=>210];
     }
 
 
+    public function removeNotification($id){
+        Notification::destroy($id);
+        return ['message' => 'notification deleted successfly'];
+    }
 
     public function latePaymentStudents(){
         $data=collect();

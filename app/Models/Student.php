@@ -50,4 +50,8 @@ class Student extends Model
     {
         return $this->hasOne(StudentBus::class, 'student_id', 'id');
     }
+
+    public function notifications(){
+        $this->belongsTo(Notification::class,'student_id','id');
+    }
 }

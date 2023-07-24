@@ -25,6 +25,7 @@ use App\Http\Controllers\API\{
     LessonController,
     QuestionController,
     QuizeController,
+    Report,
     TeacherController,
     SubjectController,
     StudentBusController,
@@ -303,7 +304,13 @@ Route::get('/latePaymentStudents/studentFees', [StudentFeesController::class, 'l
 Route::get('/allStudent/studentFees', [StudentFeesController::class, 'allStudentInfo'])->middleware('InitYearConfig');;///
 
 
-Route::get('/studentFees/notification', [StudentFeesController::class, 'sendNotification']);
+Route::get('/send/notification', [StudentFeesController::class, 'getAllLateStudentNotifications']);
+Route::delete('/remove/notification/{id}',[StudentFeesController::class,'removeNotification']);
+
+
+////report
+Route::post('/report/teacherTest', [Report::class, 'TeacherPerformance']);
+
 
 
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
