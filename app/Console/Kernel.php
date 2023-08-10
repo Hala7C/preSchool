@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('12:00');
         $schedule->command('lesson:status')->yearlyOn(9,1);
         $schedule->command('lesson:notification')->dailyAt('0:0');
+        $schedule->command('report:mfees')->monthlyOn(25,'08:00');
+        $schedule->command('report:yfees')->yearlyOn(10,10,'08:00');
+
     }
 
     /**

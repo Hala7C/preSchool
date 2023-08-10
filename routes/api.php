@@ -361,3 +361,9 @@ Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingControll
 // Route::post('/updates/student/location/{id}', [StudentController::class, 'updateStudentLocationCopy']);
 // Route::post('/update/student/time/{id}', [StudentController::class, 'updateStudentArrivalTimeCopy']);
 // Route::get('/vrp', [VRPCopyController::class, 'testPythonScript']);
+
+Route::get('/report/monthlyFeesReport', [Report::class, 'getMonthlyFeesReport']);
+Route::get('/report/yearlyFeesReport', [Report::class, 'getYearlyFeesReport']);
+Route::get('/report/studyPerformanceReport', [Report::class, 'getstudyPerformanceReport']);
+Route::get('/report', [Report::class, 'getAllReport']);
+

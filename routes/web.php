@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\Report;
+use App\Http\Controllers\API\ReportController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
 /*
@@ -19,6 +21,9 @@ Broadcast::routes();
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/monthlyReport', [Report::class,'feesMonthlylyReport']);
+Route::get('/yearlyReport', [Report::class,'feesYearlyReport']);
+
 
 Route::middleware([
     'auth:sanctum',
