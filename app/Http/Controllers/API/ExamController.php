@@ -146,8 +146,8 @@ class ExamController extends Controller
             $subName = $exam->subject()->get()[0]->name;
             $subID = $exam->subject()->get()[0]->id;
             $teacherName = $exam->teacher()->get()[0]->fullName;
-            $className = $exam->class()->get('name');
-            $classID = $exam->class()->get('id');
+            $className = $exam->class()[0]->name;
+            $classID = $exam->class()[0]->id;
             $data->push([
                 'name' => $exam->name,
                 'file_path' => $exam->file_path,
