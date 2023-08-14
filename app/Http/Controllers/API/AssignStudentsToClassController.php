@@ -17,6 +17,7 @@ class AssignStudentsToClassController extends Controller
 
     public function StudentNotAssigned()
     {
+<<<<<<< Updated upstream
         $students=Student::all();
         $data=collect();
         $i=0;
@@ -25,102 +26,141 @@ class AssignStudentsToClassController extends Controller
                 $data->push([
                     'id'=>$std->id,
                     'name'=>$std->fullName,
+=======
+        $students = Student::all();
+        $data = collect();
+        $i = 0;
+        foreach ($students as $std) {
+            if ($std->withCount('class')->get()[$i]->class_count == 0) {
+                $data->push([
+                    'id' => $std->id,
+                    'name' => $std->fullName
+>>>>>>> Stashed changes
                 ]);
             }
             ++$i;
         }
 
+<<<<<<< Updated upstream
         if($data->count()==0){
             return ['data'=>[],'status'=>210];
 
+=======
+        if ($data->count() == 0) {
+            return ['data' => 'All Students have been assignded', 'status' => 210];
+>>>>>>> Stashed changes
         }
-        return ['data'=>$data,'status'=>210];
-
+        return ['data' => $data, 'status' => 210];
     }
 
-    public function store($classID,Request $request)
+    public function store($classID, Request $request)
     {
-        $class=Classe::findOrFail($classID);
-        $validator=Validator::make($request->all(),[
+        $class = Classe::findOrFail($classID);
+        $validator = Validator::make($request->all(), [
             'students' => ['required'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+<<<<<<< Updated upstream
         $students=$request->students;
         $studentsCount=count($students);
         if($studentsCount > $class->capacity){
             return ['data'=>[],'status'=>210];
+=======
+        $students = $request->students;
+        $studentsCount = count($students);
+        if ($studentsCount > $class->capacity) {
+            return ['data' => 'student number more than class capacity ', 'status' => 210];
+>>>>>>> Stashed changes
         }
         DB::beginTransaction();
-        foreach($students as $std){
-            if ( Student::where('id', '=', $std)->exists()) {
+        foreach ($students as $std) {
+            if (Student::where('id', '=', $std)->exists()) {
                 StudentClass::create([
-                    'student_id'=>$std,
-                    'class_id'=>$classID
+                    'student_id' => $std,
+                    'class_id' => $classID
                 ]);
-            }else{
+            } else {
                 DB::rollBack();
+<<<<<<< Updated upstream
                 return ['data'=>[],'status'=>210];
+=======
+                return ['data' => 'there is no student with id ' . $std, 'status' => 210];
+>>>>>>> Stashed changes
             }
         }
         DB::commit();
-        ['data'=>'added successfully','status'=>210];
+        ['data' => 'added successfully', 'status' => 210];
     }
 
 
     public function show($classID)
     {
+<<<<<<< Updated upstream
         $class=Classe::findOrFail($classID);
         $students=$class->students()->get();
         if(count($students)==0){
             return ['data'=>[],'status'=>210];
+=======
+        $class = Classe::findOrFail($classID);
+        $students = $class->students()->get();
+        if (count($students) == 0) {
+            return ['data' => [], 'status' => 210];
+>>>>>>> Stashed changes
         }
-        $data=collect();
-        foreach($students as $std){
-            $student=Student::findOrFail($std->student_id);
+        $data = collect();
+        foreach ($students as $std) {
+            $student = Student::findOrFail($std->student_id);
             $data->push([
-                'id'=>$student->id,
-                'name'=>$student->fullName
+                'id' => $student->id,
+                'name' => $student->fullName
             ]);
         }
-        return ['data'=>$data,'status'=>210];
+        return ['data' => $data, 'status' => 210];
     }
 
 
     public function deleteStudentSFromClass(Request $request, $classID)
     {
-        $class=Classe::findOrFail($classID);
-        $validator=Validator::make($request->all(),[
+        $class = Classe::findOrFail($classID);
+        $validator = Validator::make($request->all(), [
             'students' => ['required'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $students=$request->students;
+        $students = $request->students;
         DB::beginTransaction();
-        foreach($students as $std){
-            if ( Student::where('id', '=', $std)->exists()) {
-                $stdClass=StudentClass::where('student_id','=',$std)->where('class_id','=',$classID)->get();
-                if(count($stdClass)==0){
+        foreach ($students as $std) {
+            if (Student::where('id', '=', $std)->exists()) {
+                $stdClass = StudentClass::where('student_id', '=', $std)->where('class_id', '=', $classID)->get();
+                if (count($stdClass) == 0) {
                     DB::rollBack();
+<<<<<<< Updated upstream
                     return ['data'=>[],'status'=>210];
+=======
+                    return ['data' => 'there is no student with id ' . $std, 'status' => 210];
+>>>>>>> Stashed changes
                 }
                 StudentClass::destroy($stdClass[0]->id);
-            }else{
+            } else {
                 DB::rollBack();
+<<<<<<< Updated upstream
                 return ['data'=>[],'status'=>210];
+=======
+                return ['data' => 'there is no student with id ' . $std, 'status' => 210];
+>>>>>>> Stashed changes
             }
         }
         DB::commit();
-        return ['data'=>'updated successfully','status'=>210];
+        return ['data' => 'updated successfully', 'status' => 210];
     }
 
-    public function deleteStudentFromClass( $sid, $classID)
+    public function deleteStudentFromClass($sid, $classID)
     {
-        $stdClass=StudentClass::where('student_id','=',$sid)->where('class_id','=',$classID)->get();
+        $stdClass = StudentClass::where('student_id', '=', $sid)->where('class_id', '=', $classID)->get();
         StudentClass::destroy($stdClass[0]->id);
-        return ['data'=>'deleted successfully','status'=>210];
+        return ['data' => 'deleted successfully', 'status' => 210];
     }
-
 }

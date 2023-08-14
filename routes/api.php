@@ -21,6 +21,7 @@ use App\Http\Controllers\API\{
     VRPPython,
     SchoolController,
     CategoryController,
+    DashboardController,
     ExamController,
     HomeworkController,
     LessonController,
@@ -39,11 +40,14 @@ use App\Models\Student;
 use App\Models\BusTrack;
 use App\Models\Category;
 use App\Models\Exam;
+use App\Models\Market;
 use App\Models\Question;
 use App\Models\StudentFees;
 use App\Models\Subject;
 use Laravel\Jetstream\Rules\Role;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
+/////////////////////////////////////////////////////////////////////////////////////
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -145,8 +149,8 @@ Route::middleware([
     Route::post('/logout', [AuthController::class, 'logout']);
     ///quizes for student
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
-    Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher');; //
-    Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee');; //:)
+    Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher'); //
+    Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee'); //:)
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
     Route::get('supervisor/bus/students/{id}', [BusController::class, 'SupervisorAllStudent'])->middleware('role:admin');
     Route::get('/buses/students', [BusController::class, 'allBusStudent'])->middleware('role:employee,user,admin,bus_supervisor');
@@ -183,8 +187,8 @@ Route::middleware([
     Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
     Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
     Route::apiResource('subject',  SubjectController::class);
-    Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class);
-    Route::apiResource('yearFees',   App\Http\Controllers\API\YearConfigController::class);
+    Route::apiResource('config',   App\Http\Controllers\API\FeesStudentController::class)->middleware('role:employee,manager'); //
+    Route::apiResource('yearFees',   App\Http\Controllers\API\YearConfigController::class)->middleware('role:employee,manager'); //
 
 
 
@@ -206,14 +210,14 @@ Route::middleware([
 
     //registry
     Route::post('/student/store', [StudentController::class, 'store1']);
-    Route::get('/students',        [StudentController::class, 'index']);
+    Route::get('/students',        [StudentController::class, 'index'])->middleware('role:employee,manager');;
     Route::post('/student/{id}',   [StudentController::class, 'update']);
     Route::delete('/student/{id}', [StudentController::class, 'destroy']);
 
 
     //recruit
     Route::post('/employee/store',  [EmployeeController::class, 'store']);
-    Route::get('/employees',        [EmployeeController::class, 'index']);
+    Route::get('/employees',        [EmployeeController::class, 'index'])->middleware('role:employee,manager');
     Route::get('/employee/{id}',    [EmployeeController::class, 'show']);
     Route::post('/employee/{id}',   [EmployeeController::class, 'update']);
     Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
@@ -303,7 +307,7 @@ Route::get('/allStudent/studentFees', [StudentFeesController::class, 'allStudent
 
 
 Route::get('/send/notification', [StudentFeesController::class, 'getAllLateStudentNotifications']);
-Route::delete('/remove/notification/{id}',[StudentFeesController::class,'removeNotification']);
+Route::delete('/remove/notification/{id}', [StudentFeesController::class, 'removeNotification']);
 
 
 ////report
@@ -328,31 +332,14 @@ Route::get('teacher/templates', [App\Http\Controllers\API\TemplateController::cl
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
 
-
+Route::get('/marks', [App\Http\Controllers\API\MarkController::class, 'index']);
+Route::post('/insert/markets', [App\Http\Controllers\API\MarkController::class, 'insertMarket']);
+Route::get('/mark/student/{student_id}', [App\Http\Controllers\API\MarkController::class, 'show']);
+Route::put('/mark/student/update/{id}', [App\Http\Controllers\API\MarkController::class, 'update']);
+Route::delete('/mark/student/destroy/{id}', [App\Http\Controllers\API\MarkController::class, 'destroy']);
 // Route::apiResource('categories',  CategoryController::class);
 // Route::apiResource('answers',  AnswerController::class);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Assign students to class
-
-
-
-
-
 ////////////
 // Route::get('/buses/studentss', [StudentBusController::class, 'allBusStudent']);
 // Route::get('/buses/studentss/{id}', [StudentBusController::class, 'allStudent']);
@@ -362,8 +349,12 @@ Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingControll
 // Route::post('/update/student/time/{id}', [StudentController::class, 'updateStudentArrivalTimeCopy']);
 // Route::get('/vrp', [VRPCopyController::class, 'testPythonScript']);
 
-Route::get('/report/monthlyFeesReport', [Report::class, 'getMonthlyFeesReport']);
-Route::get('/report/yearlyFeesReport', [Report::class, 'getYearlyFeesReport']);
-Route::get('/report/studyPerformanceReport', [Report::class, 'getstudyPerformanceReport']);
-Route::get('/report', [Report::class, 'getAllReport']);
-
+Route::get('/report/monthlyFeesReport', [Report::class, 'getMonthlyFeesReport'])->middleware('role:employee,manager');;
+Route::get('/report/yearlyFeesReport', [Report::class, 'getYearlyFeesReport'])->middleware('role:employee,manager');;
+Route::get('/report/studyPerformanceReport', [Report::class, 'getstudyPerformanceReport'])->middleware('role:employee,manager');;
+Route::get('/report', [Report::class, 'getAllReport'])->middleware('role:employee,manager');
+Route::get('/count/student', [DashboardController::class, 'getCountStudent']);
+Route::get('/count/employee', [DashboardController::class, 'getCountEmployee']);
+Route::get('/count/teacher', [DashboardController::class, 'getCountTeacher']);
+Route::get('/count/bus', [DashboardController::class, 'getCountBus']);
+Route::get('/feesRate', [DashboardController::class, 'getFeesRate']);

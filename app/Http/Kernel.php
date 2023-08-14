@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\BusExist;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Support\Facades\App;
 
 class Kernel extends HttpKernel
 {
@@ -65,23 +66,24 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isAdmin'  =>  \App\Http\Middleware\Admin::class,
-        'isUser'=> \App\Http\Middleware\User::class,
-        'isManager'=> \App\Http\Middleware\Manager::class,
-        'isBusSupervisor'=> \App\Http\Middleware\BusSupervisor::class,
-        'isEmployee'=> \App\Http\Middleware\Employee::class,
-        'isStudent'=>\App\Http\Middleware\Student::class,
-        'isTeacher'=>\App\Http\Middleware\Teacher::class,
-        'isAdminOrUser'=>\App\Http\Middleware\StudentAdmin::class,
-        'isBusRegistry'=>\App\Http\Middleware\BusRegistry::class,
-        'isStudentDistributed'=>\App\Http\Middleware\StudentDistributed::class,
-        'isBusExist'=>\App\Http\Middleware\BusExist::class,
-        'BusCapacities'=>\App\Http\Middleware\BusCapacity::class,
-        'isTeacher\'sClass'=>\App\Http\Middleware\ClassTeacher::class,
-        'TeacherSubject'=>\App\Http\Middleware\AddExamFromTeacher::class,
-        'addExam'=>\App\Http\Middleware\ExamsRule::class,
+        'isUser' => \App\Http\Middleware\User::class,
+        'isManager' => \App\Http\Middleware\Manager::class,
+        'isBusSupervisor' => \App\Http\Middleware\BusSupervisor::class,
+        'isEmployee' => \App\Http\Middleware\Employee::class,
+        'isStudent' => \App\Http\Middleware\Student::class,
+        'isTeacher' => \App\Http\Middleware\Teacher::class,
+        'isAdminOrUser' => \App\Http\Middleware\StudentAdmin::class,
+        'isBusRegistry' => \App\Http\Middleware\BusRegistry::class,
+        'isStudentDistributed' => \App\Http\Middleware\StudentDistributed::class,
+        'isBusExist' => \App\Http\Middleware\BusExist::class,
+        'BusCapacities' => \App\Http\Middleware\BusCapacity::class,
+        'isTeacher\'sClass' => \App\Http\Middleware\ClassTeacher::class,
+        'TeacherSubject' => \App\Http\Middleware\AddExamFromTeacher::class,
+        'addExam' => \App\Http\Middleware\ExamsRule::class,
         'role' => \App\Http\Middleware\Role::class,
-        'myAuth'=>\App\Http\Middleware\MyAuth::class,
-        'InitYearConfig'=>\App\Http\Middleware\InitYearConfig::class
+        'myAuth' => \App\Http\Middleware\MyAuth::class,
+        'InitYearConfig' => \App\Http\Middleware\InitYearConfig::class,
+        'isAcive' => App\Http\Middleware\isAcive::class
 
     ];
 }

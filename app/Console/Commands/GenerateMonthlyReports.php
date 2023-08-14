@@ -20,14 +20,11 @@ use Mockery\Matcher\Subset;
 use SebastianBergmann\CodeCoverage\Util\Percentage;
 use App\Models\Employee;
 use Illuminate\Support\Facades\File;
-
-// use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\ImageManagerStatic as Image;
 use Dompdf\Dompdf;
 
 use Illuminate\Support\Facades\View;
 
-ini_set('max_execution_time', 180);
 class GenerateMonthlyReports extends Command
 {
     /**
@@ -52,7 +49,7 @@ class GenerateMonthlyReports extends Command
     public function handle()
     {
         $cuurentYear = Carbon::now()->year;
-        $cuurentmonth=Carbon::now()->month;
+        $cuurentmonth = Carbon::now()->month;
         $data = (new StudentFeesController)->allStudentInfo();
         $paided = StudentFees::sum('amount');
         $fees = YearConfig::where('year', '=', $cuurentYear)->get();
@@ -63,17 +60,17 @@ class GenerateMonthlyReports extends Command
         $values = [$paided, $unpaided];
         $this->generateChartImage($labels, $values, $imagePath);
         $pdf = app(PDF::class);
-                $pdf->loadView('monthlyReport',['data'=>$data,'paided'=>$paided,'full'=>$full,'unpaided'=>$unpaided]);
-                $fileName='without_chart-'.$cuurentmonth.'-'.$cuurentYear.'.pdf';
-                $file= $pdf->download($fileName);
-                $filePath = public_path('uploads/'.$fileName); // Get the full file path in the public folder
+        $pdf->loadView('monthlyReport', ['data' => $data, 'paided' => $paided, 'full' => $full, 'unpaided' => $unpaided]);
+        $fileName = 'without_chart-' . $cuurentmonth . '-' . $cuurentYear . '.pdf';
+        $file = $pdf->download($fileName);
+        $filePath = public_path('uploads/' . $fileName); // Get the full file path in the public folder
 
-                $pdf->save($filePath);
-                rr::create([
-                    'fileName'=>$fileName,
-                    'url'=>'uploads/'.$fileName,
-                    'type'=>'monthly-fees'
-                ]);
+        $pdf->save($filePath);
+        rr::create([
+            'fileName' => $fileName,
+            'url' => 'uploads/' . $fileName,
+            'type' => 'monthly-fees'
+        ]);
     }
     public function generateChartImage($labels, $sizes, $imagePath)
     {
@@ -144,5 +141,4 @@ class GenerateMonthlyReports extends Command
         // Save the chart image
         $image->save($imagePath);
     }
-
 }
