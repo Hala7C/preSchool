@@ -13,7 +13,17 @@ class YearConfigController extends Controller
     {
         //
         $configs = YearConfig::all();
-        return ['data' => $configs, 'status' => '210'];
+        $data = collect();
+        foreach ($configs as $config) {
+            $data->push([
+                'year' => $config->year,
+                'study_fees' => $config->study_fees,
+                'bus_fees' => $config->bus_fees,
+                'discount_bus' => intval($config->discount_bus),
+                'discount_without_bus' => intval($config->discount_without_bus)
+            ]);
+        }
+        return ['data' => $data, 'status' => '210'];
     }
 
 
