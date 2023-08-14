@@ -16,6 +16,7 @@ class YearConfigController extends Controller
         $data = collect();
         foreach ($configs as $config) {
             $data->push([
+                'id' => $config->id,
                 'year' => $config->year,
                 'study_fees' => $config->study_fees,
                 'bus_fees' => $config->bus_fees,
