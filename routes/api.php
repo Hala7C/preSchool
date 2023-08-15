@@ -202,7 +202,13 @@ Route::middleware([
 
 
 
-    //////
+    //////dash
+    Route::get('/count/student', [DashboardController::class, 'getCountStudent']);
+    Route::get('/count/employee', [DashboardController::class, 'getCountEmployee']);
+    Route::get('/count/teacher', [DashboardController::class, 'getCountTeacher']);
+    Route::get('/count/bus', [DashboardController::class, 'getCountBus']);
+    Route::get('/feesRate', [DashboardController::class, 'getFeesRate']);
+
     //teacher assignment
     Route::post('/assign/teacher', [TeacherController::class, 'assignTeacherToClassWithSubjects']); //:)
     Route::get('/teachers', [TeacherController::class, 'allTeacher']); //:)
@@ -388,10 +394,3 @@ Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingControll
 // Route::post('/updates/student/location/{id}', [StudentController::class, 'updateStudentLocationCopy']);
 // Route::post('/update/student/time/{id}', [StudentController::class, 'updateStudentArrivalTimeCopy']);
 // Route::get('/vrp', [VRPCopyController::class, 'testPythonScript']);
-
-
-Route::get('/count/student', [DashboardController::class, 'getCountStudent']);
-Route::get('/count/employee', [DashboardController::class, 'getCountEmployee']);
-Route::get('/count/teacher', [DashboardController::class, 'getCountTeacher']);
-Route::get('/count/bus', [DashboardController::class, 'getCountBus']);
-Route::get('/feesRate', [DashboardController::class, 'getFeesRate']);
