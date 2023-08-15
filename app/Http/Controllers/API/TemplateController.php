@@ -24,12 +24,12 @@ class TemplateController extends Controller
     {
         //
         $template = Template::all();
-        return $template;
+        return ['data' => $template, 'status' => '210'];
     }
     public function teacherTemplates()
     {
         $template = Template::where("status", "=", "available")->get();
-        return $template;
+        return ['data' => $template, 'status' => '210'];
     }
     public function store(Request $request)
     {

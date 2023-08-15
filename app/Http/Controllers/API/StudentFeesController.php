@@ -12,6 +12,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use function PHPUnit\Framework\isNull;
 
 class StudentFeesController extends Controller
 {
@@ -272,29 +273,47 @@ class StudentFeesController extends Controller
     {
         $notifications = Notification::all()->where('type', '=', 'late paid');
         $data = collect();
-        foreach ($notifications as $notification) {
-            $student = $notification->student()->get();
-            $std = Student::find($student[0]->id);
-            $std_fees = (new StudentFeesController)->getStudentFees($std->id);
-            $remind = (new StudentFeesController)->getStudentRemind($std_fees, $std->id);
-            $cPaid = $std_fees - $remind;
-            $current_remaining_payment = $notification->current_remaining_payment;
-            $data->push([
-                'notification_id' => $notification->id,
-                'id' => $std->id,
-                'name' => $std->fullName,
-                'current_amount' => $cPaid,
-                'current_remaining_payment' => $current_remaining_payment,
-                'total_remaining_payment' => $remind,
-            ]);
+        $wantedDates = FeesConfig::all();
+        $students = Student::all();
+        foreach ($wantedDates as $wdate) {
+            $stds = collect();
+            foreach ($notifications as $notification) {
+                if ($wdate->id == $notification->config_id) {
+                    $student = $notification->student()->get();
+                    $std = Student::find($student[0]->id);
+                    $std_fees = (new StudentFeesController)->getStudentFees($std->id);
+                    $remind = (new StudentFeesController)->getStudentRemind($std_fees, $std->id);
+                    $cPaid = $std_fees - $remind;
+                    $current_remaining_payment = $notification->current_remaining_payment;
+                    $stds->push([
+                        'id' => $std->id,
+                        'name' => $std->fullName,
+                        'current_amount' => $cPaid,
+                        'current_remaining_payment' => $current_remaining_payment,
+                        'total_remaining_payment' => $remind,
+                    ]);
+                }
+            }
+            if ($stds->count() > 0) {
+                $data->push([
+                    'date' => $wdate->date,
+                    'amount' => $wdate->amount,
+                    'notification_id' => $wdate->id,
+                    'students_info' => $stds,
+                ]);
+            }
         }
+
         return ['data' => $data, 'type' => 'late paid', 'status' => 210];
     }
 
 
     public function removeNotification($id)
     {
-        Notification::destroy($id);
+        $notifications = Notification::where('config_id', '=', $id)->get();
+        foreach ($notifications as $notifi) {
+            $notifi->destroy($notifi->id);
+        }
         return ['message' => 'notification deleted successfly'];
     }
 

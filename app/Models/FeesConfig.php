@@ -12,4 +12,9 @@ class FeesConfig extends Model
     protected $fillable = [
         'date', 'amount'
     ];
+
+    public function notifications()
+    {
+        return $this->belongsTo(Notification::class, 'config_id', 'id');
+    }
 }

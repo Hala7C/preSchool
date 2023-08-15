@@ -34,30 +34,31 @@ class StudentFeesCron extends Command
      */
     public function handle()
     {
-        $wantedDates=FeesConfig::all();
-        $cd= Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
-        $currentDate=Carbon::createFromFormat('Y-m-d',$cd);
-        $students=Student::all();
-        foreach($wantedDates as $wdate ){
-            $wantedDay = Carbon::createFromFormat('Y-m-d',$wdate->date);
-            if($currentDate->eq($wantedDay)){
-                $persent=$wdate->amount;
-                foreach($students as $std){
-                    $std_fees=(new StudentFeesController)->getStudentFees($std->id);
-                    $remind=(new StudentFeesController)->getStudentRemind($std_fees,$std->id);
-                    $cPaid=$std_fees -$remind;
+        $wantedDates = FeesConfig::all();
+        $cd = Carbon::now()->setTimezone("GMT+3")->format("Y-m-d");
+        $currentDate = Carbon::createFromFormat('Y-m-d', $cd);
+        $students = Student::all();
+        foreach ($wantedDates as $wdate) {
+            $wantedDay = Carbon::createFromFormat('Y-m-d', $wdate->date);
+            if ($currentDate->eq($wantedDay)) {
+                $persent = $wdate->amount;
+                foreach ($students as $std) {
+                    $std_fees = (new StudentFeesController)->getStudentFees($std->id);
+                    $remind = (new StudentFeesController)->getStudentRemind($std_fees, $std->id);
+                    $cPaid = $std_fees - $remind;
                     // $std_persernt=($cPaid *100)/ $std_fees;
-                    if($cPaid<$persent){
+                    if ($cPaid < $persent) {
                         /*send notification*/
-                        $current_remaining_payment=$persent-$cPaid;
+                        $current_remaining_payment = $persent - $cPaid;
                         Notification::create([
-                            'student_id'=>$std->id,
-                            'current_remaining_payment'=>$current_remaining_payment,
-                            'type'=>'late paid'
+                            'student_id' => $std->id,
+                            'current_remaining_payment' => $current_remaining_payment,
+                            'type' => 'late paid',
+                            'config_id' => $wdate->id
                         ]);
                     }
                 }
             }
         }
-        }
+    }
 }

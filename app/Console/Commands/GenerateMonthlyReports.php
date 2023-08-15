@@ -20,11 +20,14 @@ use Mockery\Matcher\Subset;
 use SebastianBergmann\CodeCoverage\Util\Percentage;
 use App\Models\Employee;
 use Illuminate\Support\Facades\File;
+
+// use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\ImageManagerStatic as Image;
 use Dompdf\Dompdf;
 
 use Illuminate\Support\Facades\View;
 
+// ini_set('max_execution_time', 180);
 class GenerateMonthlyReports extends Command
 {
     /**
