@@ -22,6 +22,8 @@ use App\Models\Employee;
 use Illuminate\Support\Facades\File;
 
 // use Barryvdh\DomPDF\Facade\Pdf;
+
+// use Barryvdh\DomPDF\Facade\Pdf;
 use Intervention\Image\ImageManagerStatic as Image;
 use Dompdf\Dompdf;
 

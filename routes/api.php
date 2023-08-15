@@ -21,7 +21,6 @@ use App\Http\Controllers\API\{
     VRPPython,
     SchoolController,
     CategoryController,
-    DashboardController,
     ExamController,
     HomeworkController,
     LessonController,
@@ -40,14 +39,11 @@ use App\Models\Student;
 use App\Models\BusTrack;
 use App\Models\Category;
 use App\Models\Exam;
-use App\Models\Market;
 use App\Models\Question;
 use App\Models\StudentFees;
 use App\Models\Subject;
 use Laravel\Jetstream\Rules\Role;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-/////////////////////////////////////////////////////////////////////////////////////
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -153,8 +149,8 @@ Route::middleware([
     Route::post('/logout', [AuthController::class, 'logout']);
     ///quizes for student
     Route::get('/categories', [CategoryController::class, 'index'])->middleware('role:user,teacher');
-    Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher'); //
-    Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee'); //:)
+    Route::get('/class/students/{classID}', [AssignStudentsToClassController::class, 'show'])->middleware('role:employee,teacher');; //
+    Route::get('/teacher/classes/{tid}', [TeacherController::class, 'teacherClases'])->middleware('role:employee');; //:)
     Route::get('/student/{id}',    [StudentController::class, 'show'])->middleware('role:admin,teacher');
     Route::get('supervisor/bus/students/{id}', [BusController::class, 'SupervisorAllStudent'])->middleware('role:admin');
     Route::get('/buses/students', [BusController::class, 'allBusStudent'])->middleware('role:employee,user,admin,bus_supervisor');
@@ -358,14 +354,31 @@ Route::post('/device-token', [DeviceTokenController::class, "store"]);
 Route::get('/busTrack/show/{id}', [App\Http\Controllers\API\BusTrackingController::class, 'show']);
 Route::put('/busTrack/{busTrack}', [App\Http\Controllers\API\BusTrackingController::class, 'update']);
 
-Route::get('/marks', [App\Http\Controllers\API\MarkController::class, 'index']);
-Route::post('/insert/markets', [App\Http\Controllers\API\MarkController::class, 'insertMarket']);
-Route::get('/mark/student/{student_id}', [App\Http\Controllers\API\MarkController::class, 'show']);
-Route::put('/mark/student/update/{id}', [App\Http\Controllers\API\MarkController::class, 'update']);
-Route::delete('/mark/student/destroy/{id}', [App\Http\Controllers\API\MarkController::class, 'destroy']);
+
 // Route::apiResource('categories',  CategoryController::class);
 // Route::apiResource('answers',  AnswerController::class);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Assign students to class
+
+
+
+
+
 ////////////
 // Route::get('/buses/studentss', [StudentBusController::class, 'allBusStudent']);
 // Route::get('/buses/studentss/{id}', [StudentBusController::class, 'allStudent']);

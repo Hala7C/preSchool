@@ -83,7 +83,6 @@ class TemplateController extends Controller
         //
         $template = Template::findOrFail($id);
         if ($template) {
-            Template::destroy($id);
             return ['data' => 'Template deleted successfuly :)'];
         }
         return ['data' => 'this template is not found'];

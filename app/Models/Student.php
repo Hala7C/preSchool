@@ -13,7 +13,7 @@ class Student extends Model
     public $table = "student";
     protected $fillable = [
         'fullName', 'gender', 'motherName', 'motherLastName', 'birthday', 'phone', 'location', 'siblingNo', 'healthInfo', 'bus_id',
-        'lng', 'lat', 'bus_registry', 'bus_discount', 'study_discount'
+        'lng', 'lat', 'bus_registry','bus_discount','study_discount'
     ];
     public function owner(): MorphOne
     {
@@ -37,27 +37,21 @@ class Student extends Model
     {
         return $this->hasMany(Absence::class, "student_id", "id");
     }
-    // public function class()
-    // {
-    //     return $this->belongsTo(Classe::class, "class_id", "id");
-    // }
-
     public function class()
     {
-        return $this->hasOne(StudentClass::class, 'student_id', 'id');
+        return $this->belongsTo(Classe::class, "class_id", "id");
     }
 
-    // public function classs(){
-    //     return $this->hasOne(StudentClass::class,'student_id','id');
-    // }
+    public function classs(){
+        return $this->hasOne(StudentClass::class,'student_id','id');
+    }
 
     public function buss()
     {
         return $this->hasOne(StudentBus::class, 'student_id', 'id');
     }
 
-    public function notifications()
-    {
-        $this->belongsTo(Notification::class, 'student_id', 'id');
+    public function notifications(){
+        $this->belongsTo(Notification::class,'student_id','id');
     }
 }
