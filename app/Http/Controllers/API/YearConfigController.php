@@ -64,7 +64,7 @@ class YearConfigController extends Controller
     public function update(Request $request, $id)
     {
         $config = YearConfig::findOrFail($id);
-        $request->validate([
+        $validator = Validator::make($request->all(), [
 
             'year' => 'sometimes|required',
             'study_fees' => 'sometimes|required|integer',
@@ -73,9 +73,12 @@ class YearConfigController extends Controller
             'discount_without_bus' => 'sometimes|required',
 
         ], ['required' => 'The field (:attribute) is required ',]);
-
-        $config->update($request->all());
-        return ['data' => $config, 'status' => '210'];
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        } else {
+            $config->update($request->all());
+            return ['data' => $config, 'status' => '210'];
+        }
     }
 
 

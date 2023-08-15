@@ -150,6 +150,7 @@ class ExamController extends Controller
             $classID = $exam->class($subID, $exam->teacher_id)[0]->id;
 
             $data->push([
+                'id' => $exam->id,
                 'name' => $exam->name,
                 'file_path' => $exam->file_path,
                 'status' => $exam->status,

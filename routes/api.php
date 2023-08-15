@@ -138,6 +138,8 @@ Route::middleware([
     'auth:sanctum',
 
 ])->group(function () {
+    Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index'])->middleware('role:employee,teacher');
+
     Route::get('/profile', [AuthController::class, 'profile']);
     // Route::post('/profile/{id}/updatepassword', [AuthController::class, 'updatepassword']);
     Route::post('/profile/{id}', [AuthController::class, 'updateProfile']);
@@ -239,7 +241,6 @@ Route::middleware([
     Route::delete('/remove/notification/{id}', [StudentFeesController::class, 'removeNotification']);
 
     ///////abs
-    Route::get('/abs', [App\Http\Controllers\API\AbsenceController::class, 'index']);
     Route::put('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'updateJustification']);
     Route::delete('/abs/{id}', [App\Http\Controllers\API\AbsenceController::class, 'deleteStudentFromAbsence']);
 
