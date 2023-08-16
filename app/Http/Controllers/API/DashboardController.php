@@ -17,7 +17,17 @@ class DashboardController extends Controller
     public function getCountStudent()
     {
         $student_count = Student::all()->count();
-        return ['data' => $student_count, 'status' => '210'];
+        $employee_count = User::where('role', 'employee')->count();
+        $teacher_count = User::where('role', 'teacher')->count();
+        $bus_count = Bus::all()->count();
+        $data = collect();
+        $data->push([
+            'student_count' => $student_count,
+            'employee_count' => $employee_count,
+            'teacher_count' => $teacher_count,
+            'bus_count' => $bus_count
+        ]);
+        return ['data' => $data, 'status' => '210'];
     }
     public function getCountEmployee()
     {

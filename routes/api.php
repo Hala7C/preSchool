@@ -206,10 +206,7 @@ Route::middleware([
 
 
     //////dash
-    Route::get('/count/student', [DashboardController::class, 'getCountStudent']);
-    Route::get('/count/employee', [DashboardController::class, 'getCountEmployee']);
-    Route::get('/count/teacher', [DashboardController::class, 'getCountTeacher']);
-    Route::get('/count/bus', [DashboardController::class, 'getCountBus']);
+    Route::get('/count', [DashboardController::class, 'getCountStudent']);
     Route::get('/feesRate', [DashboardController::class, 'getFeesRate']);
 
     //teacher assignment
