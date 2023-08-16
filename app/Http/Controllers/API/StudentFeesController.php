@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\Student;
 use Carbon\Carbon;
 use App\Models\StudentFees;
@@ -11,6 +12,7 @@ use App\Models\FeesConfig;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\isNull;
 
@@ -25,7 +27,18 @@ class StudentFeesController extends Controller
             return ['data' => [], 'status' => '210'];
         }
         $data = $student->fees()->get();
-        return ['data' => $data, 'status' => '210'];
+        $res = collect();
+        foreach ($data as $d) {
+            $emp = Employee::find($d->employee_id);
+            $res->push([
+                'id' =>    $d->id,
+                'amount' =>    $d->amount,
+                'remaind'    => $d->remaind,
+                'employee_id' => $d->employee_id,
+                'employee_name' => $emp->fullName
+            ]);
+        }
+        return ['data' => $res, 'status' => '210'];
     }
 
 
@@ -41,10 +54,13 @@ class StudentFeesController extends Controller
         }
         $std_fees = $this->getStudentFees($request->student_id);
         $remind = $this->calculateStudentRemind($std_fees, $request->student_id, $request->amount);
+        $user = Auth::user();
+        $emp = $user->ownerable;
         $input = [
             'amount' => $request->amount,
             'student_id' => $request->student_id,
             'remaind' => $remind,
+            'employee_id' => $emp->id
         ];
         if ($remind < 0) {
             return response()->json(['data' => 'the entered amount is greater than remaining amount !!', 'status' => 400], 400);
@@ -80,6 +96,7 @@ class StudentFeesController extends Controller
                     'study_discount' => $discountFees,
                     'bus_discount' => $discountbusFees,
                     'status' => $status,
+
                 ]);
             }
         }

@@ -17,6 +17,7 @@ use App\Http\Controllers\API\{
     BusController,
     DeviceTokenController,
     UserController,
+    DashboardController,
     StudentFeesController,
     VRPPython,
     SchoolController,
@@ -90,6 +91,7 @@ Route::middleware([
 
     Route::get('/teacher/subjects', [TeacherController::class, 'OwnteacherSubjects']); //:)
 
+    Route::get('/teacher/subjects/classes', [TeacherController::class, 'teacherSubjectClasses']); //:)
 
 
 
@@ -111,7 +113,7 @@ Route::middleware([
 
     //lesson
     Route::post('/lesson', [LessonController::class, 'store']); /////////////////
-    Route::post('/lesson/{id}', [LessonController::class, 'update']); ////////////
+    Route::post('/lesson/{id}/{cid}', [LessonController::class, 'update']); ////////////
     Route::delete('/lesson/{id}', [LessonController::class, 'destroy']); ///////////////
 
     Route::get('/lesson/homeworks/{id}', [LessonController::class, 'homeworks']); /////////////
@@ -119,6 +121,7 @@ Route::middleware([
     Route::get('/lesson/send/homework/{id}', [LessonController::class, 'sendHomework']); ///wait for ads and notification to finish
 
 
+    Route::get('/subject/lessons/{sid}/{cid}', [LessonController::class, 'subjectLessons']); //
 
     //homeworks
     Route::post('/homework', [HomeworkController::class, 'store']); ///////////////

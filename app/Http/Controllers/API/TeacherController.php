@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Teacher;
@@ -21,29 +22,31 @@ use function PHPUnit\Framework\isNull;
 class TeacherController extends Controller
 {
 
-    public function allTeacher(){
-        $users=User::all()->where('role','=','teacher');
-        $teacher =collect();
-        foreach ($users as $u){
-            $user=$u->ownerable;
+    public function allTeacher()
+    {
+        $users = User::all()->where('role', '=', 'teacher');
+        $teacher = collect();
+        foreach ($users as $u) {
+            $user = $u->ownerable;
             $teacher->push([
-                'id'=>$user->id,
-                'fullName'=>$user->fullName,
+                'id' => $user->id,
+                'fullName' => $user->fullName,
             ]);
         }
-        return ['data'=>$teacher,'status'=>210];
+        return ['data' => $teacher, 'status' => 210];
     }
 
-    public function assignTeacherToClassWithSubjects(Request $request){
-        $validator=Validator::make($request->all(),[
-            'class_id'=>['required','exists:class,id'],
-            'teacher_id'=>['required','exists:employee,id'],
-            'subjects'=>['required']
+    public function assignTeacherToClassWithSubjects(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'class_id' => ['required', 'exists:class,id'],
+            'teacher_id' => ['required', 'exists:employee,id'],
+            'subjects' => ['required']
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $subjects=$request->subjects;
+        $subjects = $request->subjects;
         // $i=0;
         //     $req=new Request($subjects);
         //     $validator=Validator::make($req->all(),[
@@ -53,15 +56,15 @@ class TeacherController extends Controller
         //         return response()->json($validator->errors(), 400);
         //     }
 
-        foreach($subjects as $s){
-            $input=[
-                    'class_id'=>$request->class_id,
-                    'teacher_id'=>$request->teacher_id,
-                    'subject_id'=>$s
+        foreach ($subjects as $s) {
+            $input = [
+                'class_id' => $request->class_id,
+                'teacher_id' => $request->teacher_id,
+                'subject_id' => $s
             ];
             TeacherClassSubject::create($input);
         }
-        return ['data'=>'assignted successfully','status'=>210];
+        return ['data' => 'assignted successfully', 'status' => 210];
     }
 
     // public function assignTeacherToSubject(Request $request){
@@ -77,137 +80,176 @@ class TeacherController extends Controller
     //     return ['data'=>'assignted successfully','status'=>210];
     // }
 
-    public function teacherClases($tID){
-        $teacher=Employee::findOrFail($tID);
-        $clases=$teacher->classes();
-        if(count($clases)==0){
-            return ['data'=>[],'status'=>210];
+    public function teacherClases($tID)
+    {
+        $teacher = Employee::findOrFail($tID);
+        $clases = $teacher->classes();
+        if (count($clases) == 0) {
+            return ['data' => [], 'status' => 210];
         }
-        return ['data'=>$clases,'status'=>210];
+        return ['data' => $clases, 'status' => 210];
     }
 
-    public function teacherSubjects( $Tid){
-        $teacher=Employee::findOrFail($Tid);
-        $subjects=$teacher->subjects($teacher->id);
-        if(count($subjects)==0){
-            return ['data'=>[],'status'=>210];
+    public function teacherSubjects($Tid)
+    {
+        $teacher = Employee::findOrFail($Tid);
+        $subjects = $teacher->subjects($teacher->id);
+        if (count($subjects) == 0) {
+            return ['data' => [], 'status' => 210];
         }
-        return ['data'=>$subjects,'status'=>210];
+        return ['data' => $subjects, 'status' => 210];
     }
-    public function OwnteacherSubjects(){
-        $user=Auth::user()->ownerable;
-        $teacher=Employee::findOrFail($user->id);
-        $subjects=$teacher->subjects($teacher->id);
-        if(count($subjects)==0){
-            return ['data'=>[],'status'=>210];
+    public function OwnteacherSubjects()
+    {
+        $user = Auth::user()->ownerable;
+        $teacher = Employee::findOrFail($user->id);
+        $subjects = $teacher->subjects($teacher->id);
+        if (count($subjects) == 0) {
+            return ['data' => [], 'status' => 210];
         }
-        return ['data'=>$subjects,'status'=>210];
+        return ['data' => $subjects, 'status' => 210];
     }
 
 
-    public function teacherSubjectinXClass($classID,$tID){
-        $class=Classe::findOrFail($classID);
+    public function teacherSubjectinXClass($classID, $tID)
+    {
+        $class = Classe::findOrFail($classID);
         // $user=Auth::user();
         // $teacher=$user->ownerable;
-        $teacher=Employee::findOrFail($tID);
-        $subjects=DB::table('subject')
-        ->join('teacher_class_subject','subject.id','=','teacher_class_subject.subject_id')
-        ->where('teacher_class_subject.class_id','=',$class->id)
-        ->where('teacher_class_subject.teacher_id','=',$teacher->id)
-        ->distinct()
-        ->get(['subject.*']);
-        return ['data' =>$subjects,'status'=>210];
+        $teacher = Employee::findOrFail($tID);
+        $subjects = DB::table('subject')
+            ->join('teacher_class_subject', 'subject.id', '=', 'teacher_class_subject.subject_id')
+            ->where('teacher_class_subject.class_id', '=', $class->id)
+            ->where('teacher_class_subject.teacher_id', '=', $teacher->id)
+            ->distinct()
+            ->get(['subject.*']);
+        return ['data' => $subjects, 'status' => 210];
     }
 
 
-    public function teacherClassinXSubject($subid){
-        $subject=Subject::findOrFail($subid);
-        $user=Auth::user();
-        $teacher=$user->ownerable;
-        $teacher=Employee::findOrFail($teacher->id);
-        $classes=DB::table('class')
-        ->join('teacher_class_subject','class.id','=','teacher_class_subject.class_id')
-        ->where('teacher_class_subject.subject_id','=',$subject->id)
-        ->where('teacher_class_subject.teacher_id','=',$teacher->id)
-        ->distinct()
-        ->get(['class.*']);
-        return ['data' =>$classes,'status'=>210];
+    public function teacherClassinXSubject($subid)
+    {
+        $subject = Subject::findOrFail($subid);
+        $user = Auth::user();
+        $teacher = $user->ownerable;
+        $teacher = Employee::findOrFail($teacher->id);
+        $classes = DB::table('class')
+            ->join('teacher_class_subject', 'class.id', '=', 'teacher_class_subject.class_id')
+            ->where('teacher_class_subject.subject_id', '=', $subject->id)
+            ->where('teacher_class_subject.teacher_id', '=', $teacher->id)
+            ->distinct()
+            ->get(['class.*']);
+        return ['data' => $classes, 'status' => 210];
     }
-
-    public function SubjectTeachers( $id){
-        $subject=Subject::findOrFail($id);
-        $teachers=$subject->teachers();
-        if(count($teachers)==0){
-            return ['data'=>[],'status'=>210];
-        }
-        return ['data'=>$teachers,'status'=>210];
-    }
-
-    public function ClassTeachers($id){
-        $class=Classe::findOrFail($id);
-        $teachers=$class->teachers();
-        if(count($teachers)==0){
-            return ['data'=>[],'status'=>210];
-        }
-        return ['data'=>$teachers,'status'=>210];
-    }
-
-    public function allAssignDate(){
-        $users=User::all()->where('role','=','teacher');
-        $data =collect();
-        foreach ($users as $u){
-            $user=$u->ownerable;
-            $clases=$user->classes();
-            foreach($clases as $class){
-                $subjects=DB::table('subject')
-                ->join('teacher_class_subject','subject.id','=','teacher_class_subject.subject_id')
-                ->where('teacher_class_subject.class_id','=',$class->id)
-                ->where('teacher_class_subject.teacher_id','=',$user->id)
+    public function teacherSubjectClasses()
+    {
+        $user = Auth::user();
+        $teacher = $user->ownerable;
+        $teacher = Employee::findOrFail($teacher->id);
+        $subjects = $teacher->subjects($teacher->id);
+        $data = collect();
+        foreach ($subjects as $subject) {
+            $classes = DB::table('class')
+                ->join('teacher_class_subject', 'class.id', '=', 'teacher_class_subject.class_id')
+                ->where('teacher_class_subject.subject_id', '=', $subject->id)
+                ->where('teacher_class_subject.teacher_id', '=', $teacher->id)
                 ->distinct()
-                ->get(['subject.*']);
-                $info=['class_id'=>$class->id,
-                        'class_name'=>$class->name,
-                        'subjects'=>$subjects
-                        ];
+                ->get(['class.*']);
+            foreach ($classes as $class) {
                 $data->push([
-                    'id'=>$user->id,
-                    'fullName'=>$user->fullName,
-                    'classes_subjects'=>$info
+                    'subject_id' => $subject->id,
+                    'subject_name' => $subject->name,
+                    "id" => $class->id,
+                    "name" => $class->name,
+                    "capacity" =>  12,
+                    "level_id" => 2,
+
                 ]);
             }
-
         }
-    return ['data'=>$data,'status'=>210];
+        return ['data' => $data, 'status' => '210'];
     }
 
-    public function unAssignsubjectFromTeacher($classID,$tID,$sid){
-        $tClass=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->where('subject_id','=',$sid)->get();
-        if(count($tClass)==0){
-            return ['data' =>[],'status'=>210];
+    public function SubjectTeachers($id)
+    {
+        $subject = Subject::findOrFail($id);
+        $teachers = $subject->teachers();
+        if (count($teachers) == 0) {
+            return ['data' => [], 'status' => 210];
+        }
+        return ['data' => $teachers, 'status' => 210];
+    }
+
+    public function ClassTeachers($id)
+    {
+        $class = Classe::findOrFail($id);
+        $teachers = $class->teachers();
+        if (count($teachers) == 0) {
+            return ['data' => [], 'status' => 210];
+        }
+        return ['data' => $teachers, 'status' => 210];
+    }
+
+    public function allAssignDate()
+    {
+        $users = User::all()->where('role', '=', 'teacher');
+        $data = collect();
+        foreach ($users as $u) {
+            $user = $u->ownerable;
+            $clases = $user->classes();
+            foreach ($clases as $class) {
+                $subjects = DB::table('subject')
+                    ->join('teacher_class_subject', 'subject.id', '=', 'teacher_class_subject.subject_id')
+                    ->where('teacher_class_subject.class_id', '=', $class->id)
+                    ->where('teacher_class_subject.teacher_id', '=', $user->id)
+                    ->distinct()
+                    ->get(['subject.*']);
+                $info = [
+                    'class_id' => $class->id,
+                    'class_name' => $class->name,
+                    'subjects' => $subjects
+                ];
+                $data->push([
+                    'id' => $user->id,
+                    'fullName' => $user->fullName,
+                    'classes_subjects' => $info
+                ]);
+            }
+        }
+        return ['data' => $data, 'status' => 210];
+    }
+
+    public function unAssignsubjectFromTeacher($classID, $tID, $sid)
+    {
+        $tClass = TeacherClassSubject::where('teacher_id', '=', $tID)->where('class_id', '=', $classID)->where('subject_id', '=', $sid)->get();
+        if (count($tClass) == 0) {
+            return ['data' => [], 'status' => 210];
         }
         TeacherClassSubject::destroy($tClass[0]->id);
-        return ['data' =>'deleted successfully','status'=>210];
+        return ['data' => 'deleted successfully', 'status' => 210];
     }
 
-    public function unAssignAllsubjectFromTeacher($classID,$tID){
-        $tClasses=TeacherClassSubject::where('teacher_id','=',$tID)->where('class_id','=',$classID)->get();
-        if(count($tClasses)==0){
-            return ['data' =>[],'status'=>400];
+    public function unAssignAllsubjectFromTeacher($classID, $tID)
+    {
+        $tClasses = TeacherClassSubject::where('teacher_id', '=', $tID)->where('class_id', '=', $classID)->get();
+        if (count($tClasses) == 0) {
+            return ['data' => [], 'status' => 400];
         }
         // return $tClasses;
-        foreach ($tClasses as $sub){
+        foreach ($tClasses as $sub) {
             TeacherClassSubject::destroy($sub->id);
         }
-        return ['data' =>'deleted successfully','status'=>210];
+        return ['data' => 'deleted successfully', 'status' => 210];
     }
 
-    public function teacherClasess(){
-        $user=Auth::user();
-        $teacher=$user->ownerable;
-        $clases=$teacher->classess($teacher->id);
-        if(count($clases)==0){
-            return ['data'=>[],'status'=>210];
+    public function teacherClasess()
+    {
+        $user = Auth::user();
+        $teacher = $user->ownerable;
+        $clases = $teacher->classess($teacher->id);
+        if (count($clases) == 0) {
+            return ['data' => [], 'status' => 210];
         }
-        return ['data'=>$clases,'status'=>210];
+        return ['data' => $clases, 'status' => 210];
     }
 }
