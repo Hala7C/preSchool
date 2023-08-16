@@ -208,6 +208,8 @@ Route::middleware([
     //////dash
     Route::get('/count', [DashboardController::class, 'getCountStudent']);
     Route::get('/feesRate', [DashboardController::class, 'getFeesRate']);
+    Route::get('/busRate', [DashboardController::class, 'busRate']);
+
 
     //teacher assignment
     Route::post('/assign/teacher', [TeacherController::class, 'assignTeacherToClassWithSubjects']); //:)
