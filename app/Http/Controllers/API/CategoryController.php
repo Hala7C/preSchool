@@ -25,7 +25,9 @@ class CategoryController extends Controller
             $data->push([
                 'id' => $category->id,
                 'name' => $category->name,
-                'img'    => $s[2]
+                'img_name'    => $s[2],
+                'img_path' => $category->img
+
             ]);
         }
 
