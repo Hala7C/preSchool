@@ -26,7 +26,7 @@ class CategoryController extends Controller
                 'id' => $category->id,
                 'name' => $category->name,
                 'img_name'    => $s[2],
-                'img_path' => $category->img
+                'img' => $category->img
 
             ]);
         }
