@@ -171,7 +171,17 @@ class QuestionController extends Controller
             }
         }
         DB::commit();
-        return $this->show($question->id);
+        $correct_answer = $question->answers()->where('correct_answer', true)->first();
+        $data = [
+            'id' => $question->id,
+            'text' => $question->text,
+            'audio' => $question->audio,
+            'category_id' => $question->category_id,
+            'correct_answer_text' => $correct_answer->text,
+            "correct_answer_symbol" => $correct_answer->symbol
+        ];
+        return ['data' => $data, 'status' => '210'];
+        // return $this->show($question->id);
     }
 
     public function destroy($id)
