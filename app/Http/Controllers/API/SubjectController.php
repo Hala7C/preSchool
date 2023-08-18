@@ -25,7 +25,7 @@ class SubjectController extends Controller
             $request->all(),
             [
                 'name' => 'required|alpha|max:60',
-                'level_id'=>'required|exists:level,id'
+                'level_id' => 'required|exists:level,id'
             ],
             [
                 // 'name.unique' => 'This subject is already exists :(',
@@ -37,7 +37,7 @@ class SubjectController extends Controller
         } else {
             $input = [
                 'name' => $request->name,
-                'level_id'=>$request->level_id
+                'level_id' => $request->level_id
             ];
             $subject = Subject::create($input);
             return ['data' => $subject, 'status' => '210'];
@@ -59,10 +59,11 @@ class SubjectController extends Controller
             $request->all(),
             [
 
-                'name' => ['sometimes', 'required', 'alpha', 'max:255',
-                //  Rule::unique('subject', 'name')->ignore($subject->id),
-            ],
-                 'level_id'=>['sometimes','required','exist:level,id']
+                'name' => [
+                    'sometimes', 'required', 'alpha', 'max:255',
+                    //  Rule::unique('subject', 'name')->ignore($subject->id),
+                ],
+                'level_id' => ['sometimes', 'required', 'exists:level,id']
 
             ],
             [
@@ -84,9 +85,10 @@ class SubjectController extends Controller
         return ['message' => 'subject deleted successfly'];
     }
 
-    public function subjectLessons($id){
-        $subject=Subject::findOrFail($id);
-        $lessons=$subject->lessons()->get();
-        return ['data'=>$lessons,'status'=>210];
+    public function subjectLessons($id)
+    {
+        $subject = Subject::findOrFail($id);
+        $lessons = $subject->lessons()->get();
+        return ['data' => $lessons, 'status' => 210];
     }
 }

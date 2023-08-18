@@ -10,6 +10,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Pusher\Pusher;
 
 class BusController extends Controller
 {
@@ -27,15 +28,20 @@ class BusController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'capacity' => 'required|integer',
-            'number' => 'required|integer',
-            'bus_supervisor_id' => 'required'
+            'capacity' => ['required|integer'],
+            'number' => ['required|integer'],
+            'bus_supervisor_id' => ['required']
         ]);
-        $emp = Employee::findOrFail($request->bus_supervisor_id);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
-        } elseif ($emp->bus != null) {
-            return response()->json('the supervisor is already assignmented to another bus', 400);
+        }
+        $emp = Employee::findOrFail($request->bus_supervisor_id);
+        if ($emp->bus != null) {
+            $data = collect();
+            $data->push([
+                'msg' => 'the supervisor is already assignmented to another bus'
+            ]);
+            return response()->json($data, 400);
         } else {
 
             $input = [
@@ -53,9 +59,9 @@ class BusController extends Controller
         $bus = Bus::findOrFail($id);
         $validator = Validator::make($request->all(), [
             [
-                'number'     => 'required|numeric',
-                'capacity' => 'required|numeric',
-                'bus_supervisor_id' => 'somtimes|required'
+                'number'     => ['required|numeric'],
+                'capacity' => ['required|numeric'],
+                'bus_supervisor_id' => ['somtimes|required']
             ]
         ]);
         if ($validator->fails()) {
@@ -70,7 +76,7 @@ class BusController extends Controller
     public function destroy($id)
     {
         Bus::destroy($id);
-        return ['data' => 'bus deleted successfly','status'=>210];
+        return ['data' => 'bus deleted successfly', 'status' => 210];
     }
 
     public function allBusSupervisor()
@@ -79,6 +85,7 @@ class BusController extends Controller
         $data = collect();
         foreach ($supervisors_account as $supervisor) {
             $emp = $supervisor->ownerable;
+            // return $emp;
 
             if ($emp->bus() != null) {
                 $data->push([
@@ -91,22 +98,22 @@ class BusController extends Controller
     }
     public function allStudent($id)
     {
-        $student=Student::find($id);
-        if(is_null($student)){
-            return ['data'=>[],'status'=>200];
+        $student = Student::find($id);
+        if (is_null($student)) {
+            return ['data' => [], 'status' => 200];
         }
         $bus = $student->bus()->first();
-        if($bus==null){
+        if ($bus == null) {
             return ['data' => [], 'status' => '210'];
         }
         $students = $bus->students()->get();
-        $data=collect();
-        foreach($students as $std){
+        $data = collect();
+        foreach ($students as $std) {
             $data->push([
-                'id'=>$std->id,
-                'name'=>$std->fullName,
-                'lng'=>$std->lng,
-                'lat'=>$std->lat
+                'id' => $std->id,
+                'name' => $std->fullName,
+                'lng' => $std->lng,
+                'lat' => $std->lat
             ]);
         }
         return ['data' => $data, 'status' => '210'];
@@ -114,52 +121,52 @@ class BusController extends Controller
 
     public function SupervisorAllStudent($id)
     {
-        $supervisor=Employee::find($id);
-        if(is_null($supervisor)){
-            return ['data'=>[],'status'=>200];
+        $supervisor = Employee::find($id);
+        if (is_null($supervisor)) {
+            return ['data' => [], 'status' => 200];
         }
         $bus = $supervisor->bus()->first();
-        if($bus==null){
+        if ($bus == null) {
             return ['data' => [], 'status' => '210'];
         }
         $students = $bus->students()->get();
-        $data=collect();
-        foreach($students as $std){
+        $data = collect();
+        foreach ($students as $std) {
             $data->push([
-                'id'=>$std->id,
-                'name'=>$std->fullName,
-                'lng'=>$std->lng,
-                'lat'=>$std->lat
+                'id' => $std->id,
+                'name' => $std->fullName,
+                'lng' => $std->lng,
+                'lat' => $std->lat
             ]);
         }
         return ['data' => $data, 'status' => '210'];
     }
 
-    public function allBusStudent(){
-        $busses=Bus::all();
-        $data =collect();
-        foreach($busses as $b){
+    public function allBusStudent()
+    {
+        $busses = Bus::all();
+        $data = collect();
+        foreach ($busses as $b) {
             $data->push([
-                'bus_id'=>$b->id,
-                'students_list'=>$b->students()->get()
+                'bus_id' => $b->id,
+                'students_list' => $b->students()->get()
             ]);
         }
         return ['data' => $data, 'status' => '210'];
-
     }
 
 
     public function allStudentWithoutBus()
     {
-        $students=Student::all()->where('bus_registry','=','0');
-        if($students==null){
+        $students = Student::all()->where('bus_registry', '=', '0');
+        if ($students == null) {
             return ['data' => "students are not assigned to  buses yet !!\n please try again after sorting", 'status' => '210'];
         }
-        $data=collect();
-        foreach($students as $std){
+        $data = collect();
+        foreach ($students as $std) {
             $data->push([
-                'id'=>$std->id,
-                'name'=>$std->fullName,
+                'id' => $std->id,
+                'name' => $std->fullName,
             ]);
         }
         return ['data' => $data, 'status' => '210'];

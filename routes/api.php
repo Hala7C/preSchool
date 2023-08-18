@@ -33,17 +33,17 @@ use App\Http\Controllers\API\{
     StudentBusController,
     VRPCopyController
 };
-use App\Http\Middleware\Employee;
-use App\Models\Advertisement;
-use App\Models\Bus;
-use App\Models\Student;
-use App\Models\BusTrack;
-use App\Models\Category;
-use App\Models\Exam;
-use App\Models\Question;
-use App\Models\StudentFees;
-use App\Models\Subject;
-use Laravel\Jetstream\Rules\Role;
+// use App\Http\Middleware\Employee;
+// use App\Models\Advertisement;
+// use App\Models\Bus;
+// use App\Models\Student;
+// use App\Models\BusTrack;
+// use App\Models\Category;
+// use App\Models\Exam;
+// use App\Models\Question;
+// use App\Models\StudentFees;
+// use App\Models\Subject;
+// use Laravel\Jetstream\Rules\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -182,8 +182,8 @@ Route::middleware([
     'auth:sanctum',
     'isEmployee',
 ])->group(function () {
-    Route::get('/supervisors',  [BusController::class, 'allBusSupervisor']);
     Route::post('/buses/store', [BusController::class, 'store']);
+    Route::get('/supervisors',  [BusController::class, 'allBusSupervisor']);
     Route::get('/buses',         [BusController::class, 'index']);
     Route::post('/buses/{id}',   [BusController::class, 'update']);
     Route::delete('/buses/{id}', [BusController::class, 'destroy']);
@@ -201,7 +201,8 @@ Route::middleware([
 
     Route::apiResource('classes',  App\Http\Controllers\API\ClassController::class);
     Route::apiResource('levels',   App\Http\Controllers\API\LevelController::class);
-    Route::apiResource('subject',  SubjectController::class);
+    Route::apiResource('subject',  SubjectController::class)->except('update');
+    Route::post('/subject/{id}', [SubjectController::class, 'update']);
 
 
 

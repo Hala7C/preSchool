@@ -55,7 +55,7 @@ class DashboardController extends Controller
         $data = collect();
         $data->push([
             'full' => $full,
-            'paided' => $paided,
+            'paided' => intval($paided),
             'unpaided' => $unpaided,
         ]);
         return ['data' => $data, 'status' => '210'];
