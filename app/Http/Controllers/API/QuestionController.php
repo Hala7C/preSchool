@@ -106,13 +106,26 @@ class QuestionController extends Controller
         $answers = $question->answers()->get();
         $data = array();
         $correctSymbol = Answer::where('question_id', '=', $id)->where('correct_answer', true)->first();
+        $ans = collect();
+        foreach ($answers as $answer) {
+            $s = explode('/', $answer->img);
+            $ans->push([
+                'id' => $answer->id,
+                'text' => $answer->text,
+                'img' => $answer->img,
+                'img_name' => $s[2],
+                'symbol' => $answer->symbol,
+                'correct_answer' => $answer->correct_answer,
+                'question_id' => $answer->question_id
+            ]);
+        }
         array_push($data, [
             'id' => $question->id,
             'text' => $question->text,
             'audio' => $question->audio,
             'category_id' => $question->category_id,
             'correct_Symbol' => $correctSymbol->symbol,
-            'answers' => $answers
+            'answers' => $ans
         ]);
         return ['data' => $data, 'status' => '210'];
     }
