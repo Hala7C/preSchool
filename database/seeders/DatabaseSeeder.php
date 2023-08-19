@@ -179,16 +179,57 @@ class DatabaseSeeder extends Seeder
         //         }
         //         $count++;
         //     }
-        $classes = Classe::all();
-        $lessons = Lesson::all();
-        foreach ($lessons as $lesson) {
-            foreach ($classes as $class) {
-                DB::table('lesson_class')->insert([
-                    'status' => 'ungiven',
-                    'lesson_id'    => $lesson->id,
-                    'class_id' => $class->id
-                ]);
-            }
-        }
+        // $classes = Classe::all();
+        // $lessons = Lesson::all();
+        // foreach ($lessons as $lesson) {
+        //     foreach ($classes as $class) {
+        //         DB::table('lesson_class')->insert([
+        //             'status' => 'ungiven',
+        //             'lesson_id'    => $lesson->id,
+        //             'class_id' => $class->id
+        //         ]);
+        //     }
+        // }
+        DB::table('employee')->insert(
+            array(
+                'fullName'     => 'bus_supervisor',
+                'gender' => 'male',
+                'birthday'    => '2012-11-12',
+                'phone' => '0959906205',
+                'location' => 'unkown',
+                'degree' => 'bachalor'
+            )
+        );
+        DB::table('users')->insert(
+            array(
+                'name'     => 'employee',
+                'password' => Hash::make('1234567890'),
+                'role'    => 'bus_supervisor',
+                'status' => 'active',
+                'ownerable_id' => 2,
+                'ownerable_type' => 'employee'
+            )
+        );
+
+        DB::table('employee')->insert(
+            array(
+                'fullName'     => 'manager',
+                'gender' => 'male',
+                'birthday'    => '2012-11-12',
+                'phone' => '0959906205',
+                'location' => 'unkown',
+                'degree' => 'bachalor'
+            )
+        );
+        DB::table('users')->insert(
+            array(
+                'name'     => 'employee',
+                'password' => Hash::make('1234567890'),
+                'role'    => 'manager',
+                'status' => 'active',
+                'ownerable_id' => 2,
+                'ownerable_type' => 'employee'
+            )
+        );
     }
 }
