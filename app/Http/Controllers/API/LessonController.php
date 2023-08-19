@@ -57,7 +57,7 @@ class LessonController extends Controller
     {
         $lesson = Lesson::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'title' => ['sometimes', 'required', 'string', 'unique:lessons,title'],
+            'title' => ['sometimes', 'required', 'string', Rule::unique('lessons', 'title')->ignore($id)],
             'semester' => ['sometimes', 'required', 'in:s1,s2,undefined'],
             'number' => ['nullable', 'numeric'],
             'subject_id' => ['sometimes', 'required', 'exists:subject,id'],
