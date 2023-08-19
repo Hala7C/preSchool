@@ -60,12 +60,12 @@ class CategoryController extends Controller
         $category = Category::create($input);
         $data = collect();
         $s = explode('/', $category->img);
-        $data->push([
+        $data = [
             'id' => $category->id,
             'name' => $category->name,
             'img_name'    => $s[2],
             'img' => $category->img
-        ]);
+        ];
         return ['data' => $data, 'status' => '210'];
     }
     public function update(Request $request, $id)
@@ -90,12 +90,12 @@ class CategoryController extends Controller
         $category->save();
         $data = collect();
         $s = explode('/', $category->img);
-        $data->push([
+        $data = [
             'id' => $category->id,
             'name' => $category->name,
             'img_name'    => $s[2],
             'img' => $category->img
-        ]);
+        ];
         return ['data' => $data, 'status' => '210'];
     }
 
