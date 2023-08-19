@@ -78,7 +78,7 @@ class CategoryController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $path = null;
+        // $path = null;
         if ($request->hasFile('img')) {
             $photo =  $request->file("img");
             $newphoto = time() . $photo->getClientOriginalName();
